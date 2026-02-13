@@ -1,5 +1,6 @@
 import { ROUTES } from "../../routes/routerDict";
 import Header from "./header/Header";
+
 import {
   CardGiftcard,
   AppRegistration,
@@ -10,6 +11,8 @@ import {
   Style,
   Login,
 } from "@mui/icons-material";
+import Main from "./main/Main";
+import { Outlet } from "react-router-dom";
 
 const Pages = [
   {
@@ -59,6 +62,9 @@ function PublicLayout() {
   return (
     <>
       <Header Pages={Pages} />
+      <Main>
+        <Outlet />
+      </Main>
     </>
   );
 }
