@@ -8,70 +8,61 @@ import initialRegisterValues from "../helpers/initialValues/initialRegisterValue
 import registerSchema from "../models/registerSchema";
 import normalizeRegisterDetails from "../helpers/normalization/normalizeRegisterDetails";
 
-const handleSubmitRegister = async () => {
-  const { userDetailsForServer } = normalizeRegisterDetails();
-
-  try {
-    const response = await axios.post(
-      "https://cardsserver-8uqn.onrender.com/users",
-      userDetailsForServer,
-    );
-    console.log(response);
-  } catch (error) {
-    if (error.response) {
-      console.log(error.response.data);
-      alert(error.response.data);
-    }
-  }
-};
-
 function RegisterForm() {
+  const handleSubmitRegister = async (data) => {
+    const userDetailsForServer = normalizeRegisterDetails(data);
+
+    console.log("sending data...");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/auth/signup",
+        userDetailsForServer,
+      );
+      console.log(response);
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+        alert(error.response.data);
+      }
+    }
+  };
   const { handleChange, handleSubmit, errors, formDetails } = useForm(
     initialRegisterValues,
     registerSchema,
-
     handleSubmitRegister,
   );
+
   return (
     <>
-      {" "}
-      <Grid container maxWidth="md" spacing={1} sx={{ bgcolor: "#fff", p: 2 }}>
+      <Grid container maxWidth="sm" spacing={1} sx={{ bgcolor: "#fff", p: 2 }}>
         <Grid container size={12} sx={{ display: "flex" }}>
-          <Grid size={{ md: 4, xs: 12 }}>
+          <Grid size={{ md: 6, xs: 12 }}>
             <MyTextField
               label="First Name"
-              name="first"
+              name="firstName"
               onChange={handleChange}
-              error={Boolean(errors.first)}
-              helperText={errors.first}
-              value={formDetails.first || ""}
+              error={Boolean(errors.firstName)}
+              helperText={errors.firstName}
+              value={formDetails.firstName || ""}
               required
             />
           </Grid>
-          <Grid size={{ md: 4, xs: 12 }}>
-            <MyTextField
-              label="Middle Name"
-              name="middle"
-              onChange={handleChange}
-              error={Boolean(errors.middle)}
-              helperText={errors.middle}
-              value={formDetails.middle}
-            />
-          </Grid>
-          <Grid size={{ md: 4, xs: 12 }}>
+
+          <Grid size={{ md: 6, xs: 12 }}>
             <MyTextField
               label="Last Name"
-              name="last"
+              name="lastName"
               onChange={handleChange}
-              error={Boolean(errors.last)}
-              helperText={errors.last}
-              value={formDetails.last}
+              error={Boolean(errors.lastName)}
+              helperText={errors.lastName}
+              value={formDetails.lastName}
               required
             />
           </Grid>
         </Grid>
         <Grid container size={12}>
-          <Grid size={{ md: 6, xs: 12 }}>
+          <Grid size={{ md: 12, xs: 12 }}>
             <MyTextField
               label="Phone"
               name="phone"
@@ -83,6 +74,8 @@ function RegisterForm() {
               required
             />
           </Grid>
+        </Grid>
+        <Grid container size={12}>
           <Grid size={{ md: 6, xs: 12 }}>
             <MyTextField
               label="Email"
@@ -95,55 +88,23 @@ function RegisterForm() {
               required
             />
           </Grid>
+          <Grid size={{ md: 6, xs: 12 }}>
+            <MyTextField
+              label="Password"
+              name="password"
+              onChange={handleChange}
+              value={formDetails.password}
+              type="password"
+              required
+              error={Boolean(errors.password)}
+              helperText={errors.password}
+              // sx={{ "& .MuiOutlinedInput-root": { borderRadius: 5 } }}
+            />
+          </Grid>
         </Grid>
-        <Grid size={12}>
-          <MyTextField
-            label="Password"
-            name="password"
-            onChange={handleChange}
-            value={formDetails.password}
-            type="password"
-            required
-            error={Boolean(errors.password)}
-            helperText={errors.password}
 
-            // sx={{ "& .MuiOutlinedInput-root": { borderRadius: 5 } }}
-          />
-        </Grid>
-        <Grid container size={12} onChange={handleChange}>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="url"
-              onChange={handleChange}
-              name="url"
-              error={Boolean(errors.url)}
-              helperText={errors.url}
-              value={formDetails.url}
-            />
-          </Grid>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="alt"
-              onChange={handleChange}
-              name="alt"
-              error={Boolean(errors.alt)}
-              helperText={errors.alt}
-              value={formDetails.alt}
-            />
-          </Grid>
-        </Grid>
         <Grid container size={12}>
-          <Grid size={{ md: 3, xs: 12 }}>
-            <MyTextField
-              label="state"
-              name="state"
-              onChange={handleChange}
-              error={Boolean(errors.state)}
-              helperText={errors.state}
-              value={formDetails.state}
-            />
-          </Grid>
-          <Grid size={{ md: 4, xs: 12 }}>
+          <Grid size={{ md: 6, xs: 12 }}>
             <MyTextField
               label="country"
               onChange={handleChange}
@@ -153,7 +114,7 @@ function RegisterForm() {
               value={formDetails.country}
             />
           </Grid>
-          <Grid size={{ md: 5, xs: 12 }}>
+          <Grid size={{ md: 6, xs: 12 }}>
             <MyTextField
               label="city"
               name="city"
@@ -164,38 +125,7 @@ function RegisterForm() {
             />
           </Grid>
         </Grid>
-        <Grid container size={12}>
-          <Grid size={{ md: 4, xs: 12 }}>
-            <MyTextField
-              label="street"
-              onChange={handleChange}
-              name="street"
-              error={Boolean(errors.street)}
-              helperText={errors.street}
-              value={formDetails.street}
-            />
-          </Grid>
-          <Grid size={{ md: 2, xs: 12 }}>
-            <MyTextField
-              label="num"
-              onChange={handleChange}
-              name="houseNumber"
-              error={Boolean(errors.houseNumber)}
-              helperText={errors.houseNumber}
-              value={formDetails.houseNumber}
-            />
-          </Grid>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="ZIP"
-              onChange={handleChange}
-              name="zip"
-              error={Boolean(errors.zip)}
-              helperText={errors.zip}
-              value={formDetails.zip}
-            />
-          </Grid>
-        </Grid>
+
         {/* <Grid container size={12}>
         
             <FormControlLabel

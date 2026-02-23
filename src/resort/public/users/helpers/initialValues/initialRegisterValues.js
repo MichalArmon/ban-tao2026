@@ -1,23 +1,14 @@
 const initialRegisterValues = {
-  first: "",
-  middle: "",
-  last: "",
+  email: "armonmic22003@gmail.com",
+  password: "StrongPassword12631$",
+  firstName: "Michal",
+  lastName: "Armon",
+  phone: "0586632566",
 
-  phone: "",
-  email: "",
-  password: "",
+  country: "Israel",
+  city: "Ramat gan",
 
-  url: "",
-  alt: "",
-
-  state: "",
-  country: "",
-  city: "",
-  street: "",
-  houseNumber: "",
-  zip: "",
-
-  isBusiness: true,
+  role: "admin",
 };
 
 export default initialRegisterValues;

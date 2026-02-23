@@ -1,16 +1,6 @@
 import Joi from "joi";
 
 const registerSchema = {
-  first: Joi.string().min(2).max(10),
-  middle: Joi.string().min(2).max(10).allow(""),
-  last: Joi.string().min(2).max(10),
-
-  phone: Joi.string()
-    .regex(/0[0-9]{1,2}-?\s?[0-9]{3}\s?[0-9]{4}/)
-    .required()
-    .messages({
-      "string.pattern.base": "wrong phone format",
-    }),
   email: Joi.string().required().email({ tlds: false }),
   password: Joi.string()
     .required()
@@ -20,18 +10,20 @@ const registerSchema = {
     .messages({
       "string.pattern.base": "wrong password format",
     }),
+  firstName: Joi.string().min(2).max(10),
 
-  url: Joi.allow(""),
-  alt: Joi.allow(""),
+  lastName: Joi.string().min(2).max(10),
 
-  state: Joi.allow(""),
+  phone: Joi.string()
+    .regex(/0[0-9]{1,2}-?\s?[0-9]{3}\s?[0-9]{4}/)
+    .required()
+    .messages({
+      "string.pattern.base": "wrong phone format",
+    }),
+
   country: Joi.string().min(2).max(10),
   city: Joi.string().min(2).max(10),
-  street: Joi.string().required(),
-  houseNumber: Joi.string().required().max(256),
-  zip: Joi.string().required().min(2).max(256),
-
-  isBusiness: true,
+  role: Joi.string().valid("user", "admin").allow(""),
 };
 
 export default registerSchema;

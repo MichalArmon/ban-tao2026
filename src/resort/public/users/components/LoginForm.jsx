@@ -16,6 +16,8 @@ const handleSubmitLogin = async (user) => {
       user,
     );
     console.log(response);
+    console.log(response.data.token);
+    console.log(response.data.data.user.firstName);
   } catch (error) {
     if (error.response) {
       console.log(error.response.data);

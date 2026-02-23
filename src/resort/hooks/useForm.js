@@ -6,13 +6,14 @@ export default function useForm(initialValues, schemaOBJ, onSubmit) {
   const [errors, setErrors] = useState({});
   const schema = Joi.object(schemaOBJ);
   const handleChange = (event) => {
-    const [value, name] = event.target;
-    setFormDetails((prev) => ({ ...prev, [name]: value }));
-    console.log(value);
+    const { value, name, type, checked } = event.target;
+    const finalValue = type === "checkbox" ? checked : value;
+    setFormDetails((prev) => ({ ...prev, [name]: finalValue }));
+    console.log(finalValue);
 
     const fieldSchema = Joi.object({ [name]: schemaOBJ[name] });
     const { error } = fieldSchema.validate(
-      { [name]: value },
+      { [name]: finalValue },
       { abortEarly: false },
     );
     if (error) {
@@ -27,7 +28,6 @@ export default function useForm(initialValues, schemaOBJ, onSubmit) {
   };
 
   const handleSubmit = () => {
-    console.log(formDetails);
     const { error } = schema.validate(formDetails, { abortEarly: false });
     if (!error) {
       onSubmit(formDetails);
