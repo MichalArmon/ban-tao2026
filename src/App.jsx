@@ -1,5 +1,5 @@
 import { Container, Typography, Paper, TextField, Button } from "@mui/material";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import "./App.css";
 
@@ -9,11 +9,12 @@ import RegisterPage from "./resort/public/pages/RegisterPage";
 import HomePage from "./resort/public/pages/HomePage";
 import LoginPage from "./resort/public/pages/LoginPage";
 import AdminLayout from "./resort/Layout/AdminLayout";
-import CreateRoomPage from "./resort/admin/pages/CreateRoomPage";
+import RoomsPage from "./resort/admin/pages/RoomsPage";
 
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/resort" replace />} />
       <Route path="/resort" element={<PublicLayout />}>
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.register} element={<RegisterPage />} />
@@ -22,8 +23,7 @@ function App() {
 
       <Route path="/admin" element={<AdminLayout />}>
         <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
-        <Route path={ADMIN_ROUTES.rooms} element={<CreateRoomPage />} />
-        <Route path={ADMIN_ROUTES.createRoom} element={<CreateRoomPage />} />
+        <Route path={ADMIN_ROUTES.rooms} element={<RoomsPage />} />
       </Route>
     </Routes>
   );

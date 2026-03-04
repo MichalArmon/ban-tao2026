@@ -31,6 +31,11 @@ export default function useForm(initialValues, schemaOBJ, onSubmit) {
     const { error } = schema.validate(formDetails, { abortEarly: false });
     if (!error) {
       onSubmit(formDetails);
+    } else {
+      console.error(
+        "❌ Joi Validation Failed! Look at these errors:",
+        error.details,
+      );
     }
   };
 

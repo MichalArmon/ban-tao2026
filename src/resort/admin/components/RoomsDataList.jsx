@@ -1,30 +1,28 @@
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from "@mui/icons-material";
 import {
   Box,
-  List,
-  ListItem,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
-  Paper,
   Button,
-  IconButton,
-  TextField,
 } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 import React, { useEffect, useState } from "react";
 
 import { useRoom } from "../../providers/RoomProvider";
-const top = 55;
 
 function RoomsDataList() {
-  const { getRoomsFromServer, rooms, setRooms, handleChange, filteredRooms } =
-    useRoom();
+  const { getRoomsFromServer, rooms, handleDeleteRoom } = useRoom();
   useEffect(() => {
     getRoomsFromServer();
     console.log(rooms);
@@ -34,9 +32,6 @@ function RoomsDataList() {
   }
   return (
     <>
-      {/* <Box sx={{ mb: 3 }}>
-        <TextField onChange={handleChange} />
-      </Box> */}
       <TableContainer
         sx={{ width: "80vw", maxHeight: "90vh ", margin: "0 auto" }}
       >
@@ -72,7 +67,9 @@ function RoomsDataList() {
               <TableCell sx={{ top: 0 }}>Features</TableCell>
               <TableCell sx={{ top: 0 }}>PriceBase</TableCell>
               <TableCell sx={{ top: 0 }}>SizeM2</TableCell>
-              <TableCell sx={{ top: 0 }}>MaxGuests</TableCell>
+              <TableCell sx={{ top: 0 }}></TableCell>
+              <TableCell sx={{ top: 0 }}></TableCell>
+              <TableCell sx={{ top: 0 }}></TableCell>
             </TableRow>
           </TableHead>
 
@@ -94,9 +91,16 @@ function RoomsDataList() {
                 <TableCell>{room.priceBase}</TableCell>
                 <TableCell>{room.sizeM2}</TableCell>
                 <TableCell>
-                  <Box sx={{ width: "100px", margin: "0 auto" }}>
-                    {/* <img style={{ width: "100%" }} src={country.flags.png} /> */}
-                  </Box>
+                  <Edit />
+                </TableCell>
+                <TableCell>
+                  <Button
+                    onClick={() => {
+                      handleDeleteRoom(room._id);
+                    }}
+                  >
+                    <Delete />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

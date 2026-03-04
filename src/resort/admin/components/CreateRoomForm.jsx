@@ -1,35 +1,17 @@
 import MyTextField from "../../../Form/MyTextField";
 
-import axios from "axios";
 import { Grid, Button, Box, FormControlLabel, Switch } from "@mui/material";
 import initialRoomValues from "../helpers/initialValues/initialRoomValues";
 import roomSchema from "../models/roomSchema";
 import useForm from "../../hooks/useForm";
-import { Loop } from "@mui/icons-material";
-import normalizeRoomDetails from "../helpers/normalization/normalizeRoomDetails";
-
-const handleSubmitCreateCard = async (data) => {
-  const roomDetailsForServer = normalizeRoomDetails(data);
-  try {
-    const response = await axios.post(
-      "http://localhost:3000/api/v1/rooms",
-      roomDetailsForServer,
-    );
-    console.log(response);
-  } catch (error) {
-    if (error.response) {
-      console.log(error.response.data);
-      alert(error.response.data.message);
-    }
-  }
-};
-const handleImageSelect = () => {};
+import { useRoom } from "../../providers/RoomProvider";
 
 function CreateRoomForm() {
+  const { handleSubmitCreateRoom } = useRoom();
   const { handleChange, handleSubmit, errors, formDetails } = useForm(
     initialRoomValues,
     roomSchema,
-    handleSubmitCreateCard,
+    handleSubmitCreateRoom,
   );
 
   return (
