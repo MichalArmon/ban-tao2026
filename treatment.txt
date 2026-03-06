@@ -1,0 +1,57 @@
+    "items": [
+        {
+            "_id": "68f6732c3834ffda99a8d8cc",
+            "title": "Thai Herbal Compress Massage",
+            "slug": "thai-herbal-compress-massage",
+            "category": "massage",
+            "therapist": "Nam",
+            "durationMinutes": 75,
+            "level": "all",
+            "price": 1800,
+            "currency": "THB",
+            "isActive": true,
+            "isPrivate": false,
+            "isClosed": false,
+            "description": "Traditional Thai massage with warm herbal compresses to melt tension, improve circulation, and calm the nervous system.",
+            "bullets": [
+                "Warm prai & lemongrass bundles",
+                "Combination of pressure & stretch",
+                "Deep relaxation with local aromas"
+            ],
+            "hero": {
+                "url": "https://cdn.shopify.com/s/files/1/0305/7844/2379/files/blog-image-1717747604979_jpg.png?v=1717747607",
+                "publicId": "treatments/hero/thai-herbal-compress",
+                "alt": "Thai herbal compress massage"
+            },
+            "gallery": [
+                {
+                    "url": "https://res.cloudinary.com/dhje7hbxd/image/upload/f_auto,q_auto/treatments/gallery/thai-herbal-1",
+                    "publicId": "treatments/gallery/thai-herbal-1",
+                    "alt": "Herbal bundles"
+                },
+                {
+                    "url": "https://res.cloudinary.com/dhje7hbxd/image/upload/f_auto,q_auto/treatments/gallery/thai-herbal-2",
+                    "publicId": "treatments/gallery/thai-herbal-2",
+                    "alt": "Warm compress application"
+                }
+            ],
+            "tags": [
+                "massage",
+                "warmth",
+                "circulation",
+                "relax",
+                "thai-tradition"
+            ],
+            "intensity": "gentle",
+            "contraindications": [
+                "fever",
+                "open-wounds",
+                "recent-surgery",
+                "skin-irritation"
+            ],
+            "createdAt": "2025-10-20T17:36:44.961Z",
+            "updatedAt": "2025-11-27T09:26:09.929Z",
+            "__v": 0,
+            "likedBy": [],
+            "likesCount": 0
+        },

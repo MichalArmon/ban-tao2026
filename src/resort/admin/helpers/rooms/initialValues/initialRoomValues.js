@@ -1,4 +1,4 @@
-const initialEditRoomValues = {
+const initialRoomValues = {
   title: "Ocean Breeze Suite",
   slug: "",
   blurb: "Spacious suite with ocean views, private balcony and king-size bed.",
@@ -11,10 +11,11 @@ const initialEditRoomValues = {
   stock: 4,
   active: true,
 
-  heroPublicId: "ban-tao/rooms/ocean-breeze-suite/hero",
-  heroUrl:
-    "https://res.cloudinary.com/dhje7hbxd/image/upload/v1730890000/ban-tao/rooms/ocean-breeze-suite/hero.jpg",
-  heroAlt: "Ocean Breeze Suite hero image",
+  heroPublicId: "",
+  heroUrl: "",
+
+  heroAlt: "",
+  images: [],
 };
 
-export default initialEditRoomValues;
+export default initialRoomValues;

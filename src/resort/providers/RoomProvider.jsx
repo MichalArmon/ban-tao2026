@@ -1,12 +1,13 @@
 import axios from "axios";
 import { createContext, useContext, useState, useEffect } from "react";
-import normalizeRoomDetails from "../admin/helpers/normalization/normalizeRoomDetails";
+import normalizeRoomDetails from "../admin/helpers/rooms/normalization/normalizeRoomDetails";
 
 // 1.create context
 const RoomContext = createContext();
 
 // 2.create provider
 export default function RoomProvider({ children }) {
+  const [room, setRoom] = useState(null);
   const [rooms, setRooms] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -54,6 +55,28 @@ export default function RoomProvider({ children }) {
     }
   };
 
+  // ✔️✔️✔️EDIT ROOM ✔️✔️✔️
+
+  const handleSubmitEditRoom = async (id, data) => {
+    const roomDetailsForServer = normalizeRoomDetails(data);
+
+    try {
+      console.log("data for server", roomDetailsForServer);
+      const response = await axios.put(
+        `http://localhost:3000/api/v1/rooms/${id}`,
+        roomDetailsForServer,
+      );
+      console.log(response);
+      getRoomsFromServer();
+    } catch (error) {
+      console.error("General Error Caught:", error);
+      if (error.response) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+      }
+    }
+  };
+
   // ✔️✔️✔️DELETE ROOM ✔️✔️✔️
   const handleDeleteRoom = async (id) => {
     try {
@@ -61,6 +84,20 @@ export default function RoomProvider({ children }) {
         `http://localhost:3000/api/v1/rooms/${id}`,
       );
       await getRoomsFromServer();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // ✔️✔️✔️GET ROOM ✔️✔️✔️
+  const handleGetRoom = async (id) => {
+    try {
+      setRoom(null);
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/rooms/${id}`,
+      );
+      console.log(response);
+      setRoom(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -78,6 +115,10 @@ export default function RoomProvider({ children }) {
         setIsDialogOpen,
         handleSubmitCreateRoom,
         handleDeleteRoom,
+        handleGetRoom,
+        handleSubmitEditRoom,
+        room,
+        setRoom,
       }}
     >
       {children}

@@ -1,0 +1,42 @@
+ <Grid item xs={12} md={6}>
+          <Stack spacing={2} sx={{ maxWidth: 500, mx: "auto" }}>
+            <Stack direction="row" spacing={1}>
+              <Chip label={`${levelLabel} level`} size="small" />
+              <Chip label={durationLabel} size="small" />
+              {item?.intensity && (
+                <Chip label={`${item.intensity} touch`} size="small" />
+              )}
+              {item?.category && <Chip label={item.category} size="small" />}
+              {priceLabel && <Chip label={priceLabel} size="small" />}
+            </Stack>
+
+            <Typography variant="h4" fontWeight={800}>
+              {item?.title || "Treatment"}
+            </Typography>
+
+            {blurb && (
+              <Typography variant="body1" sx={{ color: "text.secondary" }}>
+                {blurb}
+              </Typography>
+            )}
+
+            {bullets.length > 0 && (
+              <Stack component="ul" spacing={1} sx={{ pl: 2, m: 0 }}>
+                {bullets.map((b, i) => (
+                  <Typography key={i} component="li" variant="body2">
+                    {b}
+                  </Typography>
+                ))}
+              </Stack>
+            )}
+
+            <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
+              <Button variant="contained">Book Now</Button>
+
+              {/* 🟣 כפתור שפותח את הלו״ז */}
+              <Button variant="text" onClick={() => onOpenSchedule(item._id)}>
+                See Schedule
+              </Button>
+            </Stack>
+          </Stack>
+        </Grid>

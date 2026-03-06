@@ -17,8 +17,10 @@ export default function useCloudinaryUpload() {
       );
       const { timestamp, folder, signature, apiKey, cloudName } =
         signResponse.data;
+      console.log(signResponse);
 
       const formData = new FormData();
+      formData.append("file", file);
       formData.append("api_key", apiKey);
       formData.append("timestamp", timestamp);
       formData.append("signature", signature);
@@ -32,6 +34,7 @@ export default function useCloudinaryUpload() {
       return {
         url: cloudinaryResponse.data.secure_url,
         publicId: cloudinaryResponse.data.public_id,
+        alt: cloudinaryResponse.data.original_filename || "uploaded image",
       };
     } catch (error) {
       console.error("Upload error:", error);
@@ -41,5 +44,5 @@ export default function useCloudinaryUpload() {
     }
   };
 
-  return { uploadImage };
+  return { uploadImage, isUploading, setIsUploading };
 }

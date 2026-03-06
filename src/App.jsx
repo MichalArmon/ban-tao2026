@@ -9,7 +9,9 @@ import RegisterPage from "./resort/public/pages/RegisterPage";
 import HomePage from "./resort/public/pages/HomePage";
 import LoginPage from "./resort/public/pages/LoginPage";
 import AdminLayout from "./resort/Layout/AdminLayout";
-import RoomsPage from "./resort/admin/pages/RoomsPage";
+import AdminRoomsPage from "./resort/admin/pages/AdminRoomsPage";
+import RoomsPage from "./resort/public/pages/RoomsPage";
+import TreatmentsPage from "./resort/public/pages/TreatmentsPage";
 
 function App() {
   return (
@@ -19,11 +21,13 @@ function App() {
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.register} element={<RegisterPage />} />
         <Route path={ROUTES.login} element={<LoginPage />} />
+        <Route path={ROUTES.rooms} element={<RoomsPage />} />
+        <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>
         <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
-        <Route path={ADMIN_ROUTES.rooms} element={<RoomsPage />} />
+        <Route path={ADMIN_ROUTES.rooms} element={<AdminRoomsPage />} />
       </Route>
     </Routes>
   );

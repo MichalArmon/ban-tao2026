@@ -3,9 +3,8 @@ export const ROUTES = {
   about: "/resort/about",
   register: "/resort/register",
   login: "/resort/login",
-  favorite: "/resort/rooms",
-  MyCards: "/resort/retreats",
-  sandBox: "/resort/workshops",
+  rooms: "/resort/rooms",
+  treatments: "/resort/treatments",
 };
 export const ADMIN_ROUTES = {
   home: "/admin",

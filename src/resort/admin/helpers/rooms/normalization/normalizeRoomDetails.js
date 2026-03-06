@@ -17,7 +17,7 @@ function normalizeRoomDetails(data) {
       url: data.heroUrl,
       alt: data.heroAlt,
     },
-    images: data.images,
+    images: data.images || [],
   };
   return roomDetailsForServer;
 }

@@ -1,5 +1,4 @@
-import CreateRoomForm from "../components/CreateRoomForm";
-import RoomsDataList from "../components/RoomsDataList";
+import RoomsDataList from "../components/rooms/RoomsDataList";
 import {
   Typography,
   Fab,
@@ -11,15 +10,17 @@ import {
 import { Add } from "@mui/icons-material";
 import { useState } from "react";
 import { useRoom } from "../../providers/RoomProvider";
+import CreateRoom from "../components/rooms/CreateRoom";
 
 function CreateRoomPage() {
-  const { isDialogOpen, setIsDialogOpen } = useRoom();
+  const { isDialogOpen, setIsDialogOpen, setRoom } = useRoom();
   return (
     <Box sx={{ position: "relative", minHeight: "80vh" }}>
       <Fab
         sx={{ position: "fixed", bottom: 20, right: 20 }}
         color="primary"
         onClick={() => {
+          setRoom(null);
           setIsDialogOpen(true);
         }}
       >
@@ -35,7 +36,7 @@ function CreateRoomPage() {
       >
         <DialogTitle>Create New Room</DialogTitle>
         <DialogContent dividers>
-          <CreateRoomForm />
+          <CreateRoom />
         </DialogContent>
       </Dialog>
       <RoomsDataList />

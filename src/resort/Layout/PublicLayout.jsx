@@ -18,43 +18,43 @@ const Pages = [
   {
     label: "Home",
     path: ROUTES.home,
-    icon: <Home />,
+    icon: null,
   },
   {
     label: "About",
     path: ROUTES.about,
-    icon: <Person />,
+    icon: null,
   },
   {
-    label: "Cards",
-    path: ROUTES.home,
-    icon: <CardGiftcard />,
+    label: "Rooms",
+    path: ROUTES.rooms,
+    icon: null,
   },
   {
-    label: "My Cards",
-    path: ROUTES.MyCards,
-    icon: <Style />,
+    label: "Treatments",
+    path: ROUTES.treatments,
+    icon: null,
   },
   {
     label: "Favorites",
     path: ROUTES.favorite,
-    icon: <Favorite />,
+    icon: null,
   },
   {
     label: "Sand Box",
     path: ROUTES.sandBox,
-    icon: <School />,
+    icon: null,
   },
   {
     label: "Register",
     path: ROUTES.register,
-    icon: <AppRegistration />,
+    icon: null,
   },
 
   {
     label: "Login",
     path: ROUTES.login,
-    icon: <Login />,
+    icon: null,
   },
 ];
 

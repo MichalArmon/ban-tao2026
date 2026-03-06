@@ -14,19 +14,27 @@ import {
   TableRow,
   Typography,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
 import React, { useEffect, useState } from "react";
 
-import { useRoom } from "../../providers/RoomProvider";
+import { useRoom } from "../../../providers/RoomProvider";
+import EditRoom from "./EditRoom";
+import CreateRoom from "./CreateRoom";
 
 function RoomsDataList() {
-  const { getRoomsFromServer, rooms, handleDeleteRoom } = useRoom();
+  const { getRoomsFromServer, rooms, handleDeleteRoom, handleGetRoom } =
+    useRoom();
   useEffect(() => {
     getRoomsFromServer();
     console.log(rooms);
   }, []);
+  const [roomSelected, setRoomSelected] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   if (rooms === 0) {
     <Typography>NO Rooms to show!</Typography>;
   }
@@ -63,11 +71,11 @@ function RoomsDataList() {
               }}
             >
               <TableCell sx={{ top: 0 }}>Title</TableCell>
+              <TableCell sx={{ top: 0 }}>Slug</TableCell>
               <TableCell sx={{ top: 0 }}>blurB</TableCell>
               <TableCell sx={{ top: 0 }}>Features</TableCell>
               <TableCell sx={{ top: 0 }}>PriceBase</TableCell>
               <TableCell sx={{ top: 0 }}>SizeM2</TableCell>
-              <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
             </TableRow>
@@ -86,12 +94,20 @@ function RoomsDataList() {
             {rooms.map((room, i) => (
               <TableRow key={i}>
                 <TableCell>{room.title}</TableCell>
+                <TableCell>{room.slug}</TableCell>
                 <TableCell>{room.blurb}</TableCell>
                 <TableCell>{room.features}</TableCell>
                 <TableCell>{room.priceBase}</TableCell>
                 <TableCell>{room.sizeM2}</TableCell>
                 <TableCell>
-                  <Edit />
+                  <Button
+                    onClick={() => {
+                      setIsDialogOpen(true);
+                      setRoomSelected(room._id);
+                    }}
+                  >
+                    <Edit />
+                  </Button>
                 </TableCell>
                 <TableCell>
                   <Button
@@ -102,11 +118,31 @@ function RoomsDataList() {
                     <Delete />
                   </Button>
                 </TableCell>
+                <TableCell></TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog
+        open={isDialogOpen}
+        onClose={() => {
+          setIsDialogOpen(false);
+          setRoomSelected(null);
+        }}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Edit Room</DialogTitle>
+        <DialogContent dividers>
+          {roomSelected && (
+            <EditRoom
+              roomSelected={roomSelected}
+              setIsDialogOpen={setIsDialogOpen}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
