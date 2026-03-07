@@ -1,21 +1,20 @@
-function TreatmentsHero() {
+import { Box, Container, Stack, Typography, Button } from "@mui/material";
+
+function RoomsHeroPage() {
   return (
     <Box
       sx={{
         position: "relative",
         width: "100vw",
-        left: "50%",
-        right: "50%",
-        ml: "-50vw",
-        mr: "-50vw",
+
         height: { xs: "70vh", md: "68vh" },
-        overflow: "hidden",
+
         mb: { xs: 4, md: 6 },
       }}
     >
       <Box
         component="img"
-        src="https://images.unsplash.com/photo-1483137140003-ae073b395549?auto=format&fit=crop&q=80&w=1170"
+        src="https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg"
         alt="Treatments hero"
         sx={{
           position: "absolute",
@@ -53,7 +52,7 @@ function TreatmentsHero() {
             variant="overline"
             sx={{ letterSpacing: 2, opacity: 0.9 }}
           >
-            Ban Tao Village &gt; Treatments
+            Ban Tao Village &gt; Rooms
           </Typography>
 
           <Typography
@@ -64,21 +63,21 @@ function TreatmentsHero() {
               textShadow: "0 6px 24px rgba(0,0,0,0.45)",
             }}
           >
-            Discover Our Treatments
+            Your Sanctuary Awaits
           </Typography>
 
           <Typography variant="h6" sx={{ opacity: 0.95 }}>
-            Hands-on care to release tension, restore balance, and soften the
-            body–mind.
+            Thoughtfully designed spaces to rest, recharge, and connect with
+            nature
           </Typography>
 
           <Stack direction="row" spacing={2}>
             <Button variant="contained" size="large">
-              Book a Session
+              BOOK YOUR STAY
             </Button>
 
             <Button variant="outlined" size="large" color="inherit">
-              Contact Us
+              EXPLORE VILLAGE
             </Button>
           </Stack>
         </Stack>
@@ -86,3 +85,5 @@ function TreatmentsHero() {
     </Box>
   );
 }
+
+export default RoomsHeroPage;

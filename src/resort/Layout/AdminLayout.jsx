@@ -30,7 +30,7 @@ function AdminLayout() {
   return (
     <>
       <Header Pages={Pages} />
-      <Main>
+      <Main paddingTop={10}>
         <Outlet />
       </Main>
     </>

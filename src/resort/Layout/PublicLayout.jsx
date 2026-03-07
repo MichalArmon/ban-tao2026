@@ -1,18 +1,9 @@
 import { ROUTES } from "../../routes/routerDict";
 import Header from "./header/Header";
 
-import {
-  CardGiftcard,
-  AppRegistration,
-  Favorite,
-  Home,
-  Person,
-  School,
-  Style,
-  Login,
-} from "@mui/icons-material";
 import Main from "./main/Main";
 import { Outlet } from "react-router-dom";
+import UserExtraNav from "./header/UserExtraNav";
 
 const Pages = [
   {
@@ -61,6 +52,7 @@ const Pages = [
 function PublicLayout() {
   return (
     <>
+      <UserExtraNav />
       <Header Pages={Pages} />
       <Main>
         <Outlet />

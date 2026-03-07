@@ -17,7 +17,7 @@ export default function Header({ Pages }, props) {
         color: "text.primary",
         justifyContent: "center",
         height: "var(--nav-h)",
-        top: props.offsetTop || 0,
+        top: props.offsetTop || 35,
       })}
     >
       <Toolbar

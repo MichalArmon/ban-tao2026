@@ -9,16 +9,19 @@ import RoomProvider from "./resort/providers/RoomProvider.jsx";
 
 import theme from "./theme.js";
 import TreatmentProvider from "./resort/providers/TreatmentProvider .jsx";
+import UserProvider from "./resort/providers/UserProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <TreatmentProvider>
-          <RoomProvider>
-            <App />
-          </RoomProvider>
-        </TreatmentProvider>
+        <UserProvider>
+          <TreatmentProvider>
+            <RoomProvider>
+              <App />
+            </RoomProvider>
+          </TreatmentProvider>
+        </UserProvider>
       </ThemeProvider>
     </StrictMode>
     ,

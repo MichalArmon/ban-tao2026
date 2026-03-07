@@ -1,13 +1,12 @@
-function TreatmentsHero() {
+import { Box, Container, Stack, Typography, Button } from "@mui/material";
+
+function RoomsHeroPage() {
   return (
     <Box
       sx={{
         position: "relative",
         width: "100vw",
-        left: "50%",
-        right: "50%",
-        ml: "-50vw",
-        mr: "-50vw",
+
         height: { xs: "70vh", md: "68vh" },
         overflow: "hidden",
         mb: { xs: 4, md: 6 },
@@ -86,3 +85,5 @@ function TreatmentsHero() {
     </Box>
   );
 }
+
+export default RoomsHeroPage;
