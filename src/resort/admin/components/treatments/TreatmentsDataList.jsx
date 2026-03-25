@@ -77,6 +77,7 @@ function TreatmentsDataList() {
               <TableCell sx={{ top: 0 }}>level</TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
+              <TableCell sx={{ top: 0 }}></TableCell>
             </TableRow>
           </TableHead>
 

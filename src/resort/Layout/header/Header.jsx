@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { ROUTES } from "../../../routes/routerDict";
 
-export default function Header({ Pages }, props) {
+export default function Header({ Pages, top = 0, ...props }) {
   const [selected, setSelected] = useState("Home");
 
   return (
@@ -17,7 +17,7 @@ export default function Header({ Pages }, props) {
         color: "text.primary",
         justifyContent: "center",
         height: "var(--nav-h)",
-        top: props.offsetTop || 35,
+        top: top,
       })}
     >
       <Toolbar

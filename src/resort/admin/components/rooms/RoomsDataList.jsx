@@ -35,7 +35,7 @@ function RoomsDataList() {
   }, []);
   const [roomSelected, setRoomSelected] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  if (rooms === 0) {
+  if (rooms.length === 0) {
     <Typography>NO Rooms to show!</Typography>;
   }
   return (
@@ -76,6 +76,7 @@ function RoomsDataList() {
               <TableCell sx={{ top: 0 }}>Features</TableCell>
               <TableCell sx={{ top: 0 }}>PriceBase</TableCell>
               <TableCell sx={{ top: 0 }}>SizeM2</TableCell>
+              <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
             </TableRow>

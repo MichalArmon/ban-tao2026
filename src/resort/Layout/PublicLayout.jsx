@@ -49,11 +49,11 @@ const Pages = [
   },
 ];
 
-function PublicLayout() {
+function PublicLayout(props) {
   return (
     <>
       <UserExtraNav />
-      <Header Pages={Pages} />
+      <Header Pages={Pages} top={props.offsetTop || 35} />
       <Main>
         <Outlet />
       </Main>
