@@ -1,20 +1,22 @@
 import { useEffect } from "react";
-import { useRoom } from "../../../providers/RoomProvider";
-import initialEditRoomValues from "../../helpers/rooms/initialValues/initialEditRoomValues";
-import RoomForm from "./RoomForm";
 
-function EditRoom({ roomSelected, setIsDialogOpen }) {
-  const { handleGetRoom, handleSubmitEditRoom, room } = useRoom();
+import { useTreatment } from "../../../providers/TreatmentProvider";
+import TreatmentForm from "./TreatmentForm";
+import initialEditTreatmentValues from "../../helpers/treatments/initialValues/initialEditTreatmentValues ";
+
+function EditTreatment({ TreatmentSelected, setIsDialogOpen }) {
+  const { handleGetTreatment, handleSubmitEditTreatment, treatment } =
+    useTreatment();
   useEffect(() => {
-    if (roomSelected) {
-      handleGetRoom(roomSelected);
+    if (TreatmentSelected) {
+      handleGetTreatment(TreatmentSelected);
     }
-  }, [roomSelected]);
-  if (!room) return <>Loading...</>;
+  }, [TreatmentSelected]);
+  if (!treatment) return <>Loading...</>;
 
   const handleSaveAndCloseEdit = async (formData) => {
     try {
-      await handleSubmitEditRoom(roomSelected, formData);
+      await handleSubmitEditTreatment(TreatmentSelected, formData);
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error saving room:", error);
@@ -23,15 +25,15 @@ function EditRoom({ roomSelected, setIsDialogOpen }) {
 
   return (
     <>
-      <RoomForm
-        initialRoomValues={initialEditRoomValues(room)}
+      <TreatmentForm
+        initialTreatmentValues={initialEditTreatmentValues(treatment)}
         handleSubmitForm={handleSaveAndCloseEdit}
       />
     </>
   );
 }
 
-export default EditRoom;
+export default EditTreatment;
 
 // ==========================================
 // הנה פונקציית המתאם שלנו כתובה כפונקציה רגילה!

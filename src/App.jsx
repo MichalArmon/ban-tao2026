@@ -12,7 +12,7 @@ import AdminLayout from "./resort/Layout/AdminLayout";
 import AdminRoomsPage from "./resort/admin/pages/AdminRoomsPage";
 import RoomsPage from "./resort/public/pages/RoomsPage";
 import TreatmentsPage from "./resort/public/pages/TreatmentsPage";
-
+import AdminTreatmentsPage from "./resort/admin/pages/AdminTreatmentsPage";
 function App() {
   return (
     <Routes>
@@ -28,6 +28,10 @@ function App() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
         <Route path={ADMIN_ROUTES.rooms} element={<AdminRoomsPage />} />
+        <Route
+          path={ADMIN_ROUTES.treatments}
+          element={<AdminTreatmentsPage />}
+        />
       </Route>
     </Routes>
   );

@@ -1,8 +1,9 @@
 import axios from "axios";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import normalizeRoomDetails from "../admin/helpers/rooms/normalization/normalizeRoomDetails";
-
-// 1.create context
+import { useSnackBar } from "./SnackBarProvider";
+const URL = "http://localhost:8000";
+// const URL = "http://localhost:3000/api/v1";
 const RoomContext = createContext();
 
 // 2.create provider
@@ -12,9 +13,11 @@ export default function RoomProvider({ children }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [filteredRooms, setFilteredRooms] = useState([]);
+
+  const { setSnack } = useSnackBar();
   // ✔️✔️✔️GET ROOMS ✔️✔️✔️
   const getRoomsFromServer = async () => {
-    const response = await axios.get("http://localhost:3000/api/v1/rooms");
+    const response = await axios.get(`${URL}/rooms`);
     const roomData = response.data;
     setRooms(roomData);
     setFilteredRooms(roomData);
@@ -38,19 +41,15 @@ export default function RoomProvider({ children }) {
     const roomDetailsForServer = normalizeRoomDetails(data);
 
     try {
-      console.log("data for server", roomDetailsForServer);
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/rooms",
-        roomDetailsForServer,
-      );
+      const response = await axios.post(`${URL}/rooms`, roomDetailsForServer);
       console.log(response);
       getRoomsFromServer();
       setIsDialogOpen(false);
+      setSnack("success", "Data saved successfully!");
     } catch (error) {
-      console.error("General Error Caught:", error);
+      setSnack("error", error.response.data);
       if (error.response) {
         console.log(error.response.data);
-        alert(error.response.data.message);
       }
     }
   };
@@ -63,7 +62,7 @@ export default function RoomProvider({ children }) {
     try {
       console.log("data for server", roomDetailsForServer);
       const response = await axios.put(
-        `http://localhost:3000/api/v1/rooms/${id}`,
+        `${URL}/rooms/${id}`,
         roomDetailsForServer,
       );
       console.log(response);
@@ -80,9 +79,7 @@ export default function RoomProvider({ children }) {
   // ✔️✔️✔️DELETE ROOM ✔️✔️✔️
   const handleDeleteRoom = async (id) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:3000/api/v1/rooms/${id}`,
-      );
+      const response = await axios.delete(`${URL}/api/v1/rooms/${id}`);
       await getRoomsFromServer();
     } catch (error) {
       console.log(error);
@@ -93,9 +90,7 @@ export default function RoomProvider({ children }) {
   const handleGetRoom = async (id) => {
     try {
       setRoom(null);
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/rooms/${id}`,
-      );
+      const response = await axios.get(`${URL}/api/v1/rooms/${id}`);
       console.log(response);
       setRoom(response.data);
     } catch (error) {

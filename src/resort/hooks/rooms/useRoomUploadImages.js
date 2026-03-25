@@ -1,11 +1,11 @@
 import useCloudinaryUpload from "../useCloudinaryUpload";
 
-export default function useRoomUploadImages(setFormDetails) {
+export default function useRoomUploadImages(setFormDetails, type) {
   const { uploadImage } = useCloudinaryUpload();
   const handleUploadGalleryImage = async (event, roomSlug) => {
     const file = event.target.files[0];
     if (!file) return;
-    const uploadedData = await uploadImage(file, `ban-tao/rooms/${roomSlug}`);
+    const uploadedData = await uploadImage(file, `ban-tao/${type}/${roomSlug}`);
     if (uploadedData) {
       setFormDetails((prev) => ({
         ...prev,

@@ -3,21 +3,24 @@ export default function initialEditRoomValues(room) {
     title: room.title,
     slug: room.slug,
     blurb: room.blurb,
+    description: room.description,
+    bullets: room.bullets,
+    tags: room.tags,
+    price: room.price,
+    currency: room.currency,
+    heroPublicId: room.hero.publicId,
+    heroUrl: room.hero.url,
+    isActive: room.isActive,
+
+    heroAlt: room.hero.alt,
+    gallery: room.gallery || [],
 
     features: room.features,
     maxGuests: room.maxGuests,
     sizeM2: room.sizeM2,
     bedType: room.bedType,
-    priceBase: room.priceBase,
-    currency: room.currency,
+
     stock: room.stock,
-    active: room.active,
-
-    heroPublicId: room.hero.publicId,
-    heroUrl: room.hero.url,
-
-    heroAlt: room.hero.alt,
-    images: room.images || [],
   };
   return initialEditRoomValuesOBG;
 }

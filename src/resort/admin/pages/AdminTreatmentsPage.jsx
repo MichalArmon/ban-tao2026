@@ -1,4 +1,7 @@
-import RoomsDataList from "../components/rooms/RoomsDataList";
+import { Add } from "@mui/icons-material";
+import { useTreatment } from "../../providers/TreatmentProvider";
+import CreateTreatment from "../components/treatments/CreateTreatment";
+import TreatmentsDataList from "../components/treatments/TreatmentsDataList";
 import {
   Typography,
   Fab,
@@ -7,20 +10,16 @@ import {
   DialogTitle,
   Box,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { useState } from "react";
-import { useRoom } from "../../providers/RoomProvider";
-import CreateRoom from "../components/rooms/CreateRoom";
 
-function AdminRoomsPage() {
-  const { isDialogOpen, setIsDialogOpen, setRoom } = useRoom();
+function AdminTreatmentsPage() {
+  const { isDialogOpen, setIsDialogOpen, setTreatment } = useTreatment();
   return (
     <Box sx={{ position: "relative", minHeight: "80vh" }}>
       <Fab
         sx={{ position: "fixed", bottom: 20, right: 20 }}
         color="primary"
         onClick={() => {
-          setRoom(null);
+          setTreatment(null);
           setIsDialogOpen(true);
         }}
       >
@@ -32,16 +31,16 @@ function AdminRoomsPage() {
           setIsDialogOpen(false);
         }}
         fullWidth
-        maxWidth="sm"
+        maxWidth="lg"
       >
-        <DialogTitle>Create New Room</DialogTitle>
+        <DialogTitle>Create New Treatment</DialogTitle>
         <DialogContent dividers>
-          <CreateRoom />
+          <CreateTreatment />
         </DialogContent>
       </Dialog>
-      <RoomsDataList />
+      <TreatmentsDataList />
     </Box>
   );
 }
 
-export default AdminRoomsPage;
+export default AdminTreatmentsPage;

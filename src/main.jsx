@@ -8,20 +8,24 @@ import { ThemeProvider } from "@emotion/react";
 import RoomProvider from "./resort/providers/RoomProvider.jsx";
 
 import theme from "./theme.js";
-import TreatmentProvider from "./resort/providers/TreatmentProvider .jsx";
+import TreatmentProvider from "./resort/providers/TreatmentProvider.jsx";
 import UserProvider from "./resort/providers/UserProvider.jsx";
+import SnackBarProvider from "./resort/providers/SnackBarProvider.jsx";
+SnackBarProvider;
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <UserProvider>
-          <TreatmentProvider>
-            <RoomProvider>
-              <App />
-            </RoomProvider>
-          </TreatmentProvider>
-        </UserProvider>
+        <SnackBarProvider>
+          <UserProvider>
+            <TreatmentProvider>
+              <RoomProvider>
+                <App />
+              </RoomProvider>
+            </TreatmentProvider>
+          </UserProvider>
+        </SnackBarProvider>
       </ThemeProvider>
     </StrictMode>
     ,

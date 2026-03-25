@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
 import { useEffect } from "react";
-import { useTreatment } from "../../../providers/TreatmentProvider ";
+import { useTreatment } from "../../../providers/TreatmentProvider";
 import TreatmentListSection from "./TreatmentListSection ";
 
 function TreatmentList() {

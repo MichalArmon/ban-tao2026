@@ -19,6 +19,10 @@ const Pages = [
     label: "rooms",
     path: ADMIN_ROUTES.rooms,
   },
+  {
+    label: "treatments",
+    path: ADMIN_ROUTES.treatments,
+  },
 
   {
     label: "retreats",

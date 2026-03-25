@@ -1,5 +1,4 @@
 import MyTextField from "../../../../Form/MyTextField";
-
 import {
   Grid,
   Button,
@@ -8,28 +7,37 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-
-import roomSchema from "../../models/roomSchema";
+import { useTreatment } from "../../../providers/TreatmentProvider";
 import useForm from "../../../hooks/useForm";
-import useCloudinaryUpload from "../../../hooks/useCloudinaryUpload";
-import { useRoom } from "../../../providers/RoomProvider";
+import TreatmentSchema from "../../models/treatmentSchema";
 import useRoomUploadImages from "../../../hooks/rooms/useRoomUploadImages";
+import useCloudinaryUpload from "../../../hooks/useCloudinaryUpload";
 import { Close } from "@mui/icons-material";
+import TagsInput from "../../../../Form/components/TagsInput";
 
-function RoomForm({ handleSubmitForm, initialRoomValues }) {
-  const { room } = useRoom();
+function TreatmentForm({ initialTreatmentValues, handleSubmitForm }) {
+  const { treatment } = useTreatment();
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
-    useForm(initialRoomValues, roomSchema, handleSubmitForm);
+    useForm(initialTreatmentValues, TreatmentSchema, handleSubmitForm);
+
   const { isUploading } = useCloudinaryUpload();
   const {
     handleUploadHeroImage,
     handleUploadGalleryImage,
     handleDeleteImageFromGallery,
-  } = useRoomUploadImages(setFormDetails, "rooms");
+  } = useRoomUploadImages(setFormDetails, "treatments");
+
+  if (!formDetails) {
+    return (
+      <Typography sx={{ p: 4, textAlign: "center" }}>
+        Loading treatment data...
+      </Typography>
+    );
+  }
 
   return (
     <>
-      <Grid container maxWidth="sm" spacing={1} sx={{ bgcolor: "#fff", p: 2 }}>
+      <Grid container maxWidth="xl" spacing={1} sx={{ bgcolor: "#fff", p: 2 }}>
         <Grid container size={12} sx={{ display: "flex" }}>
           <Grid size={{ md: 6, xs: 12 }}>
             <MyTextField
@@ -54,8 +62,6 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
               required
             />
           </Grid>
-        </Grid>
-        <Grid container size={12}>
           <Grid size={{ md: 12, xs: 12 }}>
             <MyTextField
               label="blurb"
@@ -90,79 +96,27 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
             />
           </Grid>
           <Grid size={{ md: 12, xs: 12 }}>
-            <MyTextField
-              label="tags"
-              name="tags"
-              onChange={handleChange}
-              error={Boolean(errors.tags)}
-              helperText={errors.tags}
+            <TagsInput
+              label="Tags"
               value={formDetails.tags}
-              required
+              onChange={(newTags) => {
+                setFormDetails({ ...formDetails, tags: newTags });
+              }}
+              name="tags"
             />
           </Grid>
-        </Grid>
-        <Grid container size={12}>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="features"
-              name="features"
-              onChange={handleChange}
-              error={Boolean(errors.features)}
-              value={formDetails.features}
-              helperText={errors.features}
-              required
-            />
-          </Grid>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="maxGuests"
-              name="maxGuests"
-              onChange={handleChange}
-              value={formDetails.maxGuests}
-              required
-              type="number"
-              error={Boolean(errors.maxGuests)}
-              helperText={errors.maxGuests}
-              // sx={{ "& .MuiOutlinedInput-root": { borderRadius: 5 } }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container size={12}>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="sizeM2"
-              onChange={handleChange}
-              name="sizeM2"
-              error={Boolean(errors.sizeM2)}
-              helperText={errors.sizeM2}
-              value={formDetails.sizeM2}
-              type="number"
-            />
-          </Grid>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="bedType"
-              name="bedType"
-              onChange={handleChange}
-              error={Boolean(errors.bedType)}
-              helperText={errors.bedType}
-              value={formDetails.bedType}
-            />
-          </Grid>
-        </Grid>
-        <Grid container size={12}>
-          <Grid size={{ md: 6, xs: 12 }}>
+          <Grid size={{ md: 4, xs: 12 }}>
             <MyTextField
               label="price"
-              onChange={handleChange}
               name="price"
+              onChange={handleChange}
               error={Boolean(errors.price)}
               helperText={errors.price}
               value={formDetails.price}
-              type="number"
+              required
             />
           </Grid>
-          <Grid size={{ md: 6, xs: 12 }}>
+          <Grid size={{ md: 4, xs: 12 }}>
             <MyTextField
               label="currency"
               name="currency"
@@ -170,30 +124,92 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
               error={Boolean(errors.currency)}
               helperText={errors.currency}
               value={formDetails.currency}
+              required
             />
           </Grid>
         </Grid>
-        <Grid container size={12}>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <MyTextField
-              label="stock"
-              onChange={handleChange}
-              name="stock"
-              error={Boolean(errors.stock)}
-              helperText={errors.stock}
-              value={formDetails.stock}
-              type="number"
-            />
-          </Grid>
-          <Grid size={{ md: 6, xs: 12 }}>
-            <FormControlLabel
-              control={
-                <Switch checked={formDetails.active} onChange={handleChange} />
-              }
-              label="Active"
-              name="iaActive"
-            />
-          </Grid>
+
+        <Grid size={{ md: 4, xs: 12 }}>
+          <MyTextField
+            label="therapist"
+            name="therapist"
+            onChange={handleChange}
+            error={Boolean(errors.therapist)}
+            value={formDetails.therapist}
+            helperText={errors.therapist}
+            required
+          />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <MyTextField
+            label="duration"
+            name="duration"
+            onChange={handleChange}
+            value={formDetails.duration}
+            required
+            type="number"
+            error={Boolean(errors.duration)}
+            helperText={errors.duration}
+          />
+        </Grid>
+
+        <Grid size={{ md: 4, xs: 12 }}>
+          <MyTextField
+            label="level"
+            onChange={handleChange}
+            name="level"
+            error={Boolean(errors.level)}
+            helperText={errors.level}
+            value={formDetails.level}
+          />
+        </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
+          <MyTextField
+            label="contraindications"
+            name="contraindications"
+            onChange={handleChange}
+            error={Boolean(errors.contraindications)}
+            helperText={errors.contraindications}
+            value={formDetails.contraindications}
+          />
+        </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
+          <MyTextField
+            label="intensity"
+            name="intensity"
+            onChange={handleChange}
+            error={Boolean(errors.intensity)}
+            helperText={errors.intensity}
+            value={formDetails.intensity}
+          />
+        </Grid>
+
+        <Grid size={{ md: 4, xs: 12 }}>
+          <FormControlLabel
+            control={
+              <Switch checked={formDetails.isActive} onChange={handleChange} />
+            }
+            label="Active"
+            name="isActive"
+          />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <FormControlLabel
+            control={
+              <Switch checked={formDetails.isPrivate} onChange={handleChange} />
+            }
+            label="Private"
+            name="isPrivate"
+          />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <FormControlLabel
+            control={
+              <Switch checked={formDetails.isClosed} onChange={handleChange} />
+            }
+            label="Closed"
+            name="isClosed"
+          />
         </Grid>
 
         {/* ✔️✔️✔️ HERO ✔️✔️✔️ */}
@@ -334,7 +350,7 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
             onClick={handleSubmit}
             fullWidth
           >
-            {!room ? " Create new room" : "Edit room"}
+            {!treatment ? " Create new treatment" : "Edit treatment"}
           </Button>
         </Box>
       </Grid>
@@ -342,4 +358,4 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
   );
 }
 
-export default RoomForm;
+export default TreatmentForm;

@@ -14,4 +14,5 @@ export const ADMIN_ROUTES = {
   retreats: "/admin/retreats",
   createRetreats: "/admin/retreats/new",
   updateRetreat: "/admin/retreats/edit/:id",
+  treatments: "/admin/treatments",
 };
