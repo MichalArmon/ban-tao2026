@@ -1,11 +1,11 @@
-import useCloudinaryUpload from "../useCloudinaryUpload";
+import useCloudinaryUpload from "./useCloudinaryUpload";
 
-export default function useRoomUploadImages(setFormDetails, type) {
+export default function useUploadImages(setFormDetails, type) {
   const { uploadImage } = useCloudinaryUpload();
-  const handleUploadGalleryImage = async (event, roomSlug) => {
+  const handleUploadGalleryImage = async (event, slug) => {
     const file = event.target.files[0];
     if (!file) return;
-    const uploadedData = await uploadImage(file, `ban-tao/${type}/${roomSlug}`);
+    const uploadedData = await uploadImage(file, `ban-tao/${type}/${slug}`);
     if (uploadedData) {
       setFormDetails((prev) => ({
         ...prev,
@@ -20,14 +20,14 @@ export default function useRoomUploadImages(setFormDetails, type) {
       }));
     }
   };
-  const handleUploadHeroImage = async (event, roomSlug) => {
+  const handleUploadHeroImage = async (event, slug) => {
     const file = event.target.files[0];
     if (!file) return;
 
     // מעלים את התמונה ומקבלים חזרה נתונים מ-Cloudinary
     const uploadedData = await uploadImage(
       file,
-      `ban-tao/rooms/${roomSlug}/hero`,
+      `ban-tao/${type}/${slug}/hero`,
     );
 
     if (uploadedData) {

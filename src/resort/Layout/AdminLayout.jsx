@@ -23,6 +23,10 @@ const Pages = [
     label: "treatments",
     path: ADMIN_ROUTES.treatments,
   },
+  {
+    label: "workshops",
+    path: ADMIN_ROUTES.workshops,
+  },
 
   {
     label: "retreats",

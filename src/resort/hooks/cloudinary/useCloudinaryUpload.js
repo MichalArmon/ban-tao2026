@@ -12,7 +12,7 @@ export default function useCloudinaryUpload() {
     setUploadError(null);
     try {
       const signResponse = await axios.post(
-        "http://localhost:3000/api/v1/uploads/sign-cloudinary",
+        "http://localhost:8000/uploads/sign-cloudinary",
         { folder: folderName },
       );
       const { timestamp, folder, signature, apiKey, cloudName } =

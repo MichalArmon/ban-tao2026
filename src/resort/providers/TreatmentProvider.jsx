@@ -42,7 +42,7 @@ export default function TreatmentProvider({ children }) {
     try {
       console.log("data for server", TreatmentDetailsForServer);
       const response = await axios.post(
-        `${URL}/api/v1/treatments`,
+        `${URL}/treatments`,
         TreatmentDetailsForServer,
       );
       console.log(response);

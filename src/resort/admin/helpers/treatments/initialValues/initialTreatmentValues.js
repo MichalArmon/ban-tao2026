@@ -40,7 +40,7 @@ const initialTreatmentValues = {
   isPrivate: true,
   isClosed: false,
   intensity: "medium",
-  contraindications: "xfsfsf",
+  contraindications: [],
 };
 
 export default initialTreatmentValues;

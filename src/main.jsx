@@ -11,7 +11,7 @@ import theme from "./theme.js";
 import TreatmentProvider from "./resort/providers/TreatmentProvider.jsx";
 import UserProvider from "./resort/providers/UserProvider.jsx";
 import SnackBarProvider from "./resort/providers/SnackBarProvider.jsx";
-SnackBarProvider;
+import WorkshopProvider from "./resort/providers/WorkshopProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -19,11 +19,13 @@ createRoot(document.getElementById("root")).render(
       <ThemeProvider theme={theme}>
         <SnackBarProvider>
           <UserProvider>
-            <TreatmentProvider>
-              <RoomProvider>
-                <App />
-              </RoomProvider>
-            </TreatmentProvider>
+            <WorkshopProvider>
+              <TreatmentProvider>
+                <RoomProvider>
+                  <App />
+                </RoomProvider>
+              </TreatmentProvider>
+            </WorkshopProvider>
           </UserProvider>
         </SnackBarProvider>
       </ThemeProvider>

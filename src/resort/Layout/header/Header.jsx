@@ -2,8 +2,6 @@ import { AppBar, Toolbar, Box, Tabs, Tab } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { ROUTES } from "../../../routes/routerDict";
-
 export default function Header({ Pages, top = 0, ...props }) {
   const [selected, setSelected] = useState("Home");
 

@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const treatmentSchema = {
+const workshopSchema = {
   title: Joi.string().required().min(2).messages({
     "string.min": "Treatment title must be at least 2 characters long",
     "any.required": "Title is required",
@@ -47,8 +47,8 @@ const treatmentSchema = {
   gallery: Joi.array()
     .items(
       Joi.object({
-        publicId: Joi.string().required(),
-        url: Joi.string().uri().required().messages({
+        publicId: Joi.string(),
+        url: Joi.string().uri().messages({
           "string.uri": "Please enter a valid URL for the gallery image",
         }),
         alt: Joi.string().allow("").optional(),
@@ -57,7 +57,7 @@ const treatmentSchema = {
     .optional(),
   isActive: Joi.boolean().required(),
 
-  therapist: Joi.string().allow("").optional(),
+  instructor: Joi.string().allow("").optional(),
   duration: Joi.number().required().min(1).messages({
     "number.min": "Duration must be at least 1 minute",
     "any.required": "Duration is required",
@@ -68,8 +68,7 @@ const treatmentSchema = {
   isPrivate: Joi.boolean().required(),
   isClosed: Joi.boolean().required(),
 
-  intensity: Joi.string().allow("").optional(),
   contraindications: Joi.array().items(Joi.string()).optional(),
 };
 
-export default treatmentSchema;
+export default workshopSchema;

@@ -10,8 +10,8 @@ import {
 import { useTreatment } from "../../../providers/TreatmentProvider";
 import useForm from "../../../hooks/useForm";
 import TreatmentSchema from "../../models/treatmentSchema";
-import useRoomUploadImages from "../../../hooks/rooms/useRoomUploadImages";
-import useCloudinaryUpload from "../../../hooks/useCloudinaryUpload";
+import useUploadImages from "../../../hooks/cloudinary/useUploadImages";
+import useCloudinaryUpload from "../../../hooks/cloudinary/useCloudinaryUpload";
 import { Close } from "@mui/icons-material";
 import TagsInput from "../../../../Form/components/TagsInput";
 
@@ -25,7 +25,7 @@ function TreatmentForm({ initialTreatmentValues, handleSubmitForm }) {
     handleUploadHeroImage,
     handleUploadGalleryImage,
     handleDeleteImageFromGallery,
-  } = useRoomUploadImages(setFormDetails, "treatments");
+  } = useUploadImages(setFormDetails, "treatments");
 
   if (!formDetails) {
     return (

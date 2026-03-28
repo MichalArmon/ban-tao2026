@@ -1,5 +1,5 @@
 function normalizeTreatmentDetails(data) {
-  const TreatmentDetailsForServer = {
+  const treatmentDetailsForServer = {
     title: data.title,
     slug: data.slug,
     category: data.category,
@@ -20,9 +20,9 @@ function normalizeTreatmentDetails(data) {
       url: data.heroUrl,
       alt: data.heroAlt,
     },
-    images: data.images || [],
+    gallery: data.gallery || [],
   };
-  return TreatmentDetailsForServer;
+  return treatmentDetailsForServer;
 }
 
 export default normalizeTreatmentDetails;
