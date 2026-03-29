@@ -1,0 +1,97 @@
+import {
+  Box,
+  IconButton,
+  Avatar,
+  Popover,
+  Typography,
+  Button,
+  Divider,
+  Stack,
+} from "@mui/material";
+import { useUser } from "../../providers/UserProvider";
+import getZodiacSign from "../../utils/zodiacSigns/getZodiacSign";
+import { LogoutRounded } from "@mui/icons-material";
+
+function UserMenu({ anchorEl, handleClose }) {
+  const { user, handleLogOutUser } = useUser();
+  const open = Boolean(anchorEl);
+  if (!user) return null;
+
+  return (
+    <Popover
+      open={open}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      PaperProps={{
+        sx: {
+          bgcolor: "background.default",
+          width: 280,
+          borderRadius: 4, // פינות מעוגלות כמו של גוגל
+          mt: 1.5,
+          boxShadow: "0px 8px 24px rgba(0,0,0,0.12)",
+          p: 2,
+        },
+      }}
+    >
+      <Stack spacing={2} alignItems="center">
+        {/* כתובת המייל מעל הכל */}
+        {/* <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontWeight: 500 }}
+        >
+          {user.email}
+        </Typography> */}
+
+        {/* האווטאר הגדול (המזל האסטרולוגי) */}
+        <Avatar
+          src={`/zodiac_signs/${getZodiacSign(user.birthDate)}.svg`}
+          sx={{ width: 80, height: 80, bgcolor: "#f5f5f5", p: 1 }}
+        />
+
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Hi, {user.firstName}!
+        </Typography>
+
+        {/* כפתור ניהול חשבון */}
+        <Button
+          variant="outlined"
+          sx={{
+            borderRadius: 8,
+            textTransform: "none",
+            px: 3,
+            borderColor: "#ddd",
+            color: "text.primary",
+          }}
+        >
+          Manage your Account
+        </Button>
+
+        <Divider sx={{ width: "100%", my: 1 }} />
+
+        {/* כפתור התנתקות */}
+        <Button
+          fullWidth
+          startIcon={<LogoutRounded />}
+          onClick={() => {
+            handleLogOutUser();
+            handleClose();
+          }}
+          sx={{
+            borderRadius: 8,
+            color: "error.main",
+            textTransform: "none",
+            py: 1.5,
+            "&:hover": { bgcolor: "#fff5f5" },
+          }}
+        >
+          Sign out
+        </Button>
+      </Stack>
+    </Popover>
+  );
+}
+
+export default UserMenu;

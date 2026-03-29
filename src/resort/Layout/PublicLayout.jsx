@@ -26,16 +26,6 @@ const Pages = [
     path: ROUTES.treatments,
     icon: null,
   },
-  {
-    label: "Favorites",
-    path: ROUTES.favorite,
-    icon: null,
-  },
-  {
-    label: "Sand Box",
-    path: ROUTES.sandBox,
-    icon: null,
-  },
 ];
 
 function PublicLayout(props) {

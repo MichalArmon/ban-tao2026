@@ -1,14 +1,30 @@
+import { Button, Box, Typography, Dialog, DialogContent } from "@mui/material";
 import { useUser } from "../../../providers/UserProvider";
 import initialRegisterValues from "../../helpers/register/initialValues/initialRegisterValues";
 import RegisterForm from "./RegisterForm";
+import CreateLogin from "../login/CreateLogin";
 
 function CreateRegister() {
-  const { handleSubmitCreateUser } = useUser();
+  const { handleSubmitCreateUser, OpenLogin, setOpenLogin, setOpenSignup } =
+    useUser();
   return (
-    <RegisterForm
-      initialRegisterValues={initialRegisterValues}
-      handleSubmitForm={handleSubmitCreateUser}
-    />
+    <>
+      <RegisterForm
+        initialRegisterValues={initialRegisterValues}
+        handleSubmitForm={handleSubmitCreateUser}
+      />
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <Typography>already have an account?</Typography>
+        <Button
+          onClick={() => {
+            setOpenSignup(false);
+            setOpenLogin(true);
+          }}
+        >
+          login
+        </Button>
+      </Box>
+    </>
   );
 }
 

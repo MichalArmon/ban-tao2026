@@ -1,7 +1,7 @@
 function normalizeLoginDetails(data) {
   const loginDetailsForServer = {
     email: data.email,
-    password: data.email,
+    password: data.password,
   };
 
   return loginDetailsForServer;

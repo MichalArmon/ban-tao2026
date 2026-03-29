@@ -29,76 +29,76 @@ function RegisterForm({ handleSubmitForm, initialRegisterValues }) {
         spacing={1}
         sx={{ bgcolor: "rgba(255, 255, 255, 0)", p: 2 }}
       >
-        <Grid container size={12} sx={{ display: "flex" }}>
-          <Grid size={{ md: 12, xs: 12 }}>
-            <MyTextField
-              label="first name"
-              name="firstName"
-              onChange={handleChange}
-              error={Boolean(errors.firstName)}
-              helperText={errors.firstName}
-              value={formDetails.firstName || ""}
-              required
-            />
-          </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
+          <MyTextField
+            label="first name"
+            name="firstName"
+            onChange={handleChange}
+            error={Boolean(errors.firstName)}
+            helperText={errors.firstName}
+            value={formDetails.firstName || ""}
+            required
+          />
+        </Grid>
 
-          <Grid size={{ md: 12, xs: 12 }}>
-            <MyTextField
-              label="last name"
-              name="lastName"
-              onChange={handleChange}
-              error={Boolean(errors.slug)}
-              helperText={errors.slug}
-              value={formDetails.slug}
-              required
+        <Grid size={{ md: 6, xs: 12 }}>
+          <MyTextField
+            label="last name"
+            name="lastName"
+            onChange={handleChange}
+            error={Boolean(errors.slug)}
+            helperText={errors.slug}
+            value={formDetails.slug}
+            required
+          />
+        </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
+          <MyTextField
+            label="email"
+            name="email"
+            onChange={handleChange}
+            error={Boolean(errors.email)}
+            helperText={errors.email}
+            value={formDetails.email}
+            required
+          />
+        </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
+          <MyTextField
+            label="password"
+            name="password"
+            onChange={handleChange}
+            error={Boolean(errors.password)}
+            helperText={errors.password}
+            value={formDetails.password}
+            required
+          />
+        </Grid>
+        <Grid size={{ md: 12, xs: 12 }}>
+          <MyTextField
+            label="phone"
+            name="phone"
+            onChange={handleChange}
+            error={Boolean(errors.phone)}
+            helperText={errors.phone}
+            value={formDetails.phone}
+            required
+          />
+        </Grid>
+        <Grid size={{ md: 12, xs: 12 }}>
+          <Box style={{ marginTop: "20px", marginBottom: "20px" }} fullWidth>
+            <BirthDatePicker
+              value={formDetails.birthDate}
+              onChange={(newValue) => {
+                const joiFriendlyDate = newValue ? newValue.toDate() : null;
+                setFormDetails((prev) => ({
+                  ...prev,
+                  birthDate: joiFriendlyDate,
+                }));
+              }}
             />
-          </Grid>
+          </Box>
           <Grid size={{ md: 12, xs: 12 }}>
-            <MyTextField
-              label="email"
-              name="email"
-              onChange={handleChange}
-              error={Boolean(errors.email)}
-              helperText={errors.email}
-              value={formDetails.email}
-              required
-            />
-          </Grid>
-          <Grid size={{ md: 12, xs: 12 }}>
-            <MyTextField
-              label="password"
-              name="password"
-              onChange={handleChange}
-              error={Boolean(errors.password)}
-              helperText={errors.password}
-              value={formDetails.password}
-              required
-            />
-          </Grid>
-          <Grid size={{ md: 12, xs: 12 }}>
-            <MyTextField
-              label="phone"
-              name="phone"
-              onChange={handleChange}
-              error={Boolean(errors.phone)}
-              helperText={errors.phone}
-              value={formDetails.phone}
-              required
-            />
-          </Grid>
-          <Grid size={{ md: 12, xs: 12 }}>
-            <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-              <BirthDatePicker
-                value={formDetails.birthDate}
-                onChange={(newValue) => {
-                  const joiFriendlyDate = newValue ? newValue.toDate() : null;
-                  setFormDetails((prev) => ({
-                    ...prev,
-                    birthDate: joiFriendlyDate,
-                  }));
-                }}
-              />
-            </div>
             <Button
               sx={{
                 px: 2,

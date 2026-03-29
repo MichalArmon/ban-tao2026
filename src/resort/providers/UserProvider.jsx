@@ -40,7 +40,6 @@ export default function UserProvider({ children }) {
       setOpenSignup(false);
       setSnack("success", "Account created successfully!");
       await handleSubmitLoginUser(userDetailsForServer);
-      setUser(response.data);
     } catch (error) {
       setSnack("error", error.response.data);
       if (error.response) {
@@ -58,13 +57,19 @@ export default function UserProvider({ children }) {
       );
       console.log(response);
       setOpenLogin(false);
+      setUser(response.data);
       setSnack("success", "You are Logged in successfully!");
     } catch (error) {
-      setSnack("error", error.response.data);
+      setSnack("error", error.response.data.message);
       if (error.response) {
         console.log(error.response.data);
       }
     }
+  };
+
+  // ✔️✔️✔️LOG-out ✔️✔️✔️
+  const handleLogOutUser = () => {
+    setUser(null);
   };
 
   // ✔️✔️✔️EDIT User ✔️✔️✔️
@@ -131,6 +136,7 @@ export default function UserProvider({ children }) {
         openSignup,
         setOpenSignup,
         handleSubmitLoginUser,
+        handleLogOutUser,
       }}
     >
       {children}
