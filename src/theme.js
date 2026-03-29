@@ -32,12 +32,42 @@ let themeStudio = createTheme({
     background: { default: "#f6f3fa" }, // רקע אפור-לבנדר רך
   },
   components: {
+    // מכבה את אפקט הגל (Ripple) לכל הרכיבים הלחיצים
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
+    // ההגדרות שלך לכפתורים + ביטול רקע הריחוף
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: 10,
           textTransform: "none",
           fontWeight: 500,
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
+        },
+      },
+    },
+    // ביטול רקע ריחוף בכפתורי אייקון
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
+        },
+      },
+    },
+    // ביטול רקע ריחוף בטאבים
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
         },
       },
     },

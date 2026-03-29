@@ -36,17 +36,6 @@ const Pages = [
     path: ROUTES.sandBox,
     icon: null,
   },
-  {
-    label: "Register",
-    path: ROUTES.register,
-    icon: null,
-  },
-
-  {
-    label: "Login",
-    path: ROUTES.login,
-    icon: null,
-  },
 ];
 
 function PublicLayout(props) {

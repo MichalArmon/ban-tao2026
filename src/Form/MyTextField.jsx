@@ -8,6 +8,7 @@ function MyTextField({
   helperText,
   value,
   type,
+  size = "medium",
   ...props
 }) {
   return (
@@ -17,7 +18,7 @@ function MyTextField({
       label={label}
       variant="outlined"
       fullWidth
-      size="medium"
+      size={size}
       margin="dense"
       sx={sx}
       error={error}
