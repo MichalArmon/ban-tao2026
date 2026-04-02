@@ -14,6 +14,7 @@ import RoomsPage from "./resort/public/pages/RoomsPage";
 import TreatmentsPage from "./resort/public/pages/TreatmentsPage";
 import AdminTreatmentsPage from "./resort/admin/pages/AdminTreatmentsPage";
 import AdminWorkshopsPage from "./resort/admin/pages/AdminWorkshopsPage";
+import AdminUsersPage from "./resort/admin/pages/AdminUsersPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
         <Route path={ADMIN_ROUTES.rooms} element={<AdminRoomsPage />} />
         <Route path={ADMIN_ROUTES.workshops} element={<AdminWorkshopsPage />} />
+        <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
         <Route
           path={ADMIN_ROUTES.treatments}
           element={<AdminTreatmentsPage />}

@@ -116,7 +116,7 @@ function RegisterForm({ handleSubmitForm, initialRegisterValues }) {
               onClick={handleSubmit}
               fullWidth
             >
-              Register
+              {user ? "edit user" : "Register"}
             </Button>
           </Grid>
         </Grid>

@@ -6,5 +6,6 @@ const initialRegisterValues = {
   phone: "050-1234567",
 
   dietaryRestrictions: "Vegan",
+  birthDate: "",
 };
 export default initialRegisterValues;

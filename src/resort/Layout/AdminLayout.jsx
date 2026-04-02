@@ -27,6 +27,10 @@ const Pages = [
     label: "workshops",
     path: ADMIN_ROUTES.workshops,
   },
+  {
+    label: "users",
+    path: ADMIN_ROUTES.users,
+  },
 
   {
     label: "retreats",

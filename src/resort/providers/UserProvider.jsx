@@ -97,7 +97,7 @@ export default function UserProvider({ children }) {
   // ✔️✔️✔️DELETE User ✔️✔️✔️
   const handleDeleteUser = async (id) => {
     try {
-      const response = await axios.delete(`${URL}/api/v1/users/${id}`);
+      const response = await axios.delete(`${URL}/users/${id}`);
       await getUsersFromServer();
     } catch (error) {
       console.log(error);
