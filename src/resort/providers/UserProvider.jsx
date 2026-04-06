@@ -5,6 +5,10 @@ import { useSnackBar } from "./SnackBarProvider";
 import normalizeRegisterDetails from "../users/helpers/register/normalization/normalizeRegisterDetails";
 
 import normalizeLoginDetails from "../users/helpers/login/normalization/normalizeLoginDetails";
+import {
+  getUser,
+  setTokenInLocalStorage,
+} from "../../../services/localStorageService";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -17,6 +21,7 @@ export default function UserProvider({ children }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [OpenLogin, setOpenLogin] = useState(false);
   const [openSignup, setOpenSignup] = useState(false);
+  const [token, setToken] = useState(null);
 
   const { setSnack } = useSnackBar();
   // ✔️✔️✔️GET Users ✔️✔️✔️
@@ -55,9 +60,12 @@ export default function UserProvider({ children }) {
         `${URL}/users/login`,
         loginUserDetailsForServer,
       );
-      console.log(response);
+      const token = response.data;
+      setTokenInLocalStorage(token);
+      const user = getUser(response.data);
+      console.log(user);
       setOpenLogin(false);
-      setUser(response.data);
+      setUser(user);
       setSnack("success", "You are Logged in successfully!");
     } catch (error) {
       setSnack("error", error.response.data.message);
