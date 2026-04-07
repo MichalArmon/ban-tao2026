@@ -1,7 +1,9 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import normalizeRoomDetails from "../admin/helpers/rooms/normalization/normalizeRoomDetails";
+
 import { useSnackBar } from "./SnackBarProvider";
+
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
 const RoomContext = createContext();
@@ -98,6 +100,25 @@ export default function RoomProvider({ children }) {
     }
   };
 
+  // ✔️✔️✔️ ROOM AVAILABILITY ✔️✔️✔️
+  const handleGetRoomsAvailability = async (
+    checkIn,
+    checkOut,
+    roomType,
+    guestsCount,
+  ) => {
+    try {
+      setRoom(null);
+
+      const response = await axios.get(
+        `${URL}/rooms/availability?checkIn=${checkIn}&checkOut=${checkOut}&roomType=${roomType}&guestsCount=${guestsCount}`,
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <RoomContext.Provider
       value={{
@@ -114,6 +135,7 @@ export default function RoomProvider({ children }) {
         handleSubmitEditRoom,
         room,
         setRoom,
+        handleGetRoomsAvailability,
       }}
     >
       {children}

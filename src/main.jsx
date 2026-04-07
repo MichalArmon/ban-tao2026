@@ -12,24 +12,28 @@ import TreatmentProvider from "./resort/providers/TreatmentProvider.jsx";
 import UserProvider from "./resort/providers/UserProvider.jsx";
 import SnackBarProvider from "./resort/providers/SnackBarProvider.jsx";
 import WorkshopProvider from "./resort/providers/WorkshopProvider.jsx";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <StrictMode>
-      <ThemeProvider theme={theme}>
-        <SnackBarProvider>
-          <UserProvider>
-            <WorkshopProvider>
-              <TreatmentProvider>
-                <RoomProvider>
-                  <App />
-                </RoomProvider>
-              </TreatmentProvider>
-            </WorkshopProvider>
-          </UserProvider>
-        </SnackBarProvider>
-      </ThemeProvider>
-    </StrictMode>
-    ,
-  </BrowserRouter>,
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <BrowserRouter>
+      <StrictMode>
+        <ThemeProvider theme={theme}>
+          <SnackBarProvider>
+            <UserProvider>
+              <WorkshopProvider>
+                <TreatmentProvider>
+                  <RoomProvider>
+                    <App />
+                  </RoomProvider>
+                </TreatmentProvider>
+              </WorkshopProvider>
+            </UserProvider>
+          </SnackBarProvider>
+        </ThemeProvider>
+      </StrictMode>
+      ,
+    </BrowserRouter>
+  </LocalizationProvider>,
 );

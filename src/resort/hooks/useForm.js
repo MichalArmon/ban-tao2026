@@ -5,26 +5,36 @@ export default function useForm(initialValues, schemaOBJ, onSubmit) {
   const [formDetails, setFormDetails] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const schema = Joi.object(schemaOBJ);
-  const handleChange = (event) => {
-    const { value, name, type, checked } = event.target;
-    const finalValue = type === "checkbox" ? checked : value;
-    setFormDetails((prev) => ({ ...prev, [name]: finalValue }));
-    console.log(finalValue);
 
+  const validateField = (name, value) => {
     const fieldSchema = Joi.object({ [name]: schemaOBJ[name] });
     const { error } = fieldSchema.validate(
-      { [name]: finalValue },
+      { [name]: value },
       { abortEarly: false },
     );
+
     if (error) {
-      console.log(error.details[0].message);
       setErrors((prev) => ({ ...prev, [name]: error.details[0].message }));
     } else {
       setErrors((prev) => {
-        delete prev[name];
-        return prev;
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
       });
     }
+  };
+
+  const handleChange = (event) => {
+    const { value, name, type, checked } = event.target;
+    const finalValue = type === "checkbox" ? checked : value;
+
+    setFormDetails((prev) => ({ ...prev, [name]: finalValue }));
+    validateField(name, finalValue);
+  };
+
+  const handleManualChange = (name, value) => {
+    setFormDetails((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
   };
 
   const handleSubmit = () => {
@@ -32,12 +42,20 @@ export default function useForm(initialValues, schemaOBJ, onSubmit) {
     if (!error) {
       onSubmit(formDetails);
     } else {
-      console.error(
-        "❌ Joi Validation Failed! Look at these errors:",
-        error.details,
-      );
+      const joiErrors = {};
+      error.details.forEach((item) => {
+        joiErrors[item.path[0]] = item.message;
+      });
+      setErrors(joiErrors);
     }
   };
 
-  return { handleChange, handleSubmit, errors, formDetails, setFormDetails };
+  return {
+    handleChange,
+    handleManualChange,
+    handleSubmit,
+    errors,
+    formDetails,
+    setFormDetails,
+  };
 }
