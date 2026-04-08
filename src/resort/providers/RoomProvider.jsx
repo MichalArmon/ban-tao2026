@@ -3,18 +3,33 @@ import { createContext, useContext, useState } from "react";
 import normalizeRoomDetails from "../admin/helpers/rooms/normalization/normalizeRoomDetails";
 
 import { useSnackBar } from "./SnackBarProvider";
+import dayjs from "dayjs";
+import { useUser } from "./UserProvider";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../routes/routerDict";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
 const RoomContext = createContext();
 
+const today = dayjs().format("ddd, MMM D, YYYY");
+
+const tomorrow = dayjs().add(1, "day").format("ddd, MMM D, YYYY");
+
 // 2.create provider
 export default function RoomProvider({ children }) {
   const [room, setRoom] = useState(null);
   const [rooms, setRooms] = useState([]);
+  const [checkIn, setCheckIn] = useState(today);
+  const [checkOut, setCheckOut] = useState(tomorrow);
+  const [guestsCount, setGuestsCount] = useState(0);
+  const [reservationId, setReservationId] = useState("");
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [filteredRooms, setFilteredRooms] = useState([]);
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   const { setSnack } = useSnackBar();
   // ✔️✔️✔️GET ROOMS ✔️✔️✔️
@@ -92,9 +107,10 @@ export default function RoomProvider({ children }) {
   const handleGetRoom = async (id) => {
     try {
       setRoom(null);
-      const response = await axios.get(`${URL}/api/v1/rooms/${id}`);
+      const response = await axios.get(`${URL}/rooms/${id}`);
       console.log(response);
       setRoom(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -114,10 +130,51 @@ export default function RoomProvider({ children }) {
         `${URL}/rooms/availability?checkIn=${checkIn}&checkOut=${checkOut}&roomType=${roomType}&guestsCount=${guestsCount}`,
       );
       console.log(response);
+      setFilteredRooms(response.data);
+      console.log("rooms:", filteredRooms);
+      setCheckIn(checkIn);
+      setCheckOut(checkOut);
+      setGuestsCount(guestsCount);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleCreateRoomReservation = async (reservation) => {
+    try {
+      const response = await axios.post(
+        `${URL}/room-reservations`,
+        reservation,
+      );
+      console.log("res id:", response.data.reservation._id);
+      setReservationId(response.data.reservation._id);
+      const newId = response.data.reservation._id;
+      sessionStorage.setItem("currentReservationId", newId);
+      console.log("ID Saved to storage:", newId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmitCreateOrder = async (order) => {
+    const savedId = sessionStorage.getItem("currentReservationId");
+    try {
+      console.log("Data from Form:", order);
+      console.log("ID from Provider State:", reservationId);
+      const newOrder = {
+        ...order,
+        userId: user._id,
+        roomReservations: [savedId],
+      };
+
+      const response = await axios.post(`${URL}/orders`, newOrder);
+      console.log(response);
+      navigate(ROUTES.thankYou);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log("Current Reservation ID in Provider:", reservationId);
 
   return (
     <RoomContext.Provider
@@ -136,6 +193,15 @@ export default function RoomProvider({ children }) {
         room,
         setRoom,
         handleGetRoomsAvailability,
+        handleSubmitCreateOrder,
+
+        setFilteredRooms,
+        checkIn,
+        setCheckIn,
+        checkOut,
+        setCheckOut,
+        handleCreateRoomReservation,
+        guestsCount,
       }}
     >
       {children}

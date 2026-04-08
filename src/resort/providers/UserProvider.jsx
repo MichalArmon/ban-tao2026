@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 import { useSnackBar } from "./SnackBarProvider";
 import normalizeRegisterDetails from "../users/helpers/register/normalization/normalizeRegisterDetails";
@@ -8,6 +8,7 @@ import normalizeLoginDetails from "../users/helpers/login/normalization/normaliz
 import {
   getUser,
   setTokenInLocalStorage,
+  removeToken,
 } from "../../../services/localStorageService";
 
 const URL = "http://localhost:8000";
@@ -23,6 +24,11 @@ export default function UserProvider({ children }) {
   const [openSignup, setOpenSignup] = useState(false);
   const [token, setToken] = useState(null);
 
+  useEffect(() => {
+    if (!user) {
+      getUser();
+    }
+  }, []);
   const { setSnack } = useSnackBar();
   // ✔️✔️✔️GET Users ✔️✔️✔️
   const getUsersFromServer = async () => {
@@ -78,6 +84,7 @@ export default function UserProvider({ children }) {
   // ✔️✔️✔️LOG-out ✔️✔️✔️
   const handleLogOutUser = () => {
     setUser(null);
+    removeToken();
   };
 
   // ✔️✔️✔️EDIT User ✔️✔️✔️

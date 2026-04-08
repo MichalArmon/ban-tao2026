@@ -5,10 +5,12 @@ export const ROUTES = {
   login: "/resort/login",
   rooms: "/resort/rooms",
   treatments: "/resort/treatments",
+  thankYou: "/resort/thank-you",
 };
 export const ADMIN_ROUTES = {
   home: "/admin",
   rooms: "/admin/rooms",
+
   createRoom: "/admin/rooms/new",
   updateRoom: "/admin/rooms/edit/:id",
   retreats: "/admin/retreats",

@@ -15,8 +15,23 @@ import TreatmentsPage from "./resort/public/pages/TreatmentsPage";
 import AdminTreatmentsPage from "./resort/admin/pages/AdminTreatmentsPage";
 import AdminWorkshopsPage from "./resort/admin/pages/AdminWorkshopsPage";
 import AdminUsersPage from "./resort/admin/pages/AdminUsersPage";
+import OrderPage from "./resort/orders/OrderPage";
+import { getUser, getToken } from "../services/localStorageService";
+import { useEffect } from "react";
+import { useUser } from "./resort/providers/UserProvider";
+import ThankYouPage from "./resort/public/pages/ThankYouPage";
 
 function App() {
+  const { setUser } = useUser();
+  useEffect(() => {
+    const token = getToken();
+    const userData = getUser();
+
+    if (token && userData) {
+      setUser(userData);
+    }
+  }, [setUser]);
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/resort" replace />} />
@@ -25,12 +40,15 @@ function App() {
         <Route path={ROUTES.register} element={<RegisterPage />} />
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.rooms} element={<RoomsPage />} />
+        <Route path="rooms/:id/order" element={<OrderPage />} />
         <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
+        <Route path={ROUTES.thankYou} element={<ThankYouPage />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>
         <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
         <Route path={ADMIN_ROUTES.rooms} element={<AdminRoomsPage />} />
+
         <Route path={ADMIN_ROUTES.workshops} element={<AdminWorkshopsPage />} />
         <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
         <Route

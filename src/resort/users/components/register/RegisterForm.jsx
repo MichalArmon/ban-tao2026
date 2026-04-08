@@ -25,7 +25,6 @@ function RegisterForm({ handleSubmitForm, initialRegisterValues }) {
     <>
       <Grid
         container
-        maxWidth="sm"
         spacing={1}
         sx={{ bgcolor: "rgba(255, 255, 255, 0)", p: 2 }}
       >
@@ -116,7 +115,11 @@ function RegisterForm({ handleSubmitForm, initialRegisterValues }) {
               onClick={handleSubmit}
               fullWidth
             >
-              {user ? "edit user" : "Register"}
+              {user
+                ? user.isAdmin
+                  ? "edit user"
+                  : "edit your Account"
+                : "Register"}
             </Button>
           </Grid>
         </Grid>
