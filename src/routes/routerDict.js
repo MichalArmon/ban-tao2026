@@ -5,6 +5,7 @@ export const ROUTES = {
   login: "/resort/login",
   rooms: "/resort/rooms",
   treatments: "/resort/treatments",
+
   thankYou: "/resort/thank-you",
 };
 export const ADMIN_ROUTES = {
@@ -19,4 +20,5 @@ export const ADMIN_ROUTES = {
   treatments: "/admin/treatments",
   workshops: "/admin/workshops",
   users: "/admin/users",
+  orders: "/admin/orders",
 };

@@ -36,6 +36,10 @@ const Pages = [
     label: "retreats",
     path: ADMIN_ROUTES.retreats,
   },
+  {
+    label: "orders",
+    path: ADMIN_ROUTES.orders,
+  },
 ];
 
 function AdminLayout() {
