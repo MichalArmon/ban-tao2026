@@ -70,14 +70,9 @@ export default function OrderProvider({ children }) {
   // ✔️✔️✔️EDIT Order ✔️✔️✔️
 
   const handleSubmitEditOrder = async (id, data) => {
-    const OrderDetailsForServer = normalizeOrderDetails(data);
-
     try {
-      console.log("data for server", OrderDetailsForServer);
-      const response = await axios.put(
-        `${URL}/Orders/${id}`,
-        OrderDetailsForServer,
-      );
+      console.log("data for server", data);
+      const response = await axios.put(`${URL}/Orders/${id}`, data);
       console.log(response);
       getOrdersFromServer();
     } catch (error) {
@@ -92,7 +87,7 @@ export default function OrderProvider({ children }) {
   // ✔️✔️✔️DELETE Order ✔️✔️✔️
   const handleDeleteOrder = async (id) => {
     try {
-      const response = await axios.delete(`${URL}/api/v1/Orders/${id}`);
+      const response = await axios.delete(`${URL}/Orders/${id}`);
       await getOrdersFromServer();
     } catch (error) {
       console.log(error);

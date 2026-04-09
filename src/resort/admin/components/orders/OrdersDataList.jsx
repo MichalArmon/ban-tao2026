@@ -71,9 +71,9 @@ function OrdersDataList() {
               }}
             >
               <TableCell sx={{ top: 0 }}>user Id</TableCell>
-              <TableCell sx={{ top: 0 }}>room Reservations</TableCell>
-              <TableCell sx={{ top: 0 }}>spa Reservations</TableCell>
-              <TableCell sx={{ top: 0 }}>yogaReservations</TableCell>
+              <TableCell sx={{ top: 0 }}>Accommodation</TableCell>
+              <TableCell sx={{ top: 0 }}>SPA</TableCell>
+              <TableCell sx={{ top: 0 }}>Studio </TableCell>
               <TableCell sx={{ top: 0 }}>totalPrice</TableCell>
               <TableCell sx={{ top: 0 }}>status</TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
@@ -97,7 +97,7 @@ function OrdersDataList() {
                 <TableCell>{order.userId}</TableCell>
                 <TableCell>{order.roomReservations[0]}</TableCell>
                 <TableCell>{order.spaReservations}</TableCell>
-                <TableCell>{order.yogaReservations}</TableCell>
+                <TableCell>{order.studioReservations}</TableCell>
                 <TableCell>{order.totalPrice}</TableCell>
                 <TableCell>{order.status}</TableCell>
                 <TableCell>
