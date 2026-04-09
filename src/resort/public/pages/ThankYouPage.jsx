@@ -1,12 +1,11 @@
-import React, { useRef } from "react";
 import { Box, Card, CardContent, Typography, Button } from "@mui/material";
 
 export default function ThankYouPage() {
   return (
     <Box
       sx={{
-        overflow: "hidden",
-        minHeight: "calc(100vh - 64px)",
+        overflowY: "hidden",
+        minHeight: "calc(100vh - 34px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -19,11 +18,10 @@ export default function ThankYouPage() {
       <Card
         sx={{
           p: 4,
-          maxWidth: 420,
+          maxWidth: 920,
           textAlign: "center",
           borderRadius: 3,
           boxShadow: 6,
-          bgcolor: "white",
         }}
       >
         <CardContent>

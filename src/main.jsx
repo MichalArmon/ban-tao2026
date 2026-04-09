@@ -14,26 +14,28 @@ import SnackBarProvider from "./resort/providers/SnackBarProvider.jsx";
 import WorkshopProvider from "./resort/providers/WorkshopProvider.jsx";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import OrderProvider from "./resort/providers/OrderProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <BrowserRouter>
-      <StrictMode>
+  <StrictMode>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <BrowserRouter>
         <ThemeProvider theme={theme}>
           <SnackBarProvider>
             <UserProvider>
               <WorkshopProvider>
                 <TreatmentProvider>
                   <RoomProvider>
-                    <App />
+                    <OrderProvider>
+                      <App />
+                    </OrderProvider>
                   </RoomProvider>
                 </TreatmentProvider>
               </WorkshopProvider>
             </UserProvider>
           </SnackBarProvider>
         </ThemeProvider>
-      </StrictMode>
-      ,
-    </BrowserRouter>
-  </LocalizationProvider>,
+      </BrowserRouter>
+    </LocalizationProvider>
+  </StrictMode>,
 );
