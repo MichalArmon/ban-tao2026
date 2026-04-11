@@ -1,17 +1,9 @@
 import UsersDataList from "../components/Users/UsersDataList";
-import {
-  Typography,
-  Fab,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Box,
-} from "@mui/material";
+import { Fab, Dialog, DialogContent, DialogTitle, Box } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useState } from "react";
+
 import { useUser } from "../../providers/UserProvider";
 
-import CreateRegister from "../../users/components/register/CreateRegister";
 import CreateUserAdmin from "../components/users/CreateUserAdmin";
 
 function AdminUsersPage() {

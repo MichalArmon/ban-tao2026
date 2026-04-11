@@ -12,20 +12,9 @@ const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
 const OrderContext = createContext();
 
-const today = dayjs().format("ddd, MMM D, YYYY");
-
-const tomorrow = dayjs().add(1, "day").format("ddd, MMM D, YYYY");
-
 // 2.create provider
 export default function OrderProvider({ children }) {
-  const {
-    checkIn,
-    setCheckIn,
-    guestsCount,
-    checkOut,
-    setCheckOut,
-    setGuestsCount,
-  } = useRoom();
+  const { checkIn, setCheckIn, guestsCount, checkOut, setCheckOut } = useRoom();
   const [order, setOrder] = useState(null);
   const [orders, setOrders] = useState([]);
 
@@ -61,7 +50,10 @@ export default function OrderProvider({ children }) {
 
       const response = await axios.post(`${URL}/orders`, newOrder);
       console.log(response);
-      navigate(ROUTES.thankYou);
+      setIsDialogOpen(false);
+      if (user.role !== "admin") {
+        navigate(ROUTES.thankYou);
+      }
     } catch (error) {
       console.log(error);
     }

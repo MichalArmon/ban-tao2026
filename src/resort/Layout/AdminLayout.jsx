@@ -40,6 +40,10 @@ const Pages = [
     label: "orders",
     path: ADMIN_ROUTES.orders,
   },
+  {
+    label: "sessions",
+    path: ADMIN_ROUTES.sessions,
+  },
 ];
 
 function AdminLayout() {

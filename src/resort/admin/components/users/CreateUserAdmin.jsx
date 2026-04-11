@@ -3,12 +3,12 @@ import initialRegisterValues from "../../../users/helpers/register/initialValues
 import { useUser } from "../../../providers/UserProvider";
 
 function CreateUserAdmin() {
-  const { handleSubmitCreateUser } = useUser();
+  const { handleSubmitAdminCreateUser } = useUser();
   return (
     <>
       <RegisterForm
         initialRegisterValues={initialRegisterValues}
-        handleSubmitForm={handleSubmitCreateUser}
+        handleSubmitForm={handleSubmitAdminCreateUser}
       />
     </>
   );

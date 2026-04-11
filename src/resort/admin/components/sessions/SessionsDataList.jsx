@@ -22,32 +22,20 @@ import { Add } from "@mui/icons-material";
 
 import React, { useEffect, useState } from "react";
 
-import { useOrder } from "../../../providers/OrderProvider";
-import EditOrder from "./EditOrder";
-import CreateOrder from "./CreateOrder";
-import { useUser } from "../../../providers/UserProvider";
+import { useSession } from "../../../providers/SessionProvider";
+import EditSession from "./EditSession";
+import CreateSession from "./CreateSession";
 
-function OrdersDataList() {
-  const { getOrdersFromServer, orders, handleDeleteOrder, handleGetOrder } =
-    useOrder();
-  const { users, getUsersFromServer } = useUser();
+function SessionsDataList() {
+  const { getSessionsFromServer, sessions, handleDeleteSession } = useSession();
   useEffect(() => {
-    getOrdersFromServer();
-    console.log(orders);
+    getSessionsFromServer();
+    console.log(sessions);
   }, []);
-  useEffect(() => {
-    getUsersFromServer();
-    console.log(users);
-  }, []);
-
-  const getUserName = (userId) => {
-    const user = users.find((u) => u._id === userId);
-    return user ? `${user.firstName} ${user.lastName || ""}` : "Unknown User";
-  };
-  const [orderSelected, setOrderSelected] = useState(null);
+  const [sessionSelected, setSessionSelected] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  if (orders.length === 0) {
-    <Typography>NO Orders to show!</Typography>;
+  if (sessions.length === 0) {
+    <Typography>NO Sessions to show!</Typography>;
   }
   return (
     <>
@@ -81,12 +69,12 @@ function OrdersDataList() {
                 },
               }}
             >
-              <TableCell sx={{ top: 0 }}>User</TableCell>
-              <TableCell sx={{ top: 0 }}>Accommodation</TableCell>
-              <TableCell sx={{ top: 0 }}>SPA</TableCell>
-              <TableCell sx={{ top: 0 }}>Studio </TableCell>
-              <TableCell sx={{ top: 0 }}>Total Price</TableCell>
-              <TableCell sx={{ top: 0 }}>Status</TableCell>
+              <TableCell sx={{ top: 0 }}>Workshop ID</TableCell>
+              <TableCell sx={{ top: 0 }}>start</TableCell>
+              <TableCell sx={{ top: 0 }}>end</TableCell>
+              <TableCell sx={{ top: 0 }}>location</TableCell>
+              <TableCell sx={{ top: 0 }}>max Cap</TableCell>
+              <TableCell sx={{ top: 0 }}>enroll</TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
@@ -103,19 +91,19 @@ function OrdersDataList() {
               bgcolor: "white",
             }}
           >
-            {orders.map((order, i) => (
+            {sessions.map((session, i) => (
               <TableRow key={i}>
-                <TableCell>{getUserName(order.userId)}</TableCell>
-                <TableCell>{order.roomReservations[0]}</TableCell>
-                <TableCell>{order.spaReservations}</TableCell>
-                <TableCell>{order.studioReservations}</TableCell>
-                <TableCell>{order.totalPrice}</TableCell>
-                <TableCell>{order.status}</TableCell>
+                <TableCell>{session.workshopId}</TableCell>
+                <TableCell>{session.startTime}</TableCell>
+                <TableCell>{session.endTime}</TableCell>
+                <TableCell>{session.location}</TableCell>
+                <TableCell>{session.maxCapacity}</TableCell>
+                <TableCell>{session.status}</TableCell>
                 <TableCell>
                   <Button
                     onClick={() => {
                       setIsDialogOpen(true);
-                      setOrderSelected(order._id);
+                      setSessionSelected(session._id);
                     }}
                   >
                     <Edit />
@@ -124,7 +112,7 @@ function OrdersDataList() {
                 <TableCell>
                   <Button
                     onClick={() => {
-                      handleDeleteOrder(order._id);
+                      handleDeleteSession(session._id);
                     }}
                   >
                     <Delete />
@@ -140,16 +128,16 @@ function OrdersDataList() {
         open={isDialogOpen}
         onClose={() => {
           setIsDialogOpen(false);
-          setOrderSelected(null);
+          setSessionSelected(null);
         }}
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Edit Order</DialogTitle>
+        <DialogTitle>Edit Session</DialogTitle>
         <DialogContent dividers>
-          {orderSelected && (
-            <EditOrder
-              orderSelected={orderSelected}
+          {sessionSelected && (
+            <EditSession
+              SessionSelected={sessionSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}
@@ -159,4 +147,4 @@ function OrdersDataList() {
   );
 }
 
-export default OrdersDataList;
+export default SessionsDataList;

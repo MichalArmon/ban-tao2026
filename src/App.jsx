@@ -21,6 +21,8 @@ import { useEffect } from "react";
 import { useUser } from "./resort/providers/UserProvider";
 import ThankYouPage from "./resort/public/pages/ThankYouPage";
 import AdminOrdersPage from "./resort/admin/pages/AdminOrdersPage";
+import WorkshopsPage from "./resort/public/pages/WorkshopsPage";
+import AdminSessionsPage from "./resort/admin/pages/AdminSessionsPage";
 
 function App() {
   const { setUser } = useUser();
@@ -43,6 +45,7 @@ function App() {
         <Route path={ROUTES.rooms} element={<RoomsPage />} />
         <Route path="rooms/:id/order" element={<OrderPage />} />
         <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
+        <Route path={ROUTES.workshops} element={<WorkshopsPage />} />
         <Route path={ROUTES.thankYou} element={<ThankYouPage />} />
       </Route>
 
@@ -53,6 +56,7 @@ function App() {
         <Route path={ADMIN_ROUTES.workshops} element={<AdminWorkshopsPage />} />
         <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
         <Route path={ADMIN_ROUTES.orders} element={<AdminOrdersPage />} />
+        <Route path={ADMIN_ROUTES.sessions} element={<AdminSessionsPage />} />
         <Route
           path={ADMIN_ROUTES.treatments}
           element={<AdminTreatmentsPage />}

@@ -8,14 +8,23 @@ import {
   RadioGroup,
   Radio,
   Checkbox,
+  TextField,
+  Autocomplete,
 } from "@mui/material";
 
 import useForm from "../../../hooks/useForm";
 import orderSchema from "../../models/orderSchema";
 import { useUser } from "../../../providers/UserProvider";
+import { useEffect } from "react";
 
 function OrderForm({ initialOrderValues, handleSubmitForm }) {
-  const { user } = useUser();
+  const { user, getUsersFromServer, users } = useUser();
+  if (!users) {
+    return <Typography>loading...</Typography>;
+  }
+  useEffect(() => {
+    getUsersFromServer();
+  }, []);
 
   const { handleChange, handleSubmit, errors, formDetails } = useForm(
     initialOrderValues,
@@ -23,7 +32,7 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
     handleSubmitForm,
   );
 
-  if (!formDetails) {
+  if (!users || !formDetails) {
     return (
       <Typography sx={{ p: 4, textAlign: "center" }}>
         Loading Order data...
@@ -42,15 +51,24 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           <Typography variant="h6" color="secondary" gutterBottom>
             Admin: Order Creation
           </Typography>
-          <MyTextField
-            name="userId"
-            label="Customer ID"
-            value={formDetails.userId}
-            onChange={handleChange}
-            error={!!errors.userId}
-            helperText={errors.userId}
-            fullWidth
-            sx={{ mb: 2 }}
+          <Autocomplete
+            options={users}
+            getOptionLabel={(option) => `${option.firstName}`}
+            value={users.find((u) => u._id === formDetails.userId) || null}
+            onChange={(event, newValue) => {
+              handleChange({
+                target: { name: "userId", value: newValue ? newValue._id : "" },
+              });
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Customer"
+                error={!!errors.userId}
+                helperText={errors.userId}
+                variant="outlined"
+              />
+            )}
           />
         </Paper>
       )}
@@ -138,7 +156,7 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           sx={{ mt: 4 }}
           onClick={handleSubmit}
         >
-          {user.isAdmin ? "Create Manual Order" : "Confirm & Pay"}
+          {user?.role === "admin" ? "Create Manual Order" : "Confirm & Pay"}
         </Button>
       </Box>
     </Box>

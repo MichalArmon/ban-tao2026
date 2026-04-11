@@ -26,6 +26,11 @@ const Pages = [
     path: ROUTES.treatments,
     icon: null,
   },
+  {
+    label: "Workshops",
+    path: ROUTES.workshops,
+    icon: null,
+  },
 ];
 
 function PublicLayout(props) {

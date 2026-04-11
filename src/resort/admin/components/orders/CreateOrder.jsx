@@ -1,9 +1,8 @@
-import { useRoom } from "../../../providers/RoomProvider";
+import { useOrder } from "../../../providers/OrderProvider";
 import initialOrderValues from "../../helpers/orders/initialValues/initialOrderValues";
 import OrderForm from "./OrderForm";
-
 function CreateOrder() {
-  const { handleSubmitCreateOrder } = useRoom();
+  const { handleSubmitCreateOrder } = useOrder();
   return (
     <OrderForm
       initialOrderValues={initialOrderValues}

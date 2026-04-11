@@ -58,6 +58,24 @@ export default function UserProvider({ children }) {
       }
     }
   };
+
+  // ✔️✔️✔️Create User ✔️✔️✔️
+
+  const handleSubmitAdminCreateUser = async (data) => {
+    const userDetailsForServer = normalizeRegisterDetails(data);
+
+    try {
+      const response = await axios.post(`${URL}/users`, userDetailsForServer);
+      console.log(response);
+      getUsersFromServer();
+      setOpenSignup(false);
+    } catch (error) {
+      setSnack("error", error.response.data);
+      if (error.response) {
+        console.log(error.response.data);
+      }
+    }
+  };
   // ✔️✔️✔️LOGIN ✔️✔️✔️
   const handleSubmitLoginUser = async (data) => {
     const loginUserDetailsForServer = normalizeLoginDetails(data);
@@ -152,6 +170,7 @@ export default function UserProvider({ children }) {
         setOpenSignup,
         handleSubmitLoginUser,
         handleLogOutUser,
+        handleSubmitAdminCreateUser,
       }}
     >
       {children}
