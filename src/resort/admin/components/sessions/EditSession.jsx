@@ -1,20 +1,27 @@
 import { useEffect } from "react";
 import { useSession } from "../../../providers/SessionProvider";
-import initialEditSessionValues from "../../helpers/Sessions/initialValues/initialEditSessionValues";
+import initialEditSessionValues from "../../helpers/sessions/initialValues/initialEditSessionValues";
 import SessionForm from "./SessionForm";
+import { Typography } from "@mui/material";
 
-function EditSession({ SessionSelected, setIsDialogOpen }) {
-  const { handleGetSession, handleSubmitEditSession, Session } = useSession();
+function EditSession({ sessionSelected, setIsDialogOpen }) {
+  const { handleGetSession, handleSubmitEditSession, session } = useSession();
   useEffect(() => {
-    if (SessionSelected) {
-      handleGetSession(SessionSelected);
+    if (sessionSelected) {
+      handleGetSession(sessionSelected);
     }
-  }, [SessionSelected]);
-  if (!Session) return <>Loading...</>;
+  }, [sessionSelected]);
+  console.log(session);
+
+  if (!session || session._id !== sessionSelected) {
+    return (
+      <Typography sx={{ p: 4, textAlign: "center" }}>Loading...</Typography>
+    );
+  }
 
   const handleSaveAndCloseEdit = async (formData) => {
     try {
-      await handleSubmitEditSession(SessionSelected, formData);
+      await handleSubmitEditSession(sessionSelected, formData);
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error saving Session:", error);
@@ -24,7 +31,8 @@ function EditSession({ SessionSelected, setIsDialogOpen }) {
   return (
     <>
       <SessionForm
-        initialSessionValues={initialEditSessionValues(Session)}
+        key={session._id}
+        initialSessionValues={initialEditSessionValues(session)}
         handleSubmitForm={handleSaveAndCloseEdit}
       />
     </>

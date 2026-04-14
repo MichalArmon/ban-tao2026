@@ -16,13 +16,13 @@ useSession;
 import useForm from "../../../hooks/useForm";
 import sessionSchema from "../../models/sessionSchema";
 
-import { Close } from "@mui/icons-material";
-import TagsInput from "../../../../Form/components/TagsInput";
 import { useWorkshop } from "../../../providers/WorkshopProvider";
 import { useEffect, useState } from "react";
 
 function SessionForm({ initialSessionValues, handleSubmitForm }) {
-  const [isRecursive, setIsRecursive] = useState(false);
+  const [isRecursive, setIsRecursive] = useState(
+    initialSessionValues.isRecursive || false,
+  );
   const { session } = useSession();
   const { workshops, getWorkshopsFromServer } = useWorkshop();
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
@@ -48,6 +48,7 @@ function SessionForm({ initialSessionValues, handleSubmitForm }) {
       </Typography>
     );
   }
+  console.log("Current Form Errors:", errors);
 
   return (
     <>
@@ -70,25 +71,24 @@ function SessionForm({ initialSessionValues, handleSubmitForm }) {
 
           <Grid container spacing={2}>
             {/* בחירת וורקשופ */}
-            <Grid item xs={12}>
+            <Grid item size={{ xs: 12, md: 6 }}>
               <MyTextField
                 select
-                fullWidth
                 label="Select Workshop"
                 name="workshopId"
                 value={formDetails.workshopId}
                 onChange={handleChange}
                 required
               >
-                {workshops.map((ws) => (
-                  <MenuItem key={ws._id} value={ws._id}>
-                    {ws.name}
+                {workshops.map((workshop) => (
+                  <MenuItem key={workshop._id} value={workshop._id}>
+                    {workshop.title}
                   </MenuItem>
                 ))}
               </MyTextField>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item size={{ xs: 12, md: 6 }}>
               <MyTextField
                 fullWidth
                 label="Location"

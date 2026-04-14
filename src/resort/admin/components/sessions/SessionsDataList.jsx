@@ -137,7 +137,7 @@ function SessionsDataList() {
         <DialogContent dividers>
           {sessionSelected && (
             <EditSession
-              SessionSelected={sessionSelected}
+              sessionSelected={sessionSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}

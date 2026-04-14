@@ -28,7 +28,7 @@ export default function SessionProvider({ children }) {
     try {
       setSession(null);
       const response = await axios.get(`${URL}/workshop-sessions/${id}`);
-      console.log(response);
+      console.log(response.data);
       setSession(response.data);
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ export default function SessionProvider({ children }) {
       const response = await axios.get(
         `${URL}/workshop-sessions/workshop/${workshopId}`,
       );
-      console.log(response);
+
       setSession(response.data);
     } catch (error) {
       console.log(error);

@@ -29,9 +29,14 @@ const sessionSchema = {
 
   // לשימוש ביצירה חזרתית (Recursive)
   startDate: Joi.date().iso().optional(),
-  endDate: Joi.date().iso().greater(Joi.ref("startDate")).optional().messages({
-    "date.greater": "End date must be after the start date",
-  }),
+  endDate: Joi.date()
+    .iso()
+    .allow(null, "")
+    .greater(Joi.ref("startDate"))
+    .optional()
+    .messages({
+      "date.greater": "End date must be after the start date",
+    }),
   daysOfWeek: Joi.array()
     .items(Joi.number().min(0).max(6))
     .unique()
@@ -45,6 +50,7 @@ const sessionSchema = {
     .valid("scheduled", "cancelled", "completed")
     .default("scheduled"),
   enrolledUsers: Joi.array().items(Joi.string()).default([]),
+  isRecursive: Joi.boolean().default(false),
 };
 
 export default sessionSchema;

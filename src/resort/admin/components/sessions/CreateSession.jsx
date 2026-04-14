@@ -3,8 +3,7 @@ import initialSessionValues from "../../helpers/sessions/initialValues/initialSe
 initialSessionValues;
 import SessionForm from "./SessionForm";
 function CreateSession() {
-  const { handleSubmitCreateSession, handleSubmitCreateRecursiveSession } =
-    useSession();
+  const { handleSubmitCreateSession } = useSession();
   return (
     <SessionForm
       initialSessionValues={initialSessionValues}
