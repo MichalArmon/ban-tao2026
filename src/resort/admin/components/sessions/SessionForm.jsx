@@ -19,10 +19,12 @@ import sessionSchema from "../../models/sessionSchema";
 import { useWorkshop } from "../../../providers/WorkshopProvider";
 import { useEffect, useState } from "react";
 
-function SessionForm({ initialSessionValues, handleSubmitForm }) {
-  const [isRecursive, setIsRecursive] = useState(
-    initialSessionValues.isRecursive || false,
-  );
+function SessionForm({
+  initialSessionValues,
+  handleSubmitForm,
+  defaultIsRecursive,
+}) {
+  const [isRecursive, setIsRecursive] = useState(defaultIsRecursive);
   const { session } = useSession();
   const { workshops, getWorkshopsFromServer } = useWorkshop();
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
@@ -58,16 +60,22 @@ function SessionForm({ initialSessionValues, handleSubmitForm }) {
             Create Workshop Session
           </Typography>
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Switch
                 checked={isRecursive}
-                onChange={() => setIsRecursive(!isRecursive)}
+                onChange={(e) => {
+                  setIsRecursive(e.target.checked); // מעדכן את התצוגה (מה שהיה לך)
+                  setFormDetails({
+                    ...formDetails,
+                    isRecursive: e.target.checked,
+                  }); // מעדכן את המידע שיישלח
+                }}
               />
             }
             label={isRecursive ? "Recursive (Multiple)" : "Single Session"}
             sx={{ mb: 2 }}
-          />
+          /> */}
 
           <Grid container spacing={2}>
             {/* בחירת וורקשופ */}

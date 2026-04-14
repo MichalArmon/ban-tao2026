@@ -44,6 +44,10 @@ const Pages = [
     label: "sessions",
     path: ADMIN_ROUTES.sessions,
   },
+  {
+    label: "rec rules",
+    path: ADMIN_ROUTES.recRules,
+  },
 ];
 
 function AdminLayout() {

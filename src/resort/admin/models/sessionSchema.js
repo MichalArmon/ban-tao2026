@@ -14,21 +14,24 @@ const sessionSchema = {
     "number.min": "Capacity must be at least 1 person",
     "any.required": "Capacity is required",
   }),
-  hour: Joi.string()
-    .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
-    .required()
-    .messages({
-      "string.pattern.base": "Hour must be in HH:MM format",
-      "any.required": "Hour is required",
-    }),
+  // hour: Joi.string()
+  //   .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+  //   .required()
+  //   .messages({
+  //     "string.pattern.base": "Hour must be in HH:MM format",
+  //     "any.required": "Hour is required",
+  //   }),
 
   // לשימוש בסשן בודד (Single)
-  startTime: Joi.date().iso().optional().messages({
-    "date.format": "Please enter a valid date",
-  }),
+  // startTime: Joi.date().iso().optional().messages({
+  //   "date.format": "Please enter a valid date",
+  // }),
+
+  hour: Joi.any().optional(),
+  startTime: Joi.any().optional(),
 
   // לשימוש ביצירה חזרתית (Recursive)
-  startDate: Joi.date().iso().optional(),
+  startDate: Joi.any().optional(),
   endDate: Joi.date()
     .iso()
     .allow(null, "")

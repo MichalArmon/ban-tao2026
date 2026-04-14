@@ -52,14 +52,9 @@ export default function SessionProvider({ children }) {
   // ✔️✔️✔️CREATE SESSION ✔️✔️✔️
 
   const handleSubmitCreateSession = async (data) => {
-    const sessionDetailsForServer = normalizeSessionDetails(data);
-
     try {
-      console.log("data for server", sessionDetailsForServer);
-      const response = await axios.post(
-        `${URL}/workshop-sessions`,
-        sessionDetailsForServer,
-      );
+      console.log("data for server", data);
+      const response = await axios.post(`${URL}/workshop-sessions`, data);
       console.log(response);
       getSessionsFromServer();
       setIsDialogOpen(false);

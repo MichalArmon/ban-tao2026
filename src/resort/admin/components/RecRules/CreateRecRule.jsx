@@ -1,17 +1,18 @@
 import { useSession } from "../../../providers/SessionProvider";
 import initialSessionValues from "../../helpers/sessions/initialValues/initialSessionValues";
+import SessionForm from "../sessions/SessionForm";
 initialSessionValues;
-import SessionForm from "./SessionForm";
-function CreateSession() {
+
+function CreateRecRule() {
   const { handleSubmitCreateSession } = useSession();
 
   return (
     <SessionForm
       initialSessionValues={initialSessionValues}
       handleSubmitForm={handleSubmitCreateSession}
-      defaultIsRecursive={false}
+      defaultIsRecursive={true}
     />
   );
 }
 
-export default CreateSession;
+export default CreateRecRule;

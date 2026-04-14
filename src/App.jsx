@@ -23,6 +23,7 @@ import ThankYouPage from "./resort/public/pages/ThankYouPage";
 import AdminOrdersPage from "./resort/admin/pages/AdminOrdersPage";
 import WorkshopsPage from "./resort/public/pages/WorkshopsPage";
 import AdminSessionsPage from "./resort/admin/pages/AdminSessionsPage";
+import AdminRecRulesPage from "./resort/admin/pages/AdminRecRulesPage";
 
 function App() {
   const { setUser } = useUser();
@@ -57,6 +58,7 @@ function App() {
         <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
         <Route path={ADMIN_ROUTES.orders} element={<AdminOrdersPage />} />
         <Route path={ADMIN_ROUTES.sessions} element={<AdminSessionsPage />} />
+        <Route path={ADMIN_ROUTES.recRules} element={<AdminRecRulesPage />} />
         <Route
           path={ADMIN_ROUTES.treatments}
           element={<AdminTreatmentsPage />}

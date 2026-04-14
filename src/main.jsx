@@ -17,6 +17,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import OrderProvider from "./resort/providers/OrderProvider.jsx";
 import SessionProvider from "./resort/providers/SessionProvider.jsx";
+import RecRuleProvider from "./resort/providers/RecRuleProvider.jsx";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -27,11 +29,13 @@ createRoot(document.getElementById("root")).render(
               <WorkshopProvider>
                 <TreatmentProvider>
                   <RoomProvider>
-                    <SessionProvider>
-                      <OrderProvider>
-                        <App />
-                      </OrderProvider>
-                    </SessionProvider>
+                    <RecRuleProvider>
+                      <SessionProvider>
+                        <OrderProvider>
+                          <App />
+                        </OrderProvider>
+                      </SessionProvider>
+                    </RecRuleProvider>
                   </RoomProvider>
                 </TreatmentProvider>
               </WorkshopProvider>

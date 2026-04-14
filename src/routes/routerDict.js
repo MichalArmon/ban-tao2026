@@ -23,4 +23,5 @@ export const ADMIN_ROUTES = {
   sessions: "/admin/sessions",
   users: "/admin/users",
   orders: "/admin/orders",
+  recRules: "/admin/rules",
 };

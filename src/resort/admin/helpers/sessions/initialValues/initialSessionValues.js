@@ -2,15 +2,10 @@ const initialSessionValues = {
   workshopId: "",
   location: "",
   maxCapacity: 10,
-  isRecursive: false, // ברירת המחדל - אירוע בודד
+  isRecursive: false,
 
-  // שדות של סשן בודד
   startTime: null,
 
-  // שדות של חוק (יוצגו רק אם isRecursive === true)
-  startDate: null,
-  endDate: null,
-  daysOfWeek: [],
   hour: "10:00",
 };
 
