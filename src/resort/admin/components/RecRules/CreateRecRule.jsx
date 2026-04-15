@@ -1,15 +1,17 @@
-import { useSession } from "../../../providers/SessionProvider";
-import initialSessionValues from "../../helpers/sessions/initialValues/initialSessionValues";
+import { useRecRule } from "../../../providers/RecRuleProvider";
+
+import initialRecRuleValues from "../../helpers/recRules/initialValues/recRuleInitialValues";
+
 import SessionForm from "../sessions/SessionForm";
-initialSessionValues;
 
 function CreateRecRule() {
-  const { handleSubmitCreateSession } = useSession();
+  const { handleSubmitCreateRecRule } = useRecRule();
 
   return (
     <SessionForm
-      initialSessionValues={initialSessionValues}
-      handleSubmitForm={handleSubmitCreateSession}
+      isEditMode={false}
+      initialSessionValues={initialRecRuleValues}
+      handleSubmitForm={handleSubmitCreateRecRule}
       defaultIsRecursive={true}
     />
   );

@@ -7,6 +7,7 @@ function CreateSession() {
 
   return (
     <SessionForm
+      isEditMode={false}
       initialSessionValues={initialSessionValues}
       handleSubmitForm={handleSubmitCreateSession}
       defaultIsRecursive={false}

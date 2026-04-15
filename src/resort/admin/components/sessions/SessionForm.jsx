@@ -23,6 +23,7 @@ function SessionForm({
   initialSessionValues,
   handleSubmitForm,
   defaultIsRecursive,
+  isEditMode,
 }) {
   const [isRecursive, setIsRecursive] = useState(defaultIsRecursive);
   const { session } = useSession();
@@ -32,6 +33,23 @@ function SessionForm({
   useEffect(() => {
     getWorkshopsFromServer();
   }, []);
+  console.log(initialSessionValues._id);
+
+  // פונקציה לכותרת הטופס
+  const getFormTitle = () => {
+    if (isEditMode && isRecursive) return "Edit Schedule Rule";
+    if (isEditMode && !isRecursive) return "Edit Session";
+    if (!isEditMode && isRecursive) return "Create Schedule Rule";
+    if (!isEditMode && !isRecursive) return "Create Session";
+  };
+
+  // פונקציה לכפתור השליחה
+  const getSubmitButtonText = () => {
+    if (isEditMode && isRecursive) return "Update Schedule";
+    if (isEditMode && !isRecursive) return "Update Session";
+    if (!isEditMode && isRecursive) return "Generate Schedule";
+    if (!isEditMode && !isRecursive) return "Create Session";
+  };
 
   // פונקציה לעדכון ימי השבוע בתוך ה-Hook
   const handleDayToggle = (dayIndex) => {
@@ -57,28 +75,10 @@ function SessionForm({
       <Box sx={{ p: 4, display: "flex", justifyContent: "center" }}>
         <Paper elevation={3} sx={{ p: 4, maxWidth: 600, width: "100%" }}>
           <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-            Create Workshop Session
+            {getFormTitle()}
           </Typography>
 
-          {/* <FormControlLabel
-            control={
-              <Switch
-                checked={isRecursive}
-                onChange={(e) => {
-                  setIsRecursive(e.target.checked); // מעדכן את התצוגה (מה שהיה לך)
-                  setFormDetails({
-                    ...formDetails,
-                    isRecursive: e.target.checked,
-                  }); // מעדכן את המידע שיישלח
-                }}
-              />
-            }
-            label={isRecursive ? "Recursive (Multiple)" : "Single Session"}
-            sx={{ mb: 2 }}
-          /> */}
-
           <Grid container spacing={2}>
-            {/* בחירת וורקשופ */}
             <Grid item size={{ xs: 12, md: 6 }}>
               <MyTextField
                 select
@@ -189,7 +189,7 @@ function SessionForm({
                 type="submit"
                 size="large"
               >
-                {isRecursive ? "Generate Schedule" : "Create Session"}
+                {getSubmitButtonText()}
               </Button>
             </Grid>
           </Grid>

@@ -69,26 +69,26 @@ export default function SessionProvider({ children }) {
 
   // ✔️✔️✔️RECURSIVE✔️✔️✔️
 
-  const handleSubmitCreateRecursiveSession = async (data) => {
-    const sessionDetailsForServer = normalizeSessionDetails(data);
+  // const handleSubmitCreateRecursiveSession = async (data) => {
+  //   const sessionDetailsForServer = normalizeSessionDetails(data);
 
-    try {
-      console.log("data for server", sessionDetailsForServer);
-      const response = await axios.post(
-        `${URL}/workshop-sessions/recursive`,
-        sessionDetailsForServer,
-      );
-      console.log(response);
-      getSessionsFromServer();
-      setIsDialogOpen(false);
-    } catch (error) {
-      console.error("General Error Caught:", error);
-      if (error.response) {
-        console.log(error.response.data);
-        alert(error.response.data.message);
-      }
-    }
-  };
+  //   try {
+  //     console.log("data for server", sessionDetailsForServer);
+  //     const response = await axios.post(
+  //       `${URL}/workshop-sessions/recursive`,
+  //       sessionDetailsForServer,
+  //     );
+  //     console.log(response);
+  //     getSessionsFromServer();
+  //     setIsDialogOpen(false);
+  //   } catch (error) {
+  //     console.error("General Error Caught:", error);
+  //     if (error.response) {
+  //       console.log(error.response.data);
+  //       alert(error.response.data.message);
+  //     }
+  //   }
+  // };
 
   // ✔️✔️✔️EDIT Session ✔️✔️✔️
 
@@ -136,7 +136,7 @@ export default function SessionProvider({ children }) {
         isDialogOpen,
         setIsDialogOpen,
         handleGetSessionByWorkshop,
-        handleSubmitCreateRecursiveSession,
+        // handleSubmitCreateRecursiveSession,
       }}
     >
       {children}

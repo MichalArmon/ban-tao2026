@@ -29,6 +29,7 @@ export default function WorkshopProvider({ children }) {
       const response = await axios.get(`${URL}/workshops/${id}`);
       console.log(response);
       setWorkshop(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
     }

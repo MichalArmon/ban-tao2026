@@ -12,6 +12,7 @@ import { Add } from "@mui/icons-material";
 import { useRecRule } from "../../providers/RecRuleProvider";
 import CreateSession from "../components/sessions/CreateSession";
 import CreateRecRule from "../components/RecRules/CreateRecRule";
+import RecRuleWeekTable from "../components/RecRules/RecRuleWeekTable";
 
 function AdminRecRulesPage() {
   const { isDialogOpen, setIsDialogOpen, setRecRule } = useRecRule();
@@ -40,7 +41,10 @@ function AdminRecRulesPage() {
           <CreateRecRule />
         </DialogContent>
       </Dialog>
-      <RecRulesDataList />
+      <Box mb={5}>
+        <RecRulesDataList />
+      </Box>
+      <RecRuleWeekTable />
     </Box>
   );
 }

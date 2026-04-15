@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useRecRule } from "../../../providers/RecRuleProvider";
 
 import EditSession from "../sessions/EditSession";
+import EditRecRule from "./EditRecRule";
 
 function RecRulesDataList() {
   const { getRecRulesFromServer, recRules, handleDeleteRecRule } = useRecRule();
@@ -135,12 +136,7 @@ function RecRulesDataList() {
       >
         <DialogTitle>Edit RecRule</DialogTitle>
         <DialogContent dividers>
-          {/* {recRuleSelected && (
-            // <EditSession
-            //   sessionSelected={recRuleSelected}
-            //   setIsDialogOpen={setIsDialogOpen}
-            // />
-          )} */}
+          <EditRecRule recRuleSelected={recRuleSelected} />
         </DialogContent>
       </Dialog>
     </>

@@ -31,6 +31,7 @@ function EditSession({ sessionSelected, setIsDialogOpen }) {
   return (
     <>
       <SessionForm
+        isEditMode={true}
         key={session._id}
         initialSessionValues={initialEditSessionValues(session)}
         handleSubmitForm={handleSaveAndCloseEdit}

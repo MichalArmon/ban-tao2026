@@ -5,6 +5,7 @@ import { useSnackBar } from "./SnackBarProvider";
 import dayjs from "dayjs";
 import { useUser } from "./UserProvider";
 import { useNavigate } from "react-router-dom";
+import normalizeRecRuleDetails from "../admin/helpers/recRules/normalization/normalizeRecRuleDetails";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -45,8 +46,12 @@ export default function RecRuleProvider({ children }) {
   // ✔️✔️✔️CREATE RecRule ✔️✔️✔️
 
   const handleSubmitCreateRecRule = async (data) => {
+    const recRuleDetailsForServer = normalizeRecRuleDetails(data);
     try {
-      const response = await axios.post(`${URL}/recurring-rules`, data);
+      const response = await axios.post(
+        `${URL}/recurring-rules`,
+        recRuleDetailsForServer,
+      );
       console.log(response);
       getRecRulesFromServer();
       setIsDialogOpen(false);
