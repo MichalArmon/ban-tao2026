@@ -122,6 +122,7 @@ function SessionForm({
                 label={isRecursive ? "Start Date" : "Session Date"}
                 type="date"
                 name="startDate"
+                value={formDetails.startDate || ""}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange}
                 required
@@ -148,6 +149,7 @@ function SessionForm({
                   <MyTextField
                     fullWidth
                     label="End Date (Until when?)"
+                    value={formDetails.endDate || ""}
                     type="date"
                     name="endDate"
                     InputLabelProps={{ shrink: true }}

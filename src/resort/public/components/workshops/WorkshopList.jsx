@@ -25,6 +25,8 @@ function WorkshopList() {
           level={workshop.level}
           intensity={workshop.intensity}
           bullets={workshop.bullets}
+          workshopId={workshop._id}
+          key={workshop._id}
         />
       ))}
     </Box>

@@ -9,6 +9,8 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import WorkshopModal from "./WorkshopModel";
+import { useState } from "react";
 
 function WorkshopListSection({
   imgSrc,
@@ -22,7 +24,12 @@ function WorkshopListSection({
   intensity,
   price,
   reverse = false,
+  workshopId,
 }) {
+  const [open, setOpen] = useState(false);
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
       <Grid
@@ -87,9 +94,15 @@ function WorkshopListSection({
               </Stack>
             )}
             <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
-              <Button variant="contained">Book Now</Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                Book Now
+              </Button>
 
-              {/* 🟣 כפתור שפותח את הלו״ז */}
               <Button variant="text" onClick={() => {}}>
                 See Schedule
               </Button>
@@ -97,6 +110,7 @@ function WorkshopListSection({
           </Stack>
         </Grid>
       </Grid>
+      <WorkshopModal open={open} onClose={onClose} workshopId={workshopId} />
     </Container>
   );
 }

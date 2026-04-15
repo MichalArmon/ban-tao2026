@@ -47,6 +47,7 @@ export default function RecRuleProvider({ children }) {
 
   const handleSubmitCreateRecRule = async (data) => {
     const recRuleDetailsForServer = normalizeRecRuleDetails(data);
+    console.log("formDetails before submit:", data);
     try {
       const response = await axios.post(
         `${URL}/recurring-rules`,

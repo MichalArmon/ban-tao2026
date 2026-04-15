@@ -15,7 +15,7 @@ export default function WorkshopProvider({ children }) {
 
   // ✔️✔️✔️GET WorkshopS ✔️✔️✔️
   const getWorkshopsFromServer = async () => {
-    const response = await axios.get(`${URL}/Workshops`);
+    const response = await axios.get(`${URL}/workshops`);
     const workshopsData = response.data;
     setWorkshops(workshopsData);
 
@@ -35,7 +35,7 @@ export default function WorkshopProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️CREATE ROOM ✔️✔️✔️
+  // ✔️✔️✔️CREATE workshop ✔️✔️✔️
 
   const handleSubmitCreateWorkshop = async (data) => {
     const workshopDetailsForServer = normalizeWorkshopDetails(data);
@@ -58,15 +58,37 @@ export default function WorkshopProvider({ children }) {
     }
   };
 
+  // ✔️✔️✔️workshop TITLE ✔️✔️✔️
+  const getWorkshopTitle = (workshopId) => {
+    const foundWorkshop = workshops?.find(
+      (workshop) => workshop._id === workshopId,
+    );
+
+    return foundWorkshop ? foundWorkshop.title : "Loading title...";
+  };
+  // ✔️✔️✔️workshop DURATION ✔️✔️✔️
+  const getWorkshopDuration = (workshopId) => {
+    const foundWorkshop = workshops?.find(
+      (workshop) => workshop._id === workshopId,
+    );
+
+    return foundWorkshop ? foundWorkshop.duration : "Loading title...";
+  };
+
+  // ✔️✔️✔️workshop detail ✔️✔️✔️
+  const getWorkshopDetails = (workshopId) => {
+    return workshops?.find((workshop) => workshop._id === workshopId);
+  };
+
   // ✔️✔️✔️EDIT Workshop ✔️✔️✔️
 
   const handleSubmitEditWorkshop = async (id, data) => {
     const workshopDetailsForServer = normalizeWorkshopDetails(data);
 
     try {
-      console.log("data for server", WorkshopDetailsForServer);
+      console.log("data for server", workshopDetailsForServer);
       const response = await axios.put(
-        `${URL}/Workshops/${id}`,
+        `${URL}/workshops/${id}`,
         workshopDetailsForServer,
       );
       console.log(response);
@@ -103,6 +125,9 @@ export default function WorkshopProvider({ children }) {
         workshop,
         isDialogOpen,
         setIsDialogOpen,
+        getWorkshopTitle,
+        getWorkshopDuration,
+        getWorkshopDetails,
       }}
     >
       {children}

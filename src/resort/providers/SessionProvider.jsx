@@ -38,12 +38,12 @@ export default function SessionProvider({ children }) {
   // ✔️✔️✔️GET Session by Workshop ✔️✔️✔️
   const handleGetSessionByWorkshop = async (workshopId) => {
     try {
-      setSession(null);
+      setSessions(null);
       const response = await axios.get(
         `${URL}/workshop-sessions/workshop/${workshopId}`,
       );
 
-      setSession(response.data);
+      setSessions(response.data);
     } catch (error) {
       console.log(error);
     }
