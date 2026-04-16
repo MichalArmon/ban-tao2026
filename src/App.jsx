@@ -44,9 +44,13 @@ function App() {
         <Route path={ROUTES.register} element={<RegisterPage />} />
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.rooms} element={<RoomsPage />} />
-        <Route path="rooms/:id/order" element={<OrderPage />} />
+        <Route path="rooms/:id/order" element={<OrderPage type="room" />} />
         <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
         <Route path={ROUTES.workshops} element={<WorkshopsPage />} />
+        <Route
+          path="workshops/:id/order"
+          element={<OrderPage type="workshop" />}
+        />
         <Route path={ROUTES.thankYou} element={<ThankYouPage />} />
       </Route>
 

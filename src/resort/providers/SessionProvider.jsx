@@ -13,6 +13,7 @@ export default function SessionProvider({ children }) {
   const [session, setSession] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [reservationId, setReservationId] = useState("");
 
   // ✔️✔️✔️GET SessionS ✔️✔️✔️
   const getSessionsFromServer = async () => {
@@ -30,6 +31,7 @@ export default function SessionProvider({ children }) {
       const response = await axios.get(`${URL}/workshop-sessions/${id}`);
       console.log(response.data);
       setSession(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -65,6 +67,24 @@ export default function SessionProvider({ children }) {
         console.log(error.response.data);
         alert(error.response.data.message);
       }
+    }
+  };
+
+  // ✔️✔️✔️ CRETE Session RESERVATION ✔️✔️✔️
+
+  const handleCreateSessionReservation = async (reservation) => {
+    try {
+      const response = await axios.post(
+        `${URL}/workshop-reservations`,
+        reservation,
+      );
+      console.log("res id:", response.data.reservation._id);
+      setReservationId(response.data.reservation._id);
+      const newId = response.data.reservation._id;
+      sessionStorage.setItem("currentSessionReservationId", newId);
+      console.log("ID Saved to storage:", newId);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -137,7 +157,7 @@ export default function SessionProvider({ children }) {
         isDialogOpen,
         setIsDialogOpen,
         handleGetSessionByWorkshop,
-        // handleSubmitCreateRecursiveSession,
+        handleCreateSessionReservation,
       }}
     >
       {children}

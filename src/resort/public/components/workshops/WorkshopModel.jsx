@@ -16,18 +16,24 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import dayjs from "dayjs";
 import { useWorkshop } from "../../../providers/WorkshopProvider";
 import { useSession } from "../../../providers/SessionProvider";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../providers/UserProvider";
 
 export default function WorkshopModal({ open, onClose, workshopId }) {
   const [groupedSessions, setGroupedSessions] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
-  const { sessions, getSessionsFromServer, handleGetSessionByWorkshop } =
-    useSession();
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const {
+    sessions,
+    getSessionsFromServer,
+    handleGetSessionByWorkshop,
+    handleCreateSessionReservation,
+  } = useSession();
   const { getWorkshopTitle, workshops, getWorkshopsFromServer } = useWorkshop();
 
   useEffect(() => {
-    console.log(workshops);
-
     if (!sessions || sessions.length === 0) {
       getSessionsFromServer();
     }
@@ -85,6 +91,16 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
     }
   }, [open, workshopId, weekOffset]);
 
+  const handleReservation = async (session) => {
+    const reservation = {
+      userId: user?._id,
+      sessionId: session._id,
+    };
+    await handleCreateSessionReservation(reservation);
+    console.log("reservation:", reservation);
+    navigate(`/resort/workshops/${session._id}/order`);
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle
@@ -117,7 +133,7 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
               variant="outlined"
               size="small"
               onClick={() => setWeekOffset((prev) => prev - 1)}
-              disabled={weekOffset <= 0}
+              // disabled={weekOffset <= 0}
             >
               {"< PREVIOUS WEEK"}
             </Button>
@@ -132,7 +148,6 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
               variant="outlined"
               size="small"
               onClick={() => setWeekOffset((prev) => prev + 1)}
-              disabled={Object.keys(groupedSessions).length === 0}
             >
               {"NEXT WEEK >"}
             </Button>
@@ -209,9 +224,7 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
                         backgroundColor: "#7a6b63",
                         "&:hover": { backgroundColor: "#5c4e46" },
                       }}
-                      onClick={() =>
-                        console.log("Booking session:", session._id)
-                      }
+                      onClick={() => handleReservation(session)}
                     >
                       BOOK
                     </Button>

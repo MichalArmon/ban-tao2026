@@ -56,7 +56,7 @@ function RoomAvailabilityCard({ room }) {
   const handleBooking = async () => {
     await handleCreateRoomReservation(reservation);
     console.log("reservation:", reservation);
-    navigate(`rooms/${room._id}/order`);
+    navigate(`/resort/rooms/${room._id}/order`);
   };
 
   const {
