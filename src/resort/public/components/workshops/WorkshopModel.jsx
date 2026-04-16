@@ -20,6 +20,7 @@ import { useSession } from "../../../providers/SessionProvider";
 export default function WorkshopModal({ open, onClose, workshopId }) {
   const [groupedSessions, setGroupedSessions] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [weekOffset, setWeekOffset] = useState(0);
   const { sessions, getSessionsFromServer, handleGetSessionByWorkshop } =
     useSession();
   const { getWorkshopTitle, workshops, getWorkshopsFromServer } = useWorkshop();
@@ -35,31 +36,25 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
       getWorkshopsFromServer();
     }
   }, [workshops]);
+  const startOfWeek = dayjs().add(weekOffset, "week").startOf("week");
+  const endOfWeek = dayjs().add(weekOffset, "week").endOf("week");
 
-  useEffect(() => {
-    if (open && workshopId) {
-      const fetchAndGroupSessions = async () => {
-        setIsLoading(true);
-        try {
-          const sessionsByWorkshop =
-            await handleGetSessionByWorkshop(workshopId);
-          const grouped = groupSessionsByDate(sessions);
-          setGroupedSessions(grouped);
-        } catch (error) {
-          console.log("Error fetching sessions:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchAndGroupSessions();
-    }
-  }, [open, workshopId]);
-  // פונקציית עזר: מקבצת את מערך הסשנים לאובייקט לפי תאריכים
-  // התוצאה תיראה ככה: { '2025-11-15': [session1, session2], '2025-11-22': [session3] }
-  const groupSessionsByDate = () => {
+  const filterCurrentWeekSessions = (sessionsArray) => {
+    return sessionsArray.filter((session) => {
+      const sessionDate = dayjs(session.startTime);
+
+      return (
+        sessionDate.isSame(startOfWeek, "day") ||
+        sessionDate.isSame(endOfWeek, "day") ||
+        (sessionDate.isAfter(startOfWeek) && sessionDate.isBefore(endOfWeek))
+      );
+    });
+  };
+
+  const groupSessionsByDate = (sessionsArray) => {
     const grouped = {};
-    if (!sessions || !Array.isArray(sessions)) return grouped;
-    sessions.forEach((session) => {
+    if (!sessionsArray || !Array.isArray(sessionsArray)) return grouped;
+    sessionsArray.forEach((session) => {
       // מחלצים רק את התאריך (בלי שעה) כדי שישמש כמפתח
       const dateKey = dayjs(session.startTime).format("YYYY-MM-DD");
       if (!grouped[dateKey]) {
@@ -70,20 +65,25 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
     return grouped;
   };
 
-  const filterCurrentWeekSessions = (groupedSessions) => {
-    const startOfWeek = dayjs().startOf("week");
-    const endOfWeek = dayjs().endOf("week");
-
-    return groupedSessions.filter((session) => {
-      const sessionDate = dayjs(session.startTime);
-
-      return (
-        sessionDate.isSame(startOfWeek, "day") ||
-        sessionDate.isSame(endOfWeek, "day") ||
-        (sessionDate.isAfter(startOfWeek) && sessionDate.isBefore(endOfWeek))
-      );
-    });
-  };
+  useEffect(() => {
+    if (open && workshopId) {
+      const fetchAndGroupSessions = async () => {
+        setIsLoading(true);
+        try {
+          const sessionsByWorkshop =
+            await handleGetSessionByWorkshop(workshopId);
+          const weeklySessions = filterCurrentWeekSessions(sessionsByWorkshop);
+          const grouped = groupSessionsByDate(weeklySessions);
+          setGroupedSessions(grouped);
+        } catch (error) {
+          console.log("Error fetching sessions:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchAndGroupSessions();
+    }
+  }, [open, workshopId, weekOffset]);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -113,7 +113,12 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
           </Typography>
           {/* כפתורי הניווט בין שבועות (כרגע רק עיצוב) */}
           <Box sx={{ display: "flex", gap: 1 }}>
-            <Button variant="outlined" size="small" disabled>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setWeekOffset((prev) => prev - 1)}
+              disabled={weekOffset <= 0}
+            >
               {"< PREVIOUS WEEK"}
             </Button>
             <Button
@@ -121,9 +126,14 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
               size="small"
               sx={{ color: "text.primary", borderColor: "#ccc" }}
             >
-              11/09 - 11/15
+              {startOfWeek.format("DD/MM")} - {endOfWeek.format("DD/MM")}
             </Button>
-            <Button variant="outlined" size="small">
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setWeekOffset((prev) => prev + 1)}
+              disabled={Object.keys(groupedSessions).length === 0}
+            >
               {"NEXT WEEK >"}
             </Button>
           </Box>
@@ -131,7 +141,7 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
 
         {/* לולאה שעוברת על כל תאריך בקבוצות שיצרנו */}
         {isLoading ? (
-          <Typography sx={{ textAlign: "center", mt: 4 }}>
+          <Typography variant="h1" sx={{ textAlign: "center", mt: 4 }}>
             Loading schedule...
           </Typography>
         ) : (

@@ -44,6 +44,7 @@ export default function SessionProvider({ children }) {
       );
 
       setSessions(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
     }
