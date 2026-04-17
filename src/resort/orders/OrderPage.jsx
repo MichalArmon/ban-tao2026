@@ -85,12 +85,16 @@ function OrderPage({ type }) {
           }}
         >
           <Typography sx={{ mb: 2, pl: 2 }} variant="h5">
-            Complete booking details
+            {type === "room"
+              ? "Complete booking details"
+              : "Complete participant Details"}
           </Typography>
           {type == "room" ? (
             <CreateOrder />
           ) : (
-            <ParticipantDetailsForm onSubmit={handleEditSessionReservation} />
+            <ParticipantDetailsForm
+              onSubmit={handleEditSessionReservation(reservationId, formData)}
+            />
           )}
         </Box>
       </Grid>
