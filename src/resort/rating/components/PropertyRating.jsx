@@ -41,12 +41,10 @@ const fake = {
   reviewsCount: 102,
 };
 
-// שיניתי את שם הקומפוננטה שלך כדי למנוע התנגשות
 function PropertyRating() {
   return (
     <>
       <Box>
-        {/* עכשיו זה קורא ל-Rating של Material UI! */}
         <Rating
           value={fake.rating}
           precision={0.5}

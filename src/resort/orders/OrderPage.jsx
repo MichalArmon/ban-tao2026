@@ -26,11 +26,17 @@ import { useSession } from "../providers/SessionProvider";
 import { useParams } from "react-router-dom";
 import { useWorkshop } from "../providers/WorkshopProvider";
 import OrderCardRoom from "./components/cards/OrderCardRoom";
+import ParticipantDetailsForm from "../public/components/sessions/ParticipantDetailsForm";
 
 function OrderPage({ type }) {
   const { handleGetRoom, room, checkIn, checkOut } = useRoom();
   const { handleGetUser, user } = useUser();
-  const { handleGetSession, setSession, session } = useSession();
+  const {
+    handleGetSession,
+    setSession,
+    session,
+    handleEditSessionReservation,
+  } = useSession();
   const { id } = useParams();
   const { handleGetWorkshop, workshop } = useWorkshop();
   const getWorkShop = async () => {
@@ -81,7 +87,11 @@ function OrderPage({ type }) {
           <Typography sx={{ mb: 2, pl: 2 }} variant="h5">
             Complete booking details
           </Typography>
-          {type == "room" ? <CreateOrder /> : null}
+          {type == "room" ? (
+            <CreateOrder />
+          ) : (
+            <ParticipantDetailsForm onSubmit={handleEditSessionReservation} />
+          )}
         </Box>
       </Grid>
       {/* RIGHT SECTION 👉👉 */}
