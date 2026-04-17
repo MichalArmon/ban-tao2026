@@ -38,22 +38,22 @@ export default function OrderProvider({ children }) {
   // ✔️✔️✔️CREATE Order ✔️✔️✔️
 
   const handleSubmitCreateOrder = async (order) => {
-    const savedId = sessionStorage.getItem("currentReservationId");
     try {
       console.log("Data from Form:", order);
       console.log("ID from Provider State:", reservationId);
+
       const newOrder = {
         ...order,
-        userId: user._id,
-        roomReservations: [savedId],
+        userId: order.userId || user._id,
       };
 
       const response = await axios.post(`${URL}/orders`, newOrder);
       console.log(response);
       setIsDialogOpen(false);
-      if (user.role !== "admin") {
-        navigate(ROUTES.thankYou);
-      }
+      // if (user.role !== "admin") {
+      //   navigate(ROUTES.thankYou);
+      // }
+      navigate(ROUTES.thankYou);
     } catch (error) {
       console.log(error);
     }

@@ -16,6 +16,9 @@ import {
 import useForm from "../../../hooks/useForm";
 import initialParticipantDetailsValues from "../../../admin/helpers/sessionReservation/initialValues/initialValuesParticipantDetails";
 import participantDetailsSchema from "../../../admin/models/sessionReservation/participantDetailsSchema";
+import { useSessionReservation } from "../../../providers/SessionReservationProvider";
+
+import { useOrder } from "../../../providers/OrderProvider";
 
 const levels = ["beginner", "intermediate", "advanced"];
 
@@ -35,12 +38,42 @@ const injuriesOptions = [
 
 const extraOptions = ["Yoga mat", "Blocks", "Private guidance", "Gentle pace"];
 
-function ParticipantDetailsForm({ onSubmit }) {
+function ParticipantDetailsForm() {
+  const { handleSubmitCreateOrder } = useOrder();
+  const { handleEditParticipantDetails } = useSessionReservation();
+  const handleSaveAndCloseEdit = async (formData) => {
+    try {
+      const reservationId = sessionStorage.getItem(
+        "currentSessionReservationId",
+      );
+      const reservationAfterUpdate = await handleEditParticipantDetails(
+        reservationId,
+        formData,
+      );
+      if (!reservationAfterUpdate) {
+        return (
+          <Box bgcolor="red" height="1300">
+            sfsfsfs
+          </Box>
+        );
+      }
+      const dataReadyForOrder = {
+        userId: reservationAfterUpdate.userId,
+        studioReservations: [reservationAfterUpdate._id],
+        totalPrice: 1000,
+      };
+      console.log("dataReadyForOrder:", dataReadyForOrder);
+      const newOrder = await handleSubmitCreateOrder(dataReadyForOrder);
+      return newOrder;
+    } catch (error) {
+      console.error("Error saving Order:", error);
+    }
+  };
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
       initialParticipantDetailsValues,
       participantDetailsSchema,
-      onSubmit,
+      handleSaveAndCloseEdit,
     );
 
   return (

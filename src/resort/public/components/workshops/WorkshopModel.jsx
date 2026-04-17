@@ -18,6 +18,7 @@ import { useWorkshop } from "../../../providers/WorkshopProvider";
 import { useSession } from "../../../providers/SessionProvider";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../providers/UserProvider";
+import { useSessionReservation } from "../../../providers/SessionReservationProvider";
 
 export default function WorkshopModal({ open, onClose, workshopId }) {
   const [groupedSessions, setGroupedSessions] = useState({});
@@ -25,12 +26,9 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
   const [weekOffset, setWeekOffset] = useState(0);
   const navigate = useNavigate();
   const { user } = useUser();
-  const {
-    sessions,
-    getSessionsFromServer,
-    handleGetSessionByWorkshop,
-    handleCreateSessionReservation,
-  } = useSession();
+  const { sessions, getSessionsFromServer, handleGetSessionByWorkshop } =
+    useSession();
+  const { handleCreateSessionReservation } = useSessionReservation();
   const { getWorkshopTitle, workshops, getWorkshopsFromServer } = useWorkshop();
 
   useEffect(() => {
@@ -95,10 +93,15 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
     const reservation = {
       userId: user?._id,
       sessionId: session._id,
+      guestsCount: 1,
+      status: "pending",
     };
-    await handleCreateSessionReservation(reservation);
+    const reservationId = await handleCreateSessionReservation(reservation);
     console.log("reservation:", reservation);
-    navigate(`/resort/workshops/${session._id}/order`);
+    if (!reservationId) {
+      return <Typography>loading...</Typography>;
+    }
+    navigate(`/resort/workshops/${reservationId}/order`);
   };
 
   return (

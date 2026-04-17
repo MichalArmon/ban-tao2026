@@ -10,8 +10,10 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-
-function OrderCardWorkshop({ service, hour }) {
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import dayjs from "dayjs";
+function OrderCardWorkshop({ service, date }) {
   return (
     <>
       <Card
@@ -47,7 +49,6 @@ function OrderCardWorkshop({ service, hour }) {
             <Typography
               variant="h5"
               component="div"
-              textAlign="center"
               sx={{ fontWeight: "bold", mb: 4 }}
             >
               {service.title}
@@ -69,48 +70,30 @@ function OrderCardWorkshop({ service, hour }) {
           </Box>
 
           {/* 3. Action Section (Bottom Right) */}
-          <Stack
-            direction="column"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ mt: "auto", borderTop: "1px solid #eee", pt: 2 }}
-          >
+
+          <Box sx={{ display: "flex", mb: 2 }}>
+            <CalendarTodayIcon sx={{ mr: 1, color: "#8d6e63" }} />
             <Box>
-              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                Your booking details
+              <Typography variant="caption" color="text.secondary">
+                Date
               </Typography>
-
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{ mt: 2, mb: 2 }}
-                divider={<Divider orientation="vertical" flexItem />}
-              >
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    date
-                  </Typography>
-                  <Typography variant="body2" fontWeight="bold">
-                    ffgdg
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {hour}
-                  </Typography>
-                </Box>
-              </Stack>
-
-              <Divider sx={{ my: 2 }} />
-
-              <Box>
-                <Typography variant="body2" fontWeight="bold">
-                  yoga
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  yoga
-                </Typography>
-              </Box>
+              <Typography variant="body1" fontWeight={500}>
+                {dayjs(date).format("dddd, MM/DD/YYYY")}
+              </Typography>
             </Box>
-          </Stack>
+          </Box>
+
+          <Box sx={{ display: "flex" }}>
+            <AccessTimeIcon sx={{ mr: 1, color: "#8d6e63" }} />
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Time
+              </Typography>
+              <Typography variant="body1" fontWeight={500}>
+                {dayjs(date).format("hh:mm A")}
+              </Typography>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
       <Card

@@ -11,8 +11,6 @@ import {
   Divider,
 } from "@mui/material";
 
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-
 import { useEffect } from "react";
 
 import { useRoom } from "../providers/RoomProvider";
@@ -27,20 +25,20 @@ import { useParams } from "react-router-dom";
 import { useWorkshop } from "../providers/WorkshopProvider";
 import OrderCardRoom from "./components/cards/OrderCardRoom";
 import ParticipantDetailsForm from "../public/components/sessions/ParticipantDetailsForm";
+import { useSessionReservation } from "../providers/SessionReservationProvider";
 
 function OrderPage({ type }) {
   const { handleGetRoom, room, checkIn, checkOut } = useRoom();
   const { handleGetUser, user } = useUser();
-  const {
-    handleGetSession,
-    setSession,
-    session,
-    handleEditSessionReservation,
-  } = useSession();
+  const { handleGetSession, setSession, session } = useSession();
   const { id } = useParams();
+  const { handleGetSessionReservation } = useSessionReservation();
   const { handleGetWorkshop, workshop } = useWorkshop();
   const getWorkShop = async () => {
-    const currentSession = await handleGetSession(id);
+    const reservation = await handleGetSessionReservation(id);
+    if (!reservation?.sessionId) return;
+
+    const currentSession = await handleGetSession(reservation.sessionId);
     if (!currentSession?.workshopId) return;
     setSession(currentSession);
     await handleGetWorkshop(currentSession.workshopId);
@@ -55,7 +53,11 @@ function OrderPage({ type }) {
     }
   }, [id, type]);
   if (type === "workshop" && (!session || !workshop)) {
-    return <Box>Loading...</Box>;
+    return (
+      <Box bgcolor="red" height="1300px">
+        Loading...
+      </Box>
+    );
   }
 
   if (type === "room" && !room) {
@@ -92,16 +94,14 @@ function OrderPage({ type }) {
           {type == "room" ? (
             <CreateOrder />
           ) : (
-            <ParticipantDetailsForm
-              onSubmit={handleEditSessionReservation(reservationId, formData)}
-            />
+            <ParticipantDetailsForm reservationId={id} />
           )}
         </Box>
       </Grid>
       {/* RIGHT SECTION 👉👉 */}
       <Grid size={{ md: 5, xs: 12 }}>
         {type === "workshop" ? (
-          <OrderCardWorkshop service={workshop} />
+          <OrderCardWorkshop service={workshop} date={session.startTime} />
         ) : (
           <OrderCardRoom service={room} checkIn={checkIn} checkOut={checkOut} />
         )}

@@ -2,8 +2,6 @@ import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import normalizeSessionDetails from "../admin/helpers/Sessions/normalization/normalizeSessionDetails";
 
-import { Email } from "@mui/icons-material";
-import normalizeSessionReservation from "../admin/helpers/sessionReservation/normalization/normalizeSessionReservationDetails";
 const URL = "http://localhost:8000";
 
 // const URL = "http://localhost:3000/api/v1";
@@ -105,51 +103,9 @@ export default function SessionProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️ CRETE Session RESERVATION ✔️✔️✔️
-
-  const handleCreateSessionReservation = async (reservation) => {
-    try {
-      const response = await axios.post(
-        `${URL}/workshop-reservations`,
-        reservation,
-      );
-      console.log("res id:", response.data.reservation._id);
-      setReservationId(response.data.reservation._id);
-      const newId = response.data.reservation._id;
-      sessionStorage.setItem("currentSessionReservationId", newId);
-      console.log("ID Saved to storage:", newId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // ✔️✔️✔️ EDIT Session RESERVATION ✔️✔️✔️
-
-  const handleEditSessionReservation = async (id, data) => {
-    const sessionReservationDetailsForServer =
-      normalizeSessionReservation(data);
-
-    try {
-      console.log("data for server", sessionReservationDetailsForServer);
-      const response = await axios.put(
-        `${URL}/workshop-reservations/${id}`,
-        sessionReservationDetailsForServer,
-      );
-      console.log(response);
-      getSessionsFromServer();
-    } catch (error) {
-      console.error("General Error Caught:", error);
-      if (error.response) {
-        console.log(error.response.data);
-        alert(error.response.data.message);
-      }
-    }
-  };
-
   return (
     <SessionContext.Provider
       value={{
-        handleEditSessionReservation,
         getSessionsFromServer,
         handleSubmitCreateSession,
         handleGetSession,
@@ -161,7 +117,6 @@ export default function SessionProvider({ children }) {
         isDialogOpen,
         setIsDialogOpen,
         handleGetSessionByWorkshop,
-        handleCreateSessionReservation,
       }}
     >
       {children}

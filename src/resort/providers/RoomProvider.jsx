@@ -96,7 +96,7 @@ export default function RoomProvider({ children }) {
   // ✔️✔️✔️DELETE ROOM ✔️✔️✔️
   const handleDeleteRoom = async (id) => {
     try {
-      const response = await axios.delete(`${URL}/api/v1/rooms/${id}`);
+      const response = await axios.delete(`${URL}/rooms/${id}`);
       await getRoomsFromServer();
     } catch (error) {
       console.log(error);
