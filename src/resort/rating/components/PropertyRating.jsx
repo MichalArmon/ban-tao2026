@@ -8,6 +8,7 @@ import {
   Stack,
   Button,
   Divider,
+  Rating, // <-- הוספתי את הייבוא החסר כאן!
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
@@ -15,7 +16,7 @@ const ScoreBadge = ({ score, text }) => (
   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
     <Box
       sx={{
-        backgroundColor: "#003580", // כחול "בוקינג"
+        backgroundColor: "#003580",
         color: "white",
         padding: "4px 8px",
         borderRadius: "4px",
@@ -36,16 +37,16 @@ const ScoreBadge = ({ score, text }) => (
 
 const fake = {
   location: "350 m from center",
-
   rating: 4.5,
   reviewsCount: 102,
 };
 
-function Rating() {
+// שיניתי את שם הקומפוננטה שלך כדי למנוע התנגשות
+function PropertyRating() {
   return (
     <>
-      {" "}
       <Box>
+        {/* עכשיו זה קורא ל-Rating של Material UI! */}
         <Rating
           value={fake.rating}
           precision={0.5}
@@ -77,4 +78,5 @@ function Rating() {
   );
 }
 
-export default Rating;
+// אל תשכחי לייצא את השם החדש
+export default PropertyRating;

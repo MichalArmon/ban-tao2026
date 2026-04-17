@@ -11,7 +11,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import Rating from "../../../rating/components/Rating";
+import PropertyRating from "../../../rating/components/PropertyRating";
 
 function OrderCardRoom({ service, checkIn, checkOut }) {
   return (
@@ -60,7 +60,7 @@ function OrderCardRoom({ service, checkIn, checkOut }) {
               alignItems="flex-start"
               spacing={2}
             >
-              <Rating />
+              <PropertyRating />
             </Stack>
 
             <Typography
