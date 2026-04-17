@@ -75,6 +75,13 @@ const roomSchema = {
     "number.min": "Stock cannot be negative",
     "any.required": "Stock is required",
   }),
+  roomType: Joi.string()
+    .valid("Single", "Double", "Suite", "Shared", "Studio")
+    .required()
+    .messages({
+      "any.only": "Invalid room type",
+      "any.required": "Room type is required",
+    }),
 };
 
 export default roomSchema;

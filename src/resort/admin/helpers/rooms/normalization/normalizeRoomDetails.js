@@ -21,6 +21,7 @@ function normalizeRoomDetails(data) {
       alt: data.heroAlt,
     },
     gallery: data.gallery || [],
+    roomType: data.roomType,
   };
   return roomDetailsForServer;
 }

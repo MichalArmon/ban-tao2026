@@ -21,6 +21,7 @@ export default function initialEditRoomValues(room) {
     bedType: room.bedType,
 
     stock: room.stock,
+    roomType: room.roomType,
   };
   return initialEditRoomValuesOBG;
 }

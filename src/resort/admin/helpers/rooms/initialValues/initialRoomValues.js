@@ -13,28 +13,17 @@ const initialRoomValues = {
   tags: ["treehouse", "jungle-view", "romantic", "eco-luxury"],
   price: 450,
   currency: "USD",
-  heroPublicId: "ban-tao/rooms/tropical-treehouse/hero",
-  heroUrl:
-    "https://res.cloudinary.com/dhje7hbxd/image/upload/v1730890000/ban-tao/rooms/tropical-treehouse/hero.jpg",
-  heroAlt: "Tropical Canopy Treehouse exterior view",
+  heroPublicId: "",
+  heroUrl: "",
+  heroAlt: "",
   isActive: true,
-  gallery: [
-    {
-      publicId: "ban-tao/rooms/tropical-treehouse/gallery1",
-      url: "https://res.cloudinary.com/dhje7hbxd/image/upload/v1730890000/ban-tao/rooms/tropical-treehouse/gallery1.jpg",
-      alt: "Stone bathtub with jungle view",
-    },
-    {
-      publicId: "ban-tao/rooms/tropical-treehouse/gallery2",
-      url: "https://res.cloudinary.com/dhje7hbxd/image/upload/v1730890000/ban-tao/rooms/tropical-treehouse/gallery2.jpg",
-      alt: "King size bed with mosquito net",
-    },
-  ],
+  gallery: [],
   features: ["Free Wi-Fi", "Air Conditioning", "Room Service", "Coffee Maker"],
   maxGuests: 2,
   sizeM2: 55,
   bedType: "King",
   stock: 2,
+  roomType: "Single",
 };
 
 export default initialRoomValues;

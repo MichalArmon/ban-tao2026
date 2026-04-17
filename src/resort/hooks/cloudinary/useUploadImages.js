@@ -9,8 +9,8 @@ export default function useUploadImages(setFormDetails, type) {
     if (uploadedData) {
       setFormDetails((prev) => ({
         ...prev,
-        images: [
-          ...(prev.images || []),
+        gallery: [
+          ...(prev.gallery || []),
           {
             publicId: uploadedData.publicId,
             url: uploadedData.url,
@@ -44,7 +44,9 @@ export default function useUploadImages(setFormDetails, type) {
   const handleDeleteImageFromGallery = (indexToRemove) => {
     setFormDetails((prev) => ({
       ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove),
+      gallery: (prev.gallery || []).filter(
+        (_, index) => index !== indexToRemove,
+      ),
     }));
   };
   return {

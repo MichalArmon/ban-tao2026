@@ -137,7 +137,7 @@ function WorkshopsDataList() {
         <DialogContent dividers>
           {workshopSelected && (
             <EditWorkshop
-              WorkshopSelected={workshopSelected}
+              workshopSelected={workshopSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}

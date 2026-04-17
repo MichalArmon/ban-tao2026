@@ -7,6 +7,10 @@ import {
   FormControlLabel,
   Switch,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import roomSchema from "../../models/roomSchema";
@@ -16,6 +20,7 @@ import { useRoom } from "../../../providers/RoomProvider";
 import useRoomUploadImages from "../../../hooks/cloudinary/useUploadImages";
 import { Close } from "@mui/icons-material";
 import BulletsField from "../../../../Form/components/BulletsField";
+import TagsInput from "../../../../Form/components/TagsInput";
 
 function RoomForm({ handleSubmitForm, initialRoomValues }) {
   const { room } = useRoom();
@@ -60,6 +65,35 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
                 required
               />
             </Grid>
+            <Grid size={{ md: 6, xs: 12 }}>
+              <FormControl fullWidth error={Boolean(errors.roomType)}>
+                <InputLabel>Room Type</InputLabel>
+
+                <Select
+                  name="roomType"
+                  value={formDetails.roomType || ""}
+                  label="Room Type"
+                  onChange={(e) =>
+                    setFormDetails((prev) => ({
+                      ...prev,
+                      roomType: e.target.value,
+                    }))
+                  }
+                >
+                  <MenuItem value="Single">Single</MenuItem>
+                  <MenuItem value="Double">Double</MenuItem>
+                  <MenuItem value="Suite">Suite</MenuItem>
+                  <MenuItem value="Shared">Shared</MenuItem>
+                  <MenuItem value="Studio">Studio</MenuItem>
+                </Select>
+
+                {errors.roomType && (
+                  <Typography variant="body2" color="error">
+                    {errors.roomType}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
           </Grid>
           <Grid container size={12}>
             <Grid size={{ md: 12, xs: 12 }}>
@@ -99,15 +133,22 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
               />
             </Grid>
             <Grid size={{ md: 12, xs: 12 }}>
-              <MyTextField
+              <TagsInput
                 label="tags"
                 name="tags"
-                onChange={handleChange}
-                error={Boolean(errors.tags)}
-                helperText={errors.tags}
-                value={formDetails.tags}
-                required
+                value={formDetails.tags || []}
+                onChange={(newTags) =>
+                  setFormDetails((prev) => ({
+                    ...prev,
+                    tags: newTags,
+                  }))
+                }
               />
+              {errors.tags && (
+                <Typography variant="body2" color="error" sx={{ mt: 0.5 }}>
+                  {errors.tags}
+                </Typography>
+              )}
             </Grid>
           </Grid>
           <Grid container size={12}>
@@ -195,16 +236,18 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
               />
             </Grid>
             <Grid size={{ md: 6, xs: 12 }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formDetails.active}
-                    onChange={handleChange}
-                  />
-                }
-                label="Active"
-                name="iaActive"
-              />
+              <Grid size={{ md: 6, xs: 12 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      name="isActive"
+                      checked={Boolean(formDetails.isActive)}
+                      onChange={handleChange}
+                    />
+                  }
+                  label="Active"
+                />
+              </Grid>
             </Grid>
           </Grid>
           {/* ✔️✔️✔️ HERO ✔️✔️✔️ */}
@@ -297,8 +340,8 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
                 flexWrap: "wrap",
               }}
             >
-              {formDetails.images &&
-                formDetails.images.map((img, index) => (
+              {formDetails.gallery &&
+                formDetails.gallery.map((img, index) => (
                   <Box
                     key={index}
                     sx={{

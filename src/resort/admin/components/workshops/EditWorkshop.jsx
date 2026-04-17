@@ -7,6 +7,8 @@ import initialEditWorkshopValues from "../../helpers/workshops/initialValues/ini
 function EditWorkshop({ workshopSelected, setIsDialogOpen }) {
   const { handleGetWorkshop, handleSubmitEditWorkshop, workshop } =
     useWorkshop();
+  console.log("workshopSelected:", workshopSelected);
+  console.log("workshop from context:", workshop);
   useEffect(() => {
     if (workshopSelected) {
       handleGetWorkshop(workshopSelected);

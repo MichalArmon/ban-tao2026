@@ -37,15 +37,20 @@ export default function useForm(initialValues, schemaOBJ, onSubmit) {
     validateField(name, value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     const { error } = schema.validate(formDetails, { abortEarly: false });
     if (!error) {
+      console.log("FORM DATA BEFORE SUBMIT:", formDetails);
       onSubmit(formDetails);
     } else {
+      console.log("Joi full error:", error);
+      console.log("Joi details:", error?.details);
       const joiErrors = {};
       error.details.forEach((item) => {
         joiErrors[item.path[0]] = item.message;
       });
+
       setErrors(joiErrors);
     }
   };
