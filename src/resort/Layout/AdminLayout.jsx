@@ -48,6 +48,10 @@ const Pages = [
     label: "rec rules",
     path: ADMIN_ROUTES.recRules,
   },
+  {
+    label: "room reservations",
+    path: ADMIN_ROUTES.roomReservation,
+  },
 ];
 
 function AdminLayout() {

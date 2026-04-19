@@ -24,4 +24,5 @@ export const ADMIN_ROUTES = {
   users: "/admin/users",
   orders: "/admin/orders",
   recRules: "/admin/rules",
+  roomReservation: "/admin/rooms/reservations",
 };
