@@ -27,7 +27,7 @@ export default function RoomReservationProvider({ children }) {
 
   // ✔️✔️✔️GET RoomReservationS ✔️✔️✔️
   const getRoomReservationsFromServer = async () => {
-    const response = await axios.get(`${URL}/workshop-reservations`);
+    const response = await axios.get(`${URL}/room-reservations`);
     const roomReservationData = response.data;
     setRoomReservations(roomReservationData);
 
@@ -40,7 +40,7 @@ export default function RoomReservationProvider({ children }) {
     try {
       sessionStorage.removeItem("currentRoomReservationId");
       const response = await axios.post(
-        `${URL}/workshop-reservations`,
+        `${URL}/room-reservations`,
         reservation,
       );
 
@@ -66,7 +66,7 @@ export default function RoomReservationProvider({ children }) {
     try {
       console.log("data for server", roomReservationDetailsForServer);
       const response = await axios.put(
-        `${URL}/workshop-reservations/${id}`,
+        `${URL}/room-reservations/${id}`,
         roomReservationDetailsForServer,
       );
       console.log(response);
@@ -94,7 +94,7 @@ export default function RoomReservationProvider({ children }) {
       console.log("payload:", payload);
 
       const response = await axios.put(
-        `${URL}/workshop-reservations/${id}`,
+        `${URL}/room-reservations/${id}`,
         payload,
       );
 
@@ -109,7 +109,7 @@ export default function RoomReservationProvider({ children }) {
   // ✔️✔️✔️DELETE RoomReservation ✔️✔️✔️
   const handleDeleteRoomReservation = async (id) => {
     try {
-      const response = await axios.delete(`${URL}/workshop-reservations/${id}`);
+      const response = await axios.delete(`${URL}/room-reservations/${id}`);
       await getRoomReservationsFromServer();
     } catch (error) {
       console.log(error);
@@ -120,7 +120,7 @@ export default function RoomReservationProvider({ children }) {
   const handleGetRoomReservation = async (id) => {
     try {
       setRoomReservation(null);
-      const response = await axios.get(`${URL}/workshop-reservations/${id}`);
+      const response = await axios.get(`${URL}/room-reservations/${id}`);
       console.log(response);
       setRoomReservation(response.data);
       return response.data;
