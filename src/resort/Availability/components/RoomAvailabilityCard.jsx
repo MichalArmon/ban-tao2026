@@ -14,6 +14,9 @@ import { useState } from "react";
 import { useRoom } from "../../providers/RoomProvider";
 import { getUser } from "../../../../services/localStorageService";
 import { useUser } from "../../providers/UserProvider";
+import RoomReservationProvider, {
+  useRoomReservation,
+} from "../../providers/RoomReservationProvider";
 
 const ScoreBadge = ({ score, text }) => (
   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -40,8 +43,8 @@ const ScoreBadge = ({ score, text }) => (
 
 function RoomAvailabilityCard({ room }) {
   const { user } = useUser();
-  const { handleCreateRoomReservation, checkIn, checkOut, guestsCount } =
-    useRoom();
+  const { checkIn, checkOut, guestsCount } = useRoom();
+  const { handleCreateRoomReservation } = useRoomReservation();
 
   if (!room) return null;
   const reservation = {

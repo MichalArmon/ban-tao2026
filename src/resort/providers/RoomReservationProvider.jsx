@@ -1,11 +1,11 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
-import normalizeRoomReservation from "../admin/helpers/RoomReservation/normalization/normalizeRoomReservationDetails";
 
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routerDict";
 import { useRoom } from "./RoomProvider";
 import { useUser } from "./UserProvider";
+import normalizeRoomReservation from "../admin/helpers/roomReservations/normalization/normalizeRoomReservationDetails";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -79,10 +79,10 @@ export default function RoomReservationProvider({ children }) {
     }
   };
   // ✔️✔️✔️EDIT Room Reservation/ParticipantDetails ✔️✔️✔️
-  const handleEditParticipantDetails = async (id, formData) => {
+  const handleEditExtraPreferencesDetails = async (id, formData) => {
     try {
       const payload = {
-        participantDetails: {
+        extraPreferencesDetails: {
           mealPlan: formData.level,
           rentScooter: formData.rentScooter,
           shuttleFromFerry: formData.shuttleFromFerry,
@@ -135,7 +135,7 @@ export default function RoomReservationProvider({ children }) {
         getRoomReservationsFromServer,
         roomReservations,
         setRoomReservations,
-        handleEditParticipantDetails,
+        handleEditExtraPreferencesDetails,
 
         filteredRoomReservations,
         isDialogOpen,

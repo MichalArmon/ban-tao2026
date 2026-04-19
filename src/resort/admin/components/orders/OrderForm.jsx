@@ -94,8 +94,8 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           Meal Plan:
         </Typography>
         <RadioGroup
-          name="boardType"
-          value={formDetails.boardType}
+          name="mealPlan"
+          value={formDetails.mealPlan}
           onChange={handleChange}
         >
           <FormControlLabel

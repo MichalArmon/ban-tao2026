@@ -19,7 +19,9 @@ import OrderProvider from "./resort/providers/OrderProvider.jsx";
 import SessionProvider from "./resort/providers/SessionProvider.jsx";
 import RecRuleProvider from "./resort/providers/RecRuleProvider.jsx";
 import SessionReservationProvider from "./resort/providers/SessionReservationProvider.jsx";
+import RoomReservationProvider from "./resort/providers/RoomReservationProvider.jsx";
 
+RoomReservationProvider;
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -32,11 +34,13 @@ createRoot(document.getElementById("root")).render(
                   <RoomProvider>
                     <RecRuleProvider>
                       <SessionProvider>
-                        <SessionReservationProvider>
-                          <OrderProvider>
-                            <App />
-                          </OrderProvider>
-                        </SessionReservationProvider>
+                        <RoomReservationProvider>
+                          <SessionReservationProvider>
+                            <OrderProvider>
+                              <App />
+                            </OrderProvider>
+                          </SessionReservationProvider>
+                        </RoomReservationProvider>
                       </SessionProvider>
                     </RecRuleProvider>
                   </RoomProvider>
