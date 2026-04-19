@@ -1,6 +1,6 @@
 // src/pages/rooms/Room.jsx
 import { useMemo, useState, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 
 import {
   Container,
@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { Hotel, SquareFoot, People } from "@mui/icons-material";
 import { useRoom } from "../../providers/RoomProvider";
+import AnimatedTitle from "../../components/ui/AnimatedTitle";
 
 const FALLBACK_IMG =
   "https://images.pexels.com/photos/7598360/pexels-photo-7598360.jpeg";
@@ -24,6 +25,7 @@ export default function FullPageCard() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [currentGallery, setCurrentGallery] = useState([]);
   const { handleGetRoomBySlug, room } = useRoom();
+  const navigate = useNavigate();
   const { slug } = useParams();
   console.log("params slug =", slug);
 
@@ -37,13 +39,19 @@ export default function FullPageCard() {
   useEffect(() => {
     if (room) {
       console.log("room:", room);
-      setMainImage(FALLBACK_IMG);
+      setMainImage(room.hero.url || FALLBACK_IMG);
       setImgLoaded(true);
       const newGallery = room.gallery?.map((image) => image.url) || [];
       setCurrentGallery(newGallery);
       console.log(newGallery);
     }
   }, [room]);
+
+  const handleImageChange = (newImgSrc) => {
+    if (!newImgSrc || newImgSrc === mainImage) return;
+    setImgLoaded(false);
+    setMainImage(newImgSrc);
+  };
 
   if (!room) {
     return (
@@ -70,100 +78,104 @@ export default function FullPageCard() {
 
   return (
     <Container
-      maxWidth="lg"
+      maxWidth="xl"
       sx={{ pt: { xs: 2, md: 4 }, pb: { xs: 4, md: 8 }, mt: 7 }}
     >
+      <AnimatedTitle>{room.title}</AnimatedTitle>
       {/* ===== Hero + Gallery =====
           מובייל: טור (hero למעלה, גלריה מתחת, גלילה אופקית)
           דסקטופ: שורה (hero משמאל, גלריה צידית מימין)
       */}
-      <Stack
+      <Grid
+        container
         direction={{ xs: "column", md: "row" }}
         spacing={2}
         sx={{ width: "100%" }}
       >
         {/* Hero */}
-        <Paper
-          elevation={0}
-          sx={{
-            flex: { md: "0 0 80%" },
-            width: "100%",
-            borderRadius: { xs: 2, md: 2 },
-            overflow: "hidden",
-            border: "1px solid",
-            borderColor: "divider",
-          }}
-        >
-          {mainImage && (
-            <Box
-              component="img"
-              src={mainImage}
-              alt={room.title}
-              onError={() => setMainImage(FALLBACK_IMG)}
-              sx={{
-                width: "100%",
-                // במובייל יחס 16:9; בדסקטופ גובה קבוע
-                height: { xs: "56vw", sm: "50vw", md: 520 },
-                maxHeight: { xs: 420, md: 520 },
-                objectFit: "cover",
-                opacity: imgLoaded ? 1 : 0,
-                transition: "opacity 0.3s ease",
-                display: "block",
-              }}
-            />
-          )}
-        </Paper>
-
-        {/* Gallery */}
-        <Box
-          sx={{
-            // מובייל: גלילה אופקית מתחת ל-Hero
-            display: { xs: "flex", md: "block" },
-            flexDirection: "row",
-            gap: 1.2,
-            overflowX: { xs: "auto", md: "visible" },
-            overflowY: { xs: "hidden", md: "auto" },
-            p: { xs: 0.5, md: 0 },
-            flex: { md: "0 0 20%" },
-            maxHeight: { md: 520 },
-            borderRadius: 2,
-            pr: { md: 0.5 },
-            "&::-webkit-scrollbar": { height: 6, width: 6 },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "divider",
-              borderRadius: 8,
-            },
-          }}
-        >
-          {currentGallery.map((full, idx) => {
-            const isActive = full === mainImage;
-            return (
+        <Grid size={9}>
+          <Paper
+            elevation={0}
+            sx={{
+              width: "100%",
+              borderRadius: { xs: 2, md: 2 },
+              overflow: "hidden",
+              border: "1px solid",
+              borderColor: "divider",
+            }}
+          >
+            {mainImage && (
               <Box
-                key={full + idx}
                 component="img"
-                src={full}
-                alt=""
-                // onClick={() => handleImageChange(full)}
-                onError={(e) => (e.currentTarget.src = FALLBACK_IMG)}
+                src={mainImage}
+                alt={room.title}
+                onError={() => setMainImage(FALLBACK_IMG)}
                 sx={{
-                  cursor: "pointer",
-                  borderRadius: 1.2,
-                  border: "2px solid",
-                  borderColor: isActive ? "primary.light" : "transparent",
-                  transition: "transform 0.2s ease, border-color 0.2s ease",
-                  "&:hover": { transform: "scale(1.03)" },
-                  // מובייל: תמונות קטנות לרוחב; דסקטופ: אריחים אנכיים
-                  width: { xs: 120, sm: 140, md: "100%" },
-                  height: { xs: 80, sm: 100, md: "auto" },
+                  width: "100%",
+                  // במובייל יחס 16:9; בדסקטופ גובה קבוע
+                  height: { xs: "56vw", sm: "50vw", md: 520 },
+                  maxHeight: { xs: 420, md: 520 },
                   objectFit: "cover",
-                  flex: { xs: "0 0 auto", md: "unset" },
-                  mb: { md: 1.2 },
+                  // opacity: imgLoaded ? 1 : 0,
+                  transition: "opacity 0.3s ease",
+                  display: "block",
                 }}
               />
-            );
-          })}
-        </Box>
-      </Stack>
+            )}
+          </Paper>
+        </Grid>
+
+        {/* Gallery */}
+        <Grid size={3}>
+          <Box
+            sx={{
+              // מובייל: גלילה אופקית מתחת ל-Hero
+              display: "flex",
+              flexDirection: { xs: "row", md: "column" },
+              gap: 1,
+              overflowX: { xs: "auto", md: "visible" },
+              overflowY: { xs: "hidden", md: "auto" },
+              p: { xs: 0.5, md: 0 },
+              maxHeight: { md: 520 },
+              borderRadius: 2,
+
+              "&::-webkit-scrollbar": { height: 6, width: 6 },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "divider",
+                borderRadius: 8,
+              },
+            }}
+          >
+            {currentGallery.map((url, index) => {
+              const isActive = url === mainImage;
+              return (
+                <Box
+                  key={url + index}
+                  component="img"
+                  src={url}
+                  alt=""
+                  onClick={() => handleImageChange(url)}
+                  onError={(event) => (event.currentTarget.src = FALLBACK_IMG)}
+                  sx={{
+                    cursor: "pointer",
+                    borderRadius: 1.2,
+                    border: "2px solid",
+                    borderColor: isActive ? "primary.light" : "transparent",
+                    transition: "transform 0.2s ease, border-color 0.2s ease",
+                    "&:hover": { transform: "scale(1.03)" },
+                    // מובייל: תמונות קטנות לרוחב; דסקטופ: אריחים אנכיים
+                    width: { xs: 120, sm: 140, md: "100%" },
+                    height: { xs: 80, sm: 100, md: "auto" },
+                    objectFit: "cover",
+                    flex: { xs: "0 0 auto", md: "unset" },
+                    mb: { md: 1.2 },
+                  }}
+                />
+              );
+            })}
+          </Box>
+        </Grid>
+      </Grid>
 
       <Divider sx={{ my: { xs: 3, md: 4 } }} />
 
@@ -232,6 +244,18 @@ export default function FullPageCard() {
               ))}
             </Stack>
           )}
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ textTransform: "none" }}
+            onClick={() =>
+              navigate("/resort/", {
+                state: { scrollToAvailability: true },
+              })
+            }
+          >
+            Check availability
+          </Button>
         </Grid>
       </Grid>
 
