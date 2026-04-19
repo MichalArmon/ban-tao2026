@@ -26,6 +26,7 @@ import { useWorkshop } from "../providers/WorkshopProvider";
 import OrderCardRoom from "./components/cards/OrderCardRoom";
 import ParticipantDetailsForm from "../public/components/sessions/ParticipantDetailsForm";
 import { useSessionReservation } from "../providers/SessionReservationProvider";
+import { useSnackBar } from "../providers/SnackBarProvider";
 
 function OrderPage({ type }) {
   const { handleGetRoom, room, checkIn, checkOut } = useRoom();

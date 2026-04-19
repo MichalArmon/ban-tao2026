@@ -2,14 +2,14 @@ import axios from "axios";
 import { createContext, useContext, useState, useEffect } from "react";
 
 import { useSnackBar } from "./SnackBarProvider";
-import normalizeRegisterDetails from "../users/helpers/register/normalization/normalizeRegisterDetails";
 
-import normalizeLoginDetails from "../users/helpers/login/normalization/normalizeLoginDetails";
 import {
   getUser,
   setTokenInLocalStorage,
   removeToken,
 } from "../../../services/localStorageService";
+import normalizeRegisterDetails from "../admin/helpers/users/normalization/normalizeRegisterDetails";
+import normalizeLoginDetails from "../admin/helpers/users/normalization/normalizeLoginDetails";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -58,27 +58,10 @@ export default function UserProvider({ children }) {
       }
     }
   };
-
-  // ✔️✔️✔️Create User ✔️✔️✔️
-
-  const handleSubmitAdminCreateUser = async (data) => {
-    const userDetailsForServer = normalizeRegisterDetails(data);
-
-    try {
-      const response = await axios.post(`${URL}/users`, userDetailsForServer);
-      console.log(response);
-      getUsersFromServer();
-      setOpenSignup(false);
-    } catch (error) {
-      setSnack("error", error.response.data);
-      if (error.response) {
-        console.log(error.response.data);
-      }
-    }
-  };
   // ✔️✔️✔️LOGIN ✔️✔️✔️
   const handleSubmitLoginUser = async (data) => {
     const loginUserDetailsForServer = normalizeLoginDetails(data);
+    console.log("loginUserDetailsForServer:", loginUserDetailsForServer);
     try {
       const response = await axios.post(
         `${URL}/users/login`,
@@ -93,6 +76,24 @@ export default function UserProvider({ children }) {
       setSnack("success", "You are Logged in successfully!");
     } catch (error) {
       setSnack("error", error.response.data.message);
+      if (error.response) {
+        console.log(error.response.data);
+      }
+    }
+  };
+
+  // ✔️✔️✔️Create User ✔️✔️✔️
+
+  const handleSubmitAdminCreateUser = async (data) => {
+    const userDetailsForServer = normalizeRegisterDetails(data);
+
+    try {
+      const response = await axios.post(`${URL}/users`, userDetailsForServer);
+      console.log(response);
+      getUsersFromServer();
+      setOpenSignup(false);
+    } catch (error) {
+      setSnack("error", error.response.data);
       if (error.response) {
         console.log(error.response.data);
       }

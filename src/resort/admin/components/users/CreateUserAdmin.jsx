@@ -1,6 +1,6 @@
-import RegisterForm from "../../../users/components/register/RegisterForm";
-import initialRegisterValues from "../../../users/helpers/register/initialValues/initialRegisterValues";
 import { useUser } from "../../../providers/UserProvider";
+import RegisterForm from "../../../public/users/components/RegisterForm";
+import initialRegisterValues from "../../helpers/users/initialValues/initialRegisterValues";
 
 function CreateUserAdmin() {
   const { handleSubmitAdminCreateUser } = useUser();

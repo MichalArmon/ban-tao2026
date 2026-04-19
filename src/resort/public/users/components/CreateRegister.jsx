@@ -1,8 +1,10 @@
 import { Button, Box, Typography, Dialog, DialogContent } from "@mui/material";
 import { useUser } from "../../../providers/UserProvider";
-import initialRegisterValues from "../../helpers/register/initialValues/initialRegisterValues";
+
 import RegisterForm from "./RegisterForm";
-import CreateLogin from "../login/CreateLogin";
+
+import initialRegisterValues from "../../../admin/helpers/users/initialValues/initialRegisterValues";
+import CreateLogin from "./CreateLogin";
 
 function CreateRegister() {
   const { handleSubmitCreateUser, OpenLogin, setOpenLogin, setOpenSignup } =

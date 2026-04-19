@@ -4,11 +4,7 @@ const initialRegisterValues = {
   firstName: "Michal",
   lastName: "Armon",
   phone: "0586632566",
-
-  country: "Israel",
-  city: "Ramat gan",
-
-  role: "admin",
+  birthDate: "1988-04-15",
 };
 
 export default initialRegisterValues;

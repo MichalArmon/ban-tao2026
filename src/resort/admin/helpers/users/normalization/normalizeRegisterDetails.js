@@ -5,11 +5,7 @@ const normalizeRegisterDetails = (data) => {
     firstName: data.firstName,
     lastName: data.lastName,
     phone: data.phone,
-
-    country: data.country,
-    city: data.city,
-
-    role: "user",
+    birthDate: data.birthDate,
   };
 
   return userDetailsForServer;

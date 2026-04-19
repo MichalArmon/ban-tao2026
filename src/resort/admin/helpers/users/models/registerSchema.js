@@ -20,10 +20,11 @@ const registerSchema = {
     .messages({
       "string.pattern.base": "wrong phone format",
     }),
-
-  country: Joi.string().min(2).max(10),
-  city: Joi.string().min(2).max(10),
-  role: Joi.string().valid("user", "admin").allow(""),
+  birthDate: Joi.date().iso().max("now").required().messages({
+    "date.format": "wrong date format, use YYYY-MM-DD",
+    "date.max": "birth date cannot be in the future",
+    "any.required": "birth date is required",
+  }),
 };
 
 export default registerSchema;

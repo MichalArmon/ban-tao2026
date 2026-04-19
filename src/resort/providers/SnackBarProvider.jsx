@@ -34,12 +34,17 @@ export default function SnackBarProvider({ children }) {
         open={isSnackOpen}
         onClose={handleClose}
         autoHideDuration={4000}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           onClose={handleClose}
           severity={snackColor}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            borderRadius: 2,
+            boxShadow: 3,
+            fontSize: "1.1rem",
+          }}
         >
           {snackMessage}
         </Alert>

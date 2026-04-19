@@ -27,10 +27,11 @@ import {
 import { useUser } from "../../providers/UserProvider";
 import { useState } from "react";
 
-import CreateRegister from "../../users/components/register/CreateRegister";
 import getZodiacSign from "../../utils/zodiacSigns/getZodiacSign";
-import CreateLogin from "../../users/components/login/CreateLogin";
-import UserMenu from "../../users/components/UserMenu";
+
+import CreateRegister from "../../public/users/components/CreateRegister";
+import CreateLogin from "../../public/users/components/CreateLogin";
+import UserMenu from "../../public/users/components/UserMenu";
 
 function UserExtraNav() {
   const [tabValue, setTabValue] = useState(0);

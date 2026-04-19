@@ -46,7 +46,7 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
       sx={{ display: "flex", flexDirection: "column", gap: 3, width: "100%" }}
     >
       {/* --- חלק אדמין --- */}
-      {user.role === "admin" && (
+      {user?.role === "admin" && (
         <Paper elevation={3} sx={{ p: 3, bgcolor: "#fdf2f2" }}>
           <Typography variant="h6" color="secondary" gutterBottom>
             Admin: Order Creation

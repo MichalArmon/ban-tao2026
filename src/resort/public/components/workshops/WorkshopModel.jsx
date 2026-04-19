@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import {
   Dialog,
   DialogTitle,
@@ -19,6 +20,7 @@ import { useSession } from "../../../providers/SessionProvider";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../providers/UserProvider";
 import { useSessionReservation } from "../../../providers/SessionReservationProvider";
+import { useSnackBar } from "../../../providers/SnackBarProvider";
 
 export default function WorkshopModal({ open, onClose, workshopId }) {
   const [groupedSessions, setGroupedSessions] = useState({});
@@ -29,7 +31,12 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
   const { sessions, getSessionsFromServer, handleGetSessionByWorkshop } =
     useSession();
   const { handleCreateSessionReservation } = useSessionReservation();
+  const { setSnack } = useSnackBar();
   const { getWorkshopTitle, workshops, getWorkshopsFromServer } = useWorkshop();
+
+  const isNotLoggedIn = () => {
+    setSnack("warning", "please log in");
+  };
 
   useEffect(() => {
     if (!sessions || sessions.length === 0) {
@@ -227,7 +234,13 @@ export default function WorkshopModal({ open, onClose, workshopId }) {
                         backgroundColor: "#7a6b63",
                         "&:hover": { backgroundColor: "#5c4e46" },
                       }}
-                      onClick={() => handleReservation(session)}
+                      onClick={
+                        user
+                          ? () => handleReservation(session)
+                          : () => {
+                              isNotLoggedIn();
+                            }
+                      }
                     >
                       BOOK
                     </Button>

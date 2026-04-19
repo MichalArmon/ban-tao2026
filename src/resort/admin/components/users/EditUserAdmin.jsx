@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useUser } from "../../../providers/UserProvider";
 
-import RegisterForm from "../../../users/components/register/RegisterForm";
-import initialEditUserValues from "../../../users/helpers/register/initialValues/initialEditRegisterValues";
+import RegisterForm from "../../../public/users/components/RegisterForm";
+import initialEditUserValues from "../../helpers/users/initialValues/initialEditRegisterValues";
 
 function EditUserAdmin({ userSelected, setIsDialogOpen }) {
   const { handleGetUser, handleSubmitEditUser, user } = useUser();

@@ -8,13 +8,19 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
-import { useUser } from "../../providers/UserProvider";
-import getZodiacSign from "../../utils/zodiacSigns/getZodiacSign";
+import { useUser } from "../../../providers/UserProvider";
+import getZodiacSign from "../../../utils/zodiacSigns/getZodiacSign";
 import { LogoutRounded } from "@mui/icons-material";
+import { useEffect } from "react";
+import { getUser } from "../../../../../services/localStorageService";
 
 function UserMenu({ anchorEl, handleClose }) {
-  const { user, handleLogOutUser } = useUser();
+  const { user, handleLogOutUser, setUser } = useUser();
   const open = Boolean(anchorEl);
+  useEffect(() => {
+    const user = getUser();
+    setUser(user);
+  }, []);
   if (!user) return null;
 
   return (
@@ -52,7 +58,7 @@ function UserMenu({ anchorEl, handleClose }) {
         />
 
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Hi, {user.firstName}!
+          Hi, {user.name}!
         </Typography>
 
         {/* כפתור ניהול חשבון */}
