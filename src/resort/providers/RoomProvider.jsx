@@ -155,7 +155,7 @@ export default function RoomProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️ CRETE ROOM RESERVATION ✔️✔️✔️
+  // ✔️✔️✔️ CREATE ROOM RESERVATION ✔️✔️✔️
 
   const handleCreateRoomReservation = async (reservation) => {
     try {

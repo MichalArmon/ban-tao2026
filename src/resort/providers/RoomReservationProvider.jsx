@@ -14,8 +14,8 @@ const RoomReservationContext = createContext();
 // 2.create provider
 export default function RoomReservationProvider({ children }) {
   const { checkIn, setCheckIn, guestsCount, checkOut, setCheckOut } = useRoom();
-  const [RoomReservation, setRoomReservation] = useState(null);
-  const [RoomReservations, setRoomReservations] = useState([]);
+  const [roomReservation, setRoomReservation] = useState(null);
+  const [roomReservations, setRoomReservations] = useState([]);
 
   const [reservationId, setReservationId] = useState("");
 
@@ -28,17 +28,17 @@ export default function RoomReservationProvider({ children }) {
   // ✔️✔️✔️GET RoomReservationS ✔️✔️✔️
   const getRoomReservationsFromServer = async () => {
     const response = await axios.get(`${URL}/workshop-reservations`);
-    const RoomReservationData = response.data;
-    setRoomReservations(RoomReservationData);
+    const roomReservationData = response.data;
+    setRoomReservations(roomReservationData);
 
-    console.log(RoomReservationData);
+    console.log(roomReservationData);
   };
 
-  // ✔️✔️✔️ CRETE Room RESERVATION ✔️✔️✔️
+  // ✔️✔️✔️ CREATE Room RESERVATION ✔️✔️✔️
 
   const handleCreateRoomReservation = async (reservation) => {
     try {
-      RoomStorage.removeItem("currentRoomReservationId");
+      sessionStorage.removeItem("currentRoomReservationId");
       const response = await axios.post(
         `${URL}/workshop-reservations`,
         reservation,
@@ -46,10 +46,10 @@ export default function RoomReservationProvider({ children }) {
 
       const newId = response.data?._id;
       setReservationId(newId);
-      RoomStorage.setItem("currentRoomReservationId", String(newId));
+      sessionStorage.setItem("currentRoomReservationId", String(newId));
       console.log(
         "ID Saved to storage:",
-        RoomStorage.getItem("currentRoomReservationId"),
+        sessionStorage.getItem("currentRoomReservationId"),
       );
       return newId;
     } catch (error) {
@@ -61,13 +61,13 @@ export default function RoomReservationProvider({ children }) {
   // ✔️✔️✔️EDIT Room Reservation /admin✔️✔️✔️
 
   const handleEditRoomReservation = async (id, data) => {
-    const RoomReservationDetailsForServer = normalizeRoomReservation(data);
+    const roomReservationDetailsForServer = normalizeRoomReservation(data);
 
     try {
-      console.log("data for server", RoomReservationDetailsForServer);
+      console.log("data for server", roomReservationDetailsForServer);
       const response = await axios.put(
         `${URL}/workshop-reservations/${id}`,
-        RoomReservationDetailsForServer,
+        roomReservationDetailsForServer,
       );
       console.log(response);
     } catch (error) {
@@ -83,11 +83,10 @@ export default function RoomReservationProvider({ children }) {
     try {
       const payload = {
         participantDetails: {
-          level: formData.level,
-          goals: formData.goals,
-          injuriesNotes: formData.injuriesNotes,
-          extras: formData.extras,
-          instructorNotes: formData.instructorNotes,
+          mealPlan: formData.level,
+          rentScooter: formData.rentScooter,
+          shuttleFromFerry: formData.shuttleFromFerry,
+          specialRequests: formData.specialRequests,
         },
       };
 
@@ -134,7 +133,7 @@ export default function RoomReservationProvider({ children }) {
     <RoomReservationContext.Provider
       value={{
         getRoomReservationsFromServer,
-        RoomReservations,
+        roomReservations,
         setRoomReservations,
         handleEditParticipantDetails,
 
@@ -145,7 +144,7 @@ export default function RoomReservationProvider({ children }) {
         handleDeleteRoomReservation,
         handleGetRoomReservation,
         handleEditRoomReservation,
-        RoomReservation,
+        roomReservation,
         setRoomReservation,
 
         setFilteredRoomReservations,
