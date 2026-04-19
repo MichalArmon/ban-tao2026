@@ -23,6 +23,7 @@ function RoomsList() {
           category={room.category}
           priceLabel={room.priceBase}
           reverse={idx % 2 === 1}
+          slug={room.slug}
         />
       ))}
     </Box>

@@ -103,11 +103,26 @@ export default function RoomProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️GET ROOM ✔️✔️✔️
+  // ✔️✔️✔️GET ROOM By SLUG✔️✔️✔️
+  const handleGetRoomBySlug = async (slug) => {
+    try {
+      console.log("handleGetRoomBySlug got slug:", slug);
+      setRoom(null);
+
+      const response = await axios.get(`${URL}/rooms/${slug}`);
+      console.log("server response:", response);
+
+      setRoom(response.data);
+      return response.data;
+    } catch (error) {
+      console.log("get room by slug error:", error);
+    }
+  };
+  // ✔️✔️✔️GET ROOM By ID✔️✔️✔️
   const handleGetRoom = async (id) => {
     try {
       setRoom(null);
-      const response = await axios.get(`${URL}/rooms/${id}`);
+      const response = await axios.get(`${URL}/rooms/id/${id}`);
       console.log(response);
       setRoom(response.data);
       return response.data;
@@ -184,7 +199,7 @@ export default function RoomProvider({ children }) {
         setCheckIn,
         checkOut,
         setCheckOut,
-
+        handleGetRoomBySlug,
         guestsCount,
       }}
     >

@@ -22,6 +22,7 @@ function normalizeRoomDetails(data) {
     },
     gallery: data.gallery || [],
     roomType: data.roomType,
+    view: data.view,
   };
   return roomDetailsForServer;
 }

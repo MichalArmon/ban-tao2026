@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material";
 
 function MyTextField({
+  margin = "dense",
   label,
   onChange,
   sx,
@@ -19,7 +20,7 @@ function MyTextField({
       variant="outlined"
       fullWidth
       size={size}
-      margin="dense"
+      margin={margin}
       sx={sx}
       error={error}
       helperText={helperText}

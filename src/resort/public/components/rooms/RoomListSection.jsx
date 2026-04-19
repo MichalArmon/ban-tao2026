@@ -7,15 +7,16 @@ import {
   Typography,
   Chip,
   Paper,
+  Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function RoomListSection({
   imgSrc,
   imgTitle,
   title,
   blurb,
-  category,
-  priceLabel,
+  slug,
   reverse = false,
   maxGuests,
   sizeM2,
@@ -35,6 +36,8 @@ function RoomListSection({
       icon: <Hotel sx={{ fontSize: 16 }} />,
     },
   ];
+
+  const navigate = useNavigate();
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
       <Grid
@@ -113,7 +116,14 @@ function RoomListSection({
             </Grid>
 
             {/* חצי ימני: עובדות מהירות */}
-            <Grid item xs={12} size={6}>
+            <Grid
+              item
+              xs={12}
+              size={6}
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+            >
               <Paper
                 elevation={0}
                 sx={{
@@ -149,6 +159,19 @@ function RoomListSection({
                   ))}
                 </Grid>
               </Paper>
+              <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
+                <Button variant="contained">Book Now</Button>
+
+                {/* 🟣 כפתור שפותח את הלו״ז */}
+                <Button
+                  variant="text"
+                  onClick={() => {
+                    navigate(`/resort/rooms/${slug}`);
+                  }}
+                >
+                  Learn More
+                </Button>
+              </Stack>
             </Grid>
           </Grid>
         </Grid>

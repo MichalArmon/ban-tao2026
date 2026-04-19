@@ -22,6 +22,7 @@ export default function initialEditRoomValues(room) {
 
     stock: room.stock,
     roomType: room.roomType,
+    view: room.view,
   };
   return initialEditRoomValuesOBG;
 }

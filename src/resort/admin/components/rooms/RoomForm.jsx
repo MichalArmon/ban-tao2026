@@ -65,8 +65,12 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
                 required
               />
             </Grid>
-            <Grid size={{ md: 6, xs: 12 }}>
-              <FormControl fullWidth error={Boolean(errors.roomType)}>
+            <Grid size={{ md: 4, xs: 12 }}>
+              <FormControl
+                margin="dense"
+                fullWidth
+                error={Boolean(errors.roomType)}
+              >
                 <InputLabel>Room Type</InputLabel>
 
                 <Select
@@ -90,6 +94,50 @@ function RoomForm({ handleSubmitForm, initialRoomValues }) {
                 {errors.roomType && (
                   <Typography variant="body2" color="error">
                     {errors.roomType}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid size={{ md: 4, xs: 12 }}>
+              <MyTextField
+                label="bedType"
+                name="bedType"
+                onChange={handleChange}
+                error={Boolean(errors.bedType)}
+                helperText={errors.bedType}
+                value={formDetails.bedType}
+              />
+            </Grid>
+
+            <Grid size={{ md: 4, xs: 12 }}>
+              <FormControl
+                margin="dense"
+                fullWidth
+                error={Boolean(errors.view)}
+              >
+                <InputLabel>View</InputLabel>
+
+                <Select
+                  name="view"
+                  value={formDetails.view || ""}
+                  label="View"
+                  onChange={(e) =>
+                    setFormDetails((prev) => ({
+                      ...prev,
+                      view: e.target.value,
+                    }))
+                  }
+                >
+                  <MenuItem value="Sea">Sea</MenuItem>
+                  <MenuItem value="Pool">Pool</MenuItem>
+                  <MenuItem value="Garden">Garden</MenuItem>
+                  <MenuItem value="Mountain">Mountain</MenuItem>
+                  <MenuItem value="None">None</MenuItem>
+                </Select>
+
+                {errors.view && (
+                  <Typography variant="body2" color="error">
+                    {errors.view}
                   </Typography>
                 )}
               </FormControl>

@@ -82,6 +82,13 @@ const roomSchema = {
       "any.only": "Invalid room type",
       "any.required": "Room type is required",
     }),
+  view: Joi.string()
+    .valid("Sea", "Pool", "Garden", "Mountain", "None")
+    .required()
+    .messages({
+      "any.only": "Invalid room type",
+      "any.required": "Room type is required",
+    }),
 };
 
 export default roomSchema;

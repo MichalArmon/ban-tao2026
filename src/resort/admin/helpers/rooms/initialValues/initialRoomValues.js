@@ -24,6 +24,7 @@ const initialRoomValues = {
   bedType: "King",
   stock: 2,
   roomType: "Single",
+  view: "Sea",
 };
 
 export default initialRoomValues;
