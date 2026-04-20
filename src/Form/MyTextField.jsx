@@ -25,6 +25,7 @@ function MyTextField({
       error={error}
       helperText={helperText}
       type={type}
+      InputLabelProps={type === "date" ? { shrink: true } : {}}
       value={value}
     />
   );

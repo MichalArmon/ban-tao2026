@@ -14,9 +14,9 @@ import { useState } from "react";
 import { useRoom } from "../../providers/RoomProvider";
 import { getUser } from "../../../../services/localStorageService";
 import { useUser } from "../../providers/UserProvider";
-import RoomReservationProvider, {
-  useRoomReservation,
-} from "../../providers/RoomReservationProvider";
+import { useRoomReservation } from "../../providers/RoomReservationProvider";
+import AvailabilityAdminButton from "./buttons/AvailabilityAdminButton";
+import AvailabilityButton from "./buttons/AvaiabiltyButton";
 
 const ScoreBadge = ({ score, text }) => (
   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -178,15 +178,11 @@ function RoomAvailabilityCard({ room }) {
               ${room.price}`}
             </Typography>
           </Box>
-          <Button
-            onClick={handleBooking}
-            variant="contained"
-            color="primary"
-            size="large"
-            sx={{ fontWeight: "bold", px: 4 }}
-          >
-            book
-          </Button>
+          {user.role === "admin" ? (
+            <AvailabilityAdminButton />
+          ) : (
+            <AvailabilityButton room={room} />
+          )}
         </Stack>
       </CardContent>
     </Card>

@@ -34,9 +34,9 @@ function AdminRoomReservationsPage() {
           setIsDialogOpen(false);
         }}
         fullWidth
-        maxWidth="sm"
+        maxWidth="xl"
       >
-        <DialogTitle>Create New RoomReservation</DialogTitle>
+        <DialogTitle>Create New Room Reservation</DialogTitle>
         <DialogContent dividers>
           <CreateRoomReservation />
         </DialogContent>

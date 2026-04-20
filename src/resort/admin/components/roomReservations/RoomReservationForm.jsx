@@ -10,199 +10,273 @@ import {
   MenuItem,
   FormGroup,
   Checkbox,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { useRoomReservation } from "../../../providers/RoomReservationProvider";
 
 import useForm from "../../../hooks/useForm";
 
-import { useWorkshop } from "../../../providers/WorkshopProvider";
 import { useEffect, useState } from "react";
-roomRes;
+import roomReservationSchema from "../../models/roomReservation/roomReservationSchema";
+
+import { useUser } from "../../../providers/UserProvider";
+import AvailableRoomsSection from "../rooms/roomsAvailability.jsx/AvailableRoomsSection";
 
 function RoomReservationForm({
   initialRoomReservationValues,
   handleSubmitForm,
-  defaultIsRecursive,
   isEditMode,
 }) {
-  const [isRecursive, setIsRecursive] = useState(defaultIsRecursive);
-  const { roomReservation } = useRoomReservation();
-  const { workshops, getWorkshopsFromServer } = useWorkshop();
+  const { users, getUsersFromServer } = useUser();
+
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
       initialRoomReservationValues,
       roomReservationSchema,
       handleSubmitForm,
     );
+
   useEffect(() => {
-    getWorkshopsFromServer();
-  }, []);
-  console.log(initialRoomReservationValues._id);
+    if (!users || users.length === 0) {
+      getUsersFromServer();
+    }
+  }, [users, getUsersFromServer]);
 
-  // פונקציה לכותרת הטופס
   const getFormTitle = () => {
-    if (isEditMode && isRecursive) return "Edit Schedule Rule";
-    if (isEditMode && !isRecursive) return "Edit RoomReservation";
-    if (!isEditMode && isRecursive) return "Create Schedule Rule";
-    if (!isEditMode && !isRecursive) return "Create RoomReservation";
+    return isEditMode ? "Edit room reservation" : "Create room reservation";
   };
 
-  // פונקציה לכפתור השליחה
   const getSubmitButtonText = () => {
-    if (isEditMode && isRecursive) return "Update Schedule";
-    if (isEditMode && !isRecursive) return "Update RoomReservation";
-    if (!isEditMode && isRecursive) return "Generate Schedule";
-    if (!isEditMode && !isRecursive) return "Create RoomReservation";
+    return isEditMode ? "Update" : "Create";
   };
 
-  // פונקציה לעדכון ימי השבוע בתוך ה-Hook
-  const handleDayToggle = (dayIndex) => {
-    const currentDays = formDetails.daysOfWeek || [];
-    const newDays = currentDays.includes(dayIndex)
-      ? currentDays.filter((d) => d !== dayIndex)
-      : [...currentDays, dayIndex];
-
-    setFormDetails({ ...formDetails, daysOfWeek: newDays });
-  };
-
-  if (!formDetails) {
+  if (!formDetails || !users) {
     return (
       <Typography sx={{ p: 4, textAlign: "center" }}>
-        Loading RoomReservation data...
+        Loading room reservation data...
       </Typography>
     );
   }
-  console.log("Current Form Errors:", errors);
 
   return (
-    <>
-      <Box sx={{ p: 4, display: "flex", justifyContent: "center" }}>
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, width: "100%" }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-            {getFormTitle()}
-          </Typography>
+    <Box sx={{ p: 4, justifyContent: "center" }}>
+      <Paper
+        elevation={3}
+        sx={{ p: 4, width: "100%", display: "flex", flexDirection: "column" }}
+      >
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+          {getFormTitle()}
+        </Typography>
 
-          <Grid container spacing={2}>
-            <Grid item size={{ xs: 12, md: 6 }}>
-              <MyTextField
-                select
-                label="Select Workshop"
-                name="workshopId"
-                value={formDetails.workshopId}
-                onChange={handleChange}
-                required
-              >
-                {workshops.map((workshop) => (
-                  <MenuItem key={workshop._id} value={workshop._id}>
-                    {workshop.title}
-                  </MenuItem>
-                ))}
-              </MyTextField>
-            </Grid>
-
-            <Grid item size={{ xs: 12, md: 6 }}>
-              <MyTextField
-                fullWidth
-                label="Location"
-                name="location"
-                value={formDetails.location}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <MyTextField
-                fullWidth
-                type="number"
-                label="Max Capacity"
-                name="maxCapacity"
-                value={formDetails.maxCapacity}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <MyTextField
-                fullWidth
-                label={isRecursive ? "Start Date" : "RoomReservation Date"}
-                type="date"
-                name="startDate"
-                value={formDetails.startDate || ""}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <MyTextField
-                fullWidth
-                label="Start Hour"
-                type="time"
-                name="hour"
-                value={formDetails.hour}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-
-            {/* שדות שמופיעים רק ב-Recursive */}
-            {isRecursive && (
-              <>
-                <Grid item xs={12}>
-                  <MyTextField
-                    fullWidth
-                    label="End Date (Until when?)"
-                    value={formDetails.endDate || ""}
-                    type="date"
-                    name="endDate"
-                    InputLabelProps={{ shrink: true }}
-                    onChange={handleChange}
-                    required
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Typography variant="body2" color="textSecondary">
-                    Select Days of Week:
-                  </Typography>
-                  <FormGroup row>
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                      (day, index) => (
-                        <FormControlLabel
-                          key={day}
-                          control={
-                            <Checkbox
-                              checked={formDetails.daysOfWeek.includes(index)}
-                              onChange={() => handleDayToggle(index)}
-                            />
-                          }
-                          label={day}
-                        />
-                      ),
-                    )}
-                  </FormGroup>
-                </Grid>
-              </>
-            )}
-
-            <Grid item xs={12} sx={{ mt: 2 }}>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-                fullWidth
-                type="submit"
-                size="large"
-              >
-                {getSubmitButtonText()}
-              </Button>
-            </Grid>
+        <Grid container spacing={2}>
+          <Grid size={12}>
+            <Autocomplete
+              options={users}
+              getOptionLabel={(option) =>
+                `${option.firstName} ${option.lastName || ""}`
+              }
+              value={
+                users.find((user) => user._id === formDetails.userId) || null
+              }
+              onChange={(event, newValue) => {
+                setFormDetails((prev) => ({
+                  ...prev,
+                  userId: newValue ? newValue._id : "",
+                  guestFullName: newValue
+                    ? `${newValue.firstName} ${newValue.lastName || ""}`.trim()
+                    : "",
+                  guestEmail: newValue?.email || "",
+                  guestPhone: newValue?.phone || "",
+                }));
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Customer"
+                  error={!!errors.userId}
+                  helperText={errors.userId}
+                />
+              )}
+            />
           </Grid>
-        </Paper>
-      </Box>
-    </>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <MyTextField
+              name="checkIn"
+              label="Check in"
+              type="date"
+              value={formDetails.checkIn || ""}
+              onChange={handleChange}
+              error={errors.checkIn}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <MyTextField
+              name="checkOut"
+              label="Check out"
+              type="date"
+              value={formDetails.checkOut || ""}
+              onChange={handleChange}
+              error={errors.checkOut}
+              helperText={errors.checkOut}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <MyTextField
+              name="guestsCount"
+              label="guestsCount"
+              type="number"
+              value={formDetails.guestsCount || ""}
+              onChange={handleChange}
+              error={errors.guestsCount}
+            />
+          </Grid>
+
+          <Grid size={12}>
+            <AvailableRoomsSection
+              checkIn={formDetails.checkIn}
+              checkOut={formDetails.checkOut}
+              guestsCount={formDetails.guestsCount}
+              selectedRoomId={formDetails.roomId}
+              onSelectRoom={(room) =>
+                setFormDetails((prev) => ({
+                  ...prev,
+                  roomId: room._id,
+                }))
+              }
+              error={errors.roomId}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <TextField
+              select
+              fullWidth
+              name="status"
+              label="Reservation status"
+              value={formDetails.status || "confirmed"}
+              onChange={handleChange}
+              error={!!errors.status}
+              helperText={errors.status}
+            >
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="confirmed">Confirmed</MenuItem>
+              <MenuItem value="cancelled">Cancelled</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <MyTextField
+              name="expiresAt"
+              label="Expires at"
+              type="date"
+              value={formDetails.expiresAt || ""}
+              onChange={handleChange}
+              error={errors.expiresAt}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <TextField
+              select
+              fullWidth
+              label="Meal Plan"
+              value={formDetails.extraPreferences?.mealPlan || ""}
+              onChange={(e) =>
+                setFormDetails((prev) => ({
+                  ...prev,
+                  extraPreferences: {
+                    ...prev.extraPreferences,
+                    mealPlan: e.target.value,
+                  },
+                }))
+              }
+              error={!!errors["extraPreferences.mealPlan"]}
+              helperText={errors["extraPreferences.mealPlan"]}
+            >
+              <MenuItem value="Breakfast only">Breakfast only</MenuItem>
+              <MenuItem value="Half board">Half board</MenuItem>
+              <MenuItem value="Full board">Full board</MenuItem>
+            </TextField>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formDetails.extraPreferences?.rentScooter || false}
+                  onChange={(e) =>
+                    setFormDetails((prev) => ({
+                      ...prev,
+                      extraPreferences: {
+                        ...prev.extraPreferences,
+                        rentScooter: e.target.checked,
+                      },
+                    }))
+                  }
+                />
+              }
+              label="Rent scooter"
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={
+                    formDetails.extraPreferences?.shuttleFromFerry || false
+                  }
+                  onChange={(e) =>
+                    setFormDetails((prev) => ({
+                      ...prev,
+                      extraPreferences: {
+                        ...prev.extraPreferences,
+                        shuttleFromFerry: e.target.checked,
+                      },
+                    }))
+                  }
+                />
+              }
+              label="Shuttle from ferry"
+            />
+          </Grid>
+
+          <Grid size={12}>
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              label="Special requests"
+              value={formDetails.extraPreferences?.specialRequests || ""}
+              onChange={(e) =>
+                setFormDetails((prev) => ({
+                  ...prev,
+                  extraPreferences: {
+                    ...prev.extraPreferences,
+                    specialRequests: e.target.value,
+                  },
+                }))
+              }
+              error={!!errors["extraPreferences.specialRequests"]}
+              helperText={errors["extraPreferences.specialRequests"]}
+            />
+          </Grid>
+
+          <Grid size={12} sx={{ mt: 2 }}>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
+            >
+              {getSubmitButtonText()}
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Box>
   );
 }
-
 export default RoomReservationForm;

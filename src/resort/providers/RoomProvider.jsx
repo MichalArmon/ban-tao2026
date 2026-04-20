@@ -155,24 +155,6 @@ export default function RoomProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️ CREATE ROOM RESERVATION ✔️✔️✔️
-
-  const handleCreateRoomReservation = async (reservation) => {
-    try {
-      const response = await axios.post(
-        `${URL}/Order-reservations`,
-        reservation,
-      );
-      console.log("res id:", response.data.reservation._id);
-      setReservationId(response.data.reservation._id);
-      const newId = response.data.reservation._id;
-      sessionStorage.setItem("currentReservationId", newId);
-      console.log("ID Saved to storage:", newId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <RoomContext.Provider
       value={{
@@ -190,7 +172,7 @@ export default function RoomProvider({ children }) {
         room,
         setRoom,
         handleGetRoomsAvailability,
-        handleCreateRoomReservation,
+
         setReservationId,
         reservationId,
 
