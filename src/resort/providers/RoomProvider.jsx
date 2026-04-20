@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import normalizeRoomDetails from "../admin/helpers/rooms/normalization/normalizeRoomDetails";
 
 import { useSnackBar } from "./SnackBarProvider";
@@ -132,28 +132,27 @@ export default function RoomProvider({ children }) {
   };
 
   // ✔️✔️✔️ ROOM AVAILABILITY ✔️✔️✔️
-  const handleGetRoomsAvailability = async (
-    checkIn,
-    checkOut,
-    roomType,
-    guestsCount,
-  ) => {
-    try {
-      setRoom(null);
+  const handleGetRoomsAvailability = useCallback(
+    async ({ checkIn, checkOut, roomType, guestsCount }) => {
+      try {
+        setRoom(null);
 
-      const response = await axios.get(
-        `${URL}/rooms/availability?checkIn=${checkIn}&checkOut=${checkOut}&roomType=${roomType}&guestsCount=${guestsCount}`,
-      );
-      console.log(response);
-      setFilteredRooms(response.data);
-      console.log("rooms:", filteredRooms);
-      setCheckIn(checkIn);
-      setCheckOut(checkOut);
-      setGuestsCount(guestsCount);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        const response = await axios.get(
+          `${URL}/rooms/availability?checkIn=${checkIn}&checkOut=${checkOut}&roomType=${roomType}&guestsCount=${guestsCount}`,
+        );
+        console.log(response);
+        setFilteredRooms(response.data);
+        console.log("rooms:", filteredRooms);
+        setCheckIn(checkIn);
+        setCheckOut(checkOut);
+        setGuestsCount(guestsCount);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [],
+  ); // <--- המערך הריק הזה הוא הקסם שעוצר את הלולאה!
 
   return (
     <RoomContext.Provider

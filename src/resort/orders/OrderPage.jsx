@@ -17,8 +17,6 @@ import { useRoom } from "../providers/RoomProvider";
 
 import { useUser } from "../providers/UserProvider";
 
-import CreateOrder from "../admin/components/orders/CreateOrder";
-
 import OrderCardWorkshop from "./components/cards/OrderCardWorkshop";
 import { useSession } from "../providers/SessionProvider";
 import { useParams } from "react-router-dom";
@@ -27,6 +25,7 @@ import OrderCardRoom from "./components/cards/OrderCardRoom";
 import ParticipantDetailsForm from "../public/components/sessions/ParticipantDetailsForm";
 import { useSessionReservation } from "../providers/SessionReservationProvider";
 import { useSnackBar } from "../providers/SnackBarProvider";
+import CreateExtraPreferences from "../admin/components/extraPreferences/CreateExtraPreferences";
 
 function OrderPage({ type }) {
   const { handleGetRoom, room, checkIn, checkOut } = useRoom();
@@ -93,7 +92,7 @@ function OrderPage({ type }) {
               : "Complete participant Details"}
           </Typography>
           {type == "room" ? (
-            <CreateOrder />
+            <CreateExtraPreferences />
           ) : (
             <ParticipantDetailsForm reservationId={id} />
           )}

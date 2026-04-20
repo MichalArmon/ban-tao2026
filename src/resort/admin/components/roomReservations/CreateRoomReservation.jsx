@@ -4,13 +4,13 @@ import initialRoomReservationValues from "../../helpers/roomReservations/initial
 initialRoomReservationValues;
 import RoomReservationForm from "./RoomReservationForm";
 function CreateRoomReservation() {
-  const { handleSubmitCreateRoomReservation } = useRoomReservation();
+  const { handleCreateRoomReservation } = useRoomReservation();
 
   return (
     <RoomReservationForm
       isEditMode={false}
       initialRoomReservationValues={initialRoomReservationValues}
-      handleSubmitForm={handleSubmitCreateRoomReservation}
+      handleSubmitForm={handleCreateRoomReservation}
     />
   );
 }

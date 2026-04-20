@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, use } from "react";
 import { Box, Typography, Paper, Button, Grid } from "@mui/material";
 import { useRoom } from "../../../../providers/RoomProvider";
 
@@ -15,7 +15,12 @@ function AvailableRoomsSection({
 
   useEffect(() => {
     if (checkIn && checkOut && roomType && guestsCount) {
-      handleGetRoomsAvailability({ checkIn, checkOut, roomType, guestsCount });
+      handleGetRoomsAvailability({
+        checkIn,
+        checkOut,
+        roomType,
+        guestsCount,
+      });
     }
   }, [checkIn, checkOut, roomType, guestsCount, handleGetRoomsAvailability]);
 

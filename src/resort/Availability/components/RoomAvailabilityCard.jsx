@@ -178,11 +178,8 @@ function RoomAvailabilityCard({ room }) {
               ${room.price}`}
             </Typography>
           </Box>
-          {user.role === "admin" ? (
-            <AvailabilityAdminButton />
-          ) : (
-            <AvailabilityButton room={room} />
-          )}
+
+          <AvailabilityButton room={room} />
         </Stack>
       </CardContent>
     </Card>

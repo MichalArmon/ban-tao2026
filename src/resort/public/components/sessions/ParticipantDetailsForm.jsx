@@ -89,13 +89,7 @@ function ParticipantDetailsForm() {
         boxShadow: 3,
       }}
     >
-      <Box
-        component="form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
+      <Box component="form" onSubmit={handleSubmit}>
         <Typography variant="subtitle1" sx={{ mb: 1 }}>
           Level
         </Typography>

@@ -13,11 +13,15 @@ import {
 } from "@mui/material";
 
 import useForm from "../../../hooks/useForm";
-import orderSchema from "../../models/orderSchema";
+
 import { useUser } from "../../../providers/UserProvider";
 import { useEffect } from "react";
+import extraPreferencesSchema from "../../models/roomReservation/extraPreferencesSchema";
 
-function OrderForm({ initialOrderValues, handleSubmitForm }) {
+function ExtraPreferencesForm({
+  initialExtraPreferencesValues,
+  handleSubmitForm,
+}) {
   const { user, getUsersFromServer, users } = useUser();
   if (!users) {
     return <Typography>loading...</Typography>;
@@ -27,15 +31,15 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
   }, []);
 
   const { handleChange, handleSubmit, errors, formDetails } = useForm(
-    initialOrderValues,
-    orderSchema,
+    initialExtraPreferencesValues,
+    extraPreferencesSchema,
     handleSubmitForm,
   );
 
   if (!users || !formDetails) {
     return (
       <Typography sx={{ p: 4, textAlign: "center" }}>
-        Loading Order data...
+        Loading ExtraPreferences data...
       </Typography>
     );
   }
@@ -45,7 +49,6 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: 3, width: "100%" }}
     >
-      {/* --- חלק משותף לכולם --- */}
       <Box
         sx={{
           width: "100%",
@@ -53,7 +56,7 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           display: "flex",
           flexDirection: { xs: "column", sm: "column" },
           mb: 2,
-          borderRadius: 2,
+          bExtraPreferencesRadius: 2,
           boxShadow: 3,
         }}
       >
@@ -61,7 +64,6 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           Extra Services
         </Typography>
 
-        {/* בחירת פנסיון */}
         <Typography variant="subtitle1" sx={{ mt: 2 }}>
           Meal Plan:
         </Typography>
@@ -87,7 +89,6 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           />
         </RadioGroup>
 
-        {/* צ'קבוקסים - ה-Hook שלך יודע לטפל בהם בזכות ה-type === "checkbox" */}
         <Box sx={{ my: 2, display: "flex", flexDirection: "column" }}>
           <FormControlLabel
             control={
@@ -128,11 +129,11 @@ function OrderForm({ initialOrderValues, handleSubmitForm }) {
           sx={{ mt: 4 }}
           onClick={handleSubmit}
         >
-          {user?.role === "admin" ? "Create Manual Order" : "Confirm & Pay"}
+          Confirm & Pay
         </Button>
       </Box>
     </Box>
   );
 }
 
-export default OrderForm;
+export default ExtraPreferencesForm;

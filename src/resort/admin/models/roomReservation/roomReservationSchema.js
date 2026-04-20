@@ -39,7 +39,7 @@ const roomReservationSchema = {
       "any.required": "Status is required",
     }),
 
-  expiresAt: Joi.date().iso().optional().messages({
+  expiresAt: Joi.date().iso().allow("", null).optional().messages({
     "date.format": "Expiration date must be a valid date format",
   }),
 

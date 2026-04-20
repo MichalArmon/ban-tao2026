@@ -33,22 +33,31 @@ function AvailabilityBar({ initialRoomAvailabilityValues, handleSubmitForm }) {
         alignItems="center"
       >
         {/* 1. Date Picker: Check-in */}
+        {/* 1. Date Picker: Check-in */}
         <DatePicker
-          label="Check-in"
-          value={formDetails.checkIn}
-          onChange={(newValue) => handleManualChange("checkIn", newValue)}
+          label="Check in"
+          value={formDetails.checkIn || null} // DatePicker מעדיף null כשהוא ריק, לא מחרוזת ריקה
+          onChange={(newValue) => handleManualChange("checkIn", newValue)} // השינוי הקריטי!
           slotProps={{
-            textField: { fullWidth: true, error: !!errors.checkIn },
+            textField: {
+              fullWidth: true,
+              error: !!errors.checkIn, // תיקנתי: היה פה בטעות checkOut קודם
+              helperText: errors.checkIn,
+            },
           }}
         />
 
         {/* 2. Date Picker: Check-out */}
         <DatePicker
-          label="Check-out"
-          value={formDetails.checkOut}
-          onChange={(newValue) => handleManualChange("checkOut", newValue)}
+          label="Check out"
+          value={formDetails.checkOut || null} // שינינו ל-null
+          onChange={(newValue) => handleManualChange("checkOut", newValue)} // השינוי הקריטי!
           slotProps={{
-            textField: { fullWidth: true, error: !!errors.checkOut },
+            textField: {
+              fullWidth: true,
+              error: !!errors.checkOut,
+              helperText: errors.checkOut,
+            },
           }}
         />
 

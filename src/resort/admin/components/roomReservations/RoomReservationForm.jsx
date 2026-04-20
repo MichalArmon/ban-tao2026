@@ -13,7 +13,6 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import { useRoomReservation } from "../../../providers/RoomReservationProvider";
 
 import useForm from "../../../hooks/useForm";
 
@@ -29,6 +28,7 @@ function RoomReservationForm({
   isEditMode,
 }) {
   const { users, getUsersFromServer } = useUser();
+  const [roomTypeFilter, setRoomTypeFilter] = useState(null);
 
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
@@ -58,7 +58,7 @@ function RoomReservationForm({
       </Typography>
     );
   }
-
+  console.log("Current formDetails state:", formDetails);
   return (
     <Box sx={{ p: 4, justifyContent: "center" }}>
       <Paper
@@ -83,11 +83,6 @@ function RoomReservationForm({
                 setFormDetails((prev) => ({
                   ...prev,
                   userId: newValue ? newValue._id : "",
-                  guestFullName: newValue
-                    ? `${newValue.firstName} ${newValue.lastName || ""}`.trim()
-                    : "",
-                  guestEmail: newValue?.email || "",
-                  guestPhone: newValue?.phone || "",
                 }));
               }}
               renderInput={(params) => (
@@ -100,7 +95,6 @@ function RoomReservationForm({
               )}
             />
           </Grid>
-
           <Grid size={{ xs: 12, md: 6 }}>
             <MyTextField
               name="checkIn"
@@ -111,7 +105,6 @@ function RoomReservationForm({
               error={errors.checkIn}
             />
           </Grid>
-
           <Grid size={{ xs: 12, md: 6 }}>
             <MyTextField
               name="checkOut"
@@ -133,9 +126,25 @@ function RoomReservationForm({
               error={errors.guestsCount}
             />
           </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <MyTextField
+              select
+              fullWidth
+              label="Filter by Room Type"
+              value={roomTypeFilter}
+              onChange={(e) => setRoomTypeFilter(e.target.value)} // מעדכן רק את משתנה העזר
+            >
+              <MenuItem value="Single">Single</MenuItem>
+              <MenuItem value="Double">Double</MenuItem>
+              <MenuItem value="Suite">Suite</MenuItem>
+              <MenuItem value="Shared">Shared</MenuItem>
+              <MenuItem value="Studio">Studio</MenuItem>
+            </MyTextField>
+          </Grid>
 
           <Grid size={12}>
             <AvailableRoomsSection
+              roomType={roomTypeFilter}
               checkIn={formDetails.checkIn}
               checkOut={formDetails.checkOut}
               guestsCount={formDetails.guestsCount}
@@ -149,7 +158,6 @@ function RoomReservationForm({
               error={errors.roomId}
             />
           </Grid>
-
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               select
@@ -166,16 +174,18 @@ function RoomReservationForm({
               <MenuItem value="cancelled">Cancelled</MenuItem>
             </TextField>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              name="expiresAt"
-              label="Expires at"
-              type="date"
-              value={formDetails.expiresAt || ""}
-              onChange={handleChange}
-              error={errors.expiresAt}
-            />
-          </Grid>
+          {/* מציג את השדה רק אם אנחנו במצב עריכה, ונועל אותו לשינויים */}
+          {isEditMode && (
+            <Grid size={{ xs: 12, md: 6 }}>
+              <MyTextField
+                name="expiresAt"
+                label="Expires at"
+                type="date"
+                value={formDetails.expiresAt || ""}
+                disabled={true} // הופך את השדה לאפור ומונע הקלדה
+              />
+            </Grid>
+          )}
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               select
@@ -199,7 +209,6 @@ function RoomReservationForm({
               <MenuItem value="Full board">Full board</MenuItem>
             </TextField>
           </Grid>
-
           <Grid size={{ xs: 12, md: 6 }}>
             <FormControlLabel
               control={
@@ -219,7 +228,6 @@ function RoomReservationForm({
               label="Rent scooter"
             />
           </Grid>
-
           <Grid size={{ xs: 12, md: 6 }}>
             <FormControlLabel
               control={
@@ -241,7 +249,6 @@ function RoomReservationForm({
               label="Shuttle from ferry"
             />
           </Grid>
-
           <Grid size={12}>
             <TextField
               fullWidth
@@ -262,7 +269,6 @@ function RoomReservationForm({
               helperText={errors["extraPreferences.specialRequests"]}
             />
           </Grid>
-
           <Grid size={12} sx={{ mt: 2 }}>
             <Button
               onClick={handleSubmit}

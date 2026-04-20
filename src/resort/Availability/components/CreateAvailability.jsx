@@ -10,7 +10,7 @@ function CreateAvailability() {
   const handleSearchSubmit = (data) => {
     const dataForServer = normalizeRoomAvailabilityValues(data);
     const { checkIn, checkOut, roomType, guestsCount } = dataForServer;
-    handleGetRoomsAvailability(checkIn, checkOut, roomType, guestsCount);
+    handleGetRoomsAvailability({ checkIn, checkOut, roomType, guestsCount });
     console.log("Searching for rooms with these params:", dataForServer);
   };
   return (
