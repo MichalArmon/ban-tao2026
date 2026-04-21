@@ -30,8 +30,8 @@ export default function RoomReservationProvider({ children }) {
     const response = await axios.get(`${URL}/room-reservations`);
     const roomReservationData = response.data;
     setRoomReservations(roomReservationData);
-
     console.log(roomReservationData);
+    return roomReservationData;
   };
 
   // ✔️✔️✔️ CREATE Room RESERVATION ✔️✔️✔️
@@ -51,6 +51,8 @@ export default function RoomReservationProvider({ children }) {
         "ID Saved to storage:",
         sessionStorage.getItem("currentRoomReservationId"),
       );
+      await getRoomReservationsFromServer();
+      setIsDialogOpen(false);
       return newId;
     } catch (error) {
       console.log(error);

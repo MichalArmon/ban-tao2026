@@ -37,6 +37,7 @@ export default function UserProvider({ children }) {
     setUsers(userData);
 
     console.log(userData);
+    return userData;
   };
 
   // ✔️✔️✔️register User ✔️✔️✔️

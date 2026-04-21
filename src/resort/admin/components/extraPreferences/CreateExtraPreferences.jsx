@@ -14,7 +14,6 @@ function CreateExtraPreferences() {
         reservationId,
         formData,
       );
-      await handleSubmitCreateOrder(reservationAfterUpdate);
       if (!reservationAfterUpdate) {
         return (
           <Box bgcolor="red" height="1300">
@@ -22,6 +21,14 @@ function CreateExtraPreferences() {
           </Box>
         );
       }
+      const dataReadyForOrder = {
+        userId: reservationAfterUpdate.userId,
+        studioReservations: [reservationAfterUpdate._id],
+        totalPrice: 1000,
+      };
+      console.log("dataReadyForOrder:", dataReadyForOrder);
+      const newOrder = await handleSubmitCreateOrder(dataReadyForOrder);
+      return newOrder;
     } catch (error) {
       console.error("Error saving ExtraPreferences:", error);
     }

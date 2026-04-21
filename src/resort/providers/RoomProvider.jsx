@@ -39,6 +39,7 @@ export default function RoomProvider({ children }) {
     setRooms(roomData);
     setFilteredRooms(roomData);
     console.log(roomData);
+    return roomData;
   };
 
   const handleChange = (event) => {

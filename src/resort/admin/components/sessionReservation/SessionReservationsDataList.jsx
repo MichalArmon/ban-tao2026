@@ -21,37 +21,38 @@ import {
 
 import React, { useEffect, useState } from "react";
 
-import { useRoomReservation } from "../../../providers/RoomReservationProvider";
-import EditRoomReservation from "./EditRoomReservation";
+import { useSessionReservation } from "../../../providers/SessionReservationProvider";
+import EditSessionReservation from "./EditSessionReservation";
 import { useUser } from "../../../providers/UserProvider";
-import { useRoom } from "../../../providers/RoomProvider";
+import { useSession } from "../../../providers/SessionProvider";
 import { formatDate } from "../../../utils/date/dateUtils";
 
-function RoomReservationsDataList() {
+function SessionReservationsDataList() {
   const {
-    getRoomReservationsFromServer,
-    roomReservations,
-    handleDeleteRoomReservation,
-  } = useRoomReservation();
+    getSessionReservationsFromServer,
+    SessionReservations,
+    handleDeleteSessionReservation,
+  } = useSessionReservation();
   const { getUsersFromServer, users, setUsers } = useUser();
-  const { getRoomsFromServer, rooms, setRooms } = useRoom();
+  const { getSessionsFromServer, Sessions, setSessions } = useSession();
   useEffect(() => {
     const gatInitialData = async () => {
       const currentUsers = await getUsersFromServer();
-      const currentRooms = await getRoomsFromServer();
-      await getRoomReservationsFromServer();
+      const currentSessions = await getSessionsFromServer();
+      await getSessionReservationsFromServer();
 
       setUsers(currentUsers);
-      setRooms(currentRooms);
+      setSessions(currentSessions);
     };
     gatInitialData();
-    console.log(roomReservations);
+    console.log(SessionReservations);
   }, []);
-  const [roomReservationSelected, setRoomReservationSelected] = useState(null);
+  const [SessionReservationSelected, setSessionReservationSelected] =
+    useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const getRoomTitle = (roomId) => {
-    const room = rooms.find((room) => room._id === roomId);
-    return room ? room.title : "Unknown User";
+  const getSessionTitle = (SessionId) => {
+    const Session = Sessions.find((Session) => Session._id === SessionId);
+    return Session ? Session.title : "Unknown User";
   };
 
   const getUserName = (userId) => {
@@ -60,7 +61,7 @@ function RoomReservationsDataList() {
   };
 
   // 1. קודם בודקים אם המשתנים קיימים בכלל. אם לא - סימן שאנחנו עדיין מחכים לשרת.
-  if (!roomReservations || !users || !rooms) {
+  if (!SessionReservations || !users || !Sessions) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
         Loading data...
@@ -70,13 +71,13 @@ function RoomReservationsDataList() {
 
   // 2. אם הגענו לכאן, המשתנים בוודאות קיימים והם מערכים. עכשיו בטוח לבדוק את האורך שלהם.
   if (
-    roomReservations.length === 0 ||
+    SessionReservations.length === 0 ||
     users.length === 0 ||
-    rooms.length === 0
+    Sessions.length === 0
   ) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
-        NO RoomReservations to show!
+        NO SessionReservations to show!
       </Typography>
     );
   }
@@ -113,7 +114,7 @@ function RoomReservationsDataList() {
               }}
             >
               <TableCell sx={{ top: 0 }}>Reservation ID</TableCell>
-              <TableCell sx={{ top: 0 }}>Room id</TableCell>
+              <TableCell sx={{ top: 0 }}>Session id</TableCell>
               <TableCell sx={{ top: 0 }}>User id</TableCell>
               <TableCell sx={{ top: 0 }}>Check in</TableCell>
               <TableCell sx={{ top: 0 }}>Check out</TableCell>
@@ -134,19 +135,21 @@ function RoomReservationsDataList() {
               bgcolor: "white",
             }}
           >
-            {roomReservations.map((roomReservation, i) => (
+            {SessionReservations.map((SessionReservation, i) => (
               <TableRow key={i}>
-                <TableCell>{roomReservation._id}</TableCell>
-                <TableCell>{getRoomTitle(roomReservation.roomId)}</TableCell>
-                <TableCell>{getUserName(roomReservation.userId)}</TableCell>
-                <TableCell>{formatDate(roomReservation.checkIn)}</TableCell>
-                <TableCell>{formatDate(roomReservation.checkOut)}</TableCell>
-                <TableCell>{roomReservation.status}</TableCell>
+                <TableCell>{SessionReservation._id}</TableCell>
+                <TableCell>
+                  {getSessionTitle(SessionReservation.SessionId)}
+                </TableCell>
+                <TableCell>{getUserName(SessionReservation.userId)}</TableCell>
+                <TableCell>{formatDate(SessionReservation.checkIn)}</TableCell>
+                <TableCell>{formatDate(SessionReservation.checkOut)}</TableCell>
+                <TableCell>{SessionReservation.status}</TableCell>
                 <TableCell>
                   <Button
                     onClick={() => {
                       setIsDialogOpen(true);
-                      setRoomReservationSelected(roomReservation._id);
+                      setSessionReservationSelected(SessionReservation._id);
                     }}
                   >
                     <Edit />
@@ -155,7 +158,7 @@ function RoomReservationsDataList() {
                 <TableCell>
                   <Button
                     onClick={() => {
-                      handleDeleteRoomReservation(roomReservation._id);
+                      handleDeleteSessionReservation(SessionReservation._id);
                     }}
                   >
                     <Delete />
@@ -171,16 +174,16 @@ function RoomReservationsDataList() {
         open={isDialogOpen}
         onClose={() => {
           setIsDialogOpen(false);
-          setRoomReservationSelected(null);
+          setSessionReservationSelected(null);
         }}
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Edit RoomReservation</DialogTitle>
+        <DialogTitle>Edit SessionReservation</DialogTitle>
         <DialogContent dividers>
-          {roomReservationSelected && (
-            <EditRoomReservation
-              roomReservationSelected={roomReservationSelected}
+          {SessionReservationSelected && (
+            <EditSessionReservation
+              SessionReservationSelected={SessionReservationSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}
@@ -190,4 +193,4 @@ function RoomReservationsDataList() {
   );
 }
 
-export default RoomReservationsDataList;
+export default SessionReservationsDataList;

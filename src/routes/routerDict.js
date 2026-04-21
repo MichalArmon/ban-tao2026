@@ -25,4 +25,5 @@ export const ADMIN_ROUTES = {
   orders: "/admin/orders",
   recRules: "/admin/rules",
   roomReservation: "/admin/rooms/reservations",
+  WorkshopReservation: "/admin/workshops/reservations",
 };
