@@ -21,6 +21,7 @@ export default function SessionProvider({ children }) {
     const response = await axios.get(`${URL}/workshop-sessions`);
     const sessionsData = response.data;
     setSessions(sessionsData);
+    return sessionsData;
 
     console.log(sessionsData);
   };
@@ -110,6 +111,7 @@ export default function SessionProvider({ children }) {
         handleSubmitCreateSession,
         handleGetSession,
         sessions,
+        setSessions,
         handleDeleteSession,
         handleSubmitEditSession,
         setSession,

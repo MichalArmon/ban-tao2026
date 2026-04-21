@@ -20,6 +20,7 @@ export default function WorkshopProvider({ children }) {
     setWorkshops(workshopsData);
 
     console.log(workshopsData);
+    return workshopsData;
   };
 
   // ✔️✔️✔️GET Workshop by id ✔️✔️✔️
@@ -119,6 +120,7 @@ export default function WorkshopProvider({ children }) {
         handleSubmitCreateWorkshop,
         handleGetWorkshop,
         workshops,
+        setWorkshops,
         handleDeleteWorkshop,
         handleSubmitEditWorkshop,
         setWorkshop,

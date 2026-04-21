@@ -26,42 +26,64 @@ import EditSessionReservation from "./EditSessionReservation";
 import { useUser } from "../../../providers/UserProvider";
 import { useSession } from "../../../providers/SessionProvider";
 import { formatDate } from "../../../utils/date/dateUtils";
+import { useWorkshop } from "../../../providers/WorkshopProvider";
 
 function SessionReservationsDataList() {
   const {
     getSessionReservationsFromServer,
-    SessionReservations,
+    sessionReservations,
     handleDeleteSessionReservation,
   } = useSessionReservation();
   const { getUsersFromServer, users, setUsers } = useUser();
-  const { getSessionsFromServer, Sessions, setSessions } = useSession();
+  const { getSessionsFromServer, sessions, setSessions } = useSession();
+  const { getWorkshopsFromServer, workshops, setWorkshops } = useWorkshop();
   useEffect(() => {
     const gatInitialData = async () => {
       const currentUsers = await getUsersFromServer();
       const currentSessions = await getSessionsFromServer();
+      const currentWorkshops = await getWorkshopsFromServer();
       await getSessionReservationsFromServer();
 
       setUsers(currentUsers);
       setSessions(currentSessions);
+      setWorkshops(currentWorkshops);
     };
     gatInitialData();
-    console.log(SessionReservations);
+    console.log(sessionReservations, workshops);
   }, []);
-  const [SessionReservationSelected, setSessionReservationSelected] =
+  const [sessionReservationSelected, setSessionReservationSelected] =
     useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const getSessionTitle = (SessionId) => {
-    const Session = Sessions.find((Session) => Session._id === SessionId);
-    return Session ? Session.title : "Unknown User";
+    const session = sessions.find((session) => session._id === SessionId);
+    return session ? session.title : "Unknown User";
   };
 
   const getUserName = (userId) => {
     const user = users.find((u) => u._id === userId);
     return user ? `${user.firstName} ${user.lastName || ""}` : "Unknown User";
   };
+  const getWorkshopTitle = (sessionId) => {
+    const session = sessions.find((session) => session._id === sessionId);
+    if (!session) return "Unknown Session";
+    const workshopId = session.workshopId;
 
-  // 1. קודם בודקים אם המשתנים קיימים בכלל. אם לא - סימן שאנחנו עדיין מחכים לשרת.
-  if (!SessionReservations || !users || !Sessions) {
+    const workshop = workshops.find((workshop) => workshop._id === workshopId);
+    return workshop ? workshop.title : "";
+  };
+
+  const getSessionDate = (sessionId) => {
+    const session = sessions.find((session) => session._id === sessionId);
+    return session ? session.startTime : "";
+  };
+
+  console.log("Data Status:", {
+    sessionReservations,
+    users,
+    sessions,
+    workshops,
+  });
+  if (!sessionReservations || !users || !sessions || !workshops) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
         Loading data...
@@ -71,9 +93,10 @@ function SessionReservationsDataList() {
 
   // 2. אם הגענו לכאן, המשתנים בוודאות קיימים והם מערכים. עכשיו בטוח לבדוק את האורך שלהם.
   if (
-    SessionReservations.length === 0 ||
+    sessionReservations.length === 0 ||
     users.length === 0 ||
-    Sessions.length === 0
+    sessions.length === 0 ||
+    workshops.length === 0
   ) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
@@ -116,8 +139,8 @@ function SessionReservationsDataList() {
               <TableCell sx={{ top: 0 }}>Reservation ID</TableCell>
               <TableCell sx={{ top: 0 }}>Session id</TableCell>
               <TableCell sx={{ top: 0 }}>User id</TableCell>
-              <TableCell sx={{ top: 0 }}>Check in</TableCell>
-              <TableCell sx={{ top: 0 }}>Check out</TableCell>
+              <TableCell sx={{ top: 0 }}>Date</TableCell>
+              <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}>Status</TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
@@ -135,21 +158,21 @@ function SessionReservationsDataList() {
               bgcolor: "white",
             }}
           >
-            {SessionReservations.map((SessionReservation, i) => (
+            {sessionReservations.map((sessionReservation, i) => (
               <TableRow key={i}>
-                <TableCell>{SessionReservation._id}</TableCell>
+                <TableCell>{sessionReservation._id}</TableCell>
+                <TableCell>{sessionReservation.sessionId}</TableCell>
+                <TableCell>{getUserName(sessionReservation.userId)}</TableCell>
                 <TableCell>
-                  {getSessionTitle(SessionReservation.SessionId)}
+                  {formatDate(getSessionDate(sessionReservation.sessionId))}
                 </TableCell>
-                <TableCell>{getUserName(SessionReservation.userId)}</TableCell>
-                <TableCell>{formatDate(SessionReservation.checkIn)}</TableCell>
-                <TableCell>{formatDate(SessionReservation.checkOut)}</TableCell>
-                <TableCell>{SessionReservation.status}</TableCell>
+                <TableCell>{formatDate(sessionReservation.checkOut)}</TableCell>
+                <TableCell>{sessionReservation.status}</TableCell>
                 <TableCell>
                   <Button
                     onClick={() => {
                       setIsDialogOpen(true);
-                      setSessionReservationSelected(SessionReservation._id);
+                      setSessionReservationSelected(sessionReservation._id);
                     }}
                   >
                     <Edit />
@@ -158,7 +181,7 @@ function SessionReservationsDataList() {
                 <TableCell>
                   <Button
                     onClick={() => {
-                      handleDeleteSessionReservation(SessionReservation._id);
+                      handleDeleteSessionReservation(sessionReservation._id);
                     }}
                   >
                     <Delete />
@@ -181,9 +204,9 @@ function SessionReservationsDataList() {
       >
         <DialogTitle>Edit SessionReservation</DialogTitle>
         <DialogContent dividers>
-          {SessionReservationSelected && (
+          {sessionReservationSelected && (
             <EditSessionReservation
-              SessionReservationSelected={SessionReservationSelected}
+              SessionReservationSelected={sessionReservationSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}
