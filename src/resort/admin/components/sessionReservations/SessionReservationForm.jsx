@@ -12,6 +12,8 @@ import {
   Checkbox,
   Autocomplete,
   TextField,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 
 import useForm from "../../../hooks/useForm";
@@ -19,6 +21,28 @@ import useForm from "../../../hooks/useForm";
 import { useEffect, useState } from "react";
 
 import { useUser } from "../../../providers/UserProvider";
+import sessionReservationValidationSchema from "../../models/sessionReservation/sessionReservationSchema";
+import { useWorkshop } from "../../../providers/WorkshopProvider";
+import AvailableSessionsSection from "../sessions/sessionAvailability/AvailableSessionSection";
+import { useSession } from "../../../providers/SessionProvider";
+
+const levels = ["beginner", "intermediate", "advanced"];
+
+const goalOptions = [
+  "Improve flexibility",
+  "Build strength",
+  "Reduce stress",
+  "Improve balance",
+];
+
+const injuriesOptions = [
+  "No injuries",
+  "Lower back sensitivity",
+  "Knee pain",
+  "Shoulder tension",
+];
+
+const extraOptions = ["Yoga mat", "Blocks", "Private guidance", "Gentle pace"];
 
 function SessionReservationForm({
   initialSessionReservationValues,
@@ -26,20 +50,25 @@ function SessionReservationForm({
   isEditMode,
 }) {
   const { users, getUsersFromServer } = useUser();
-  const [SessionTypeFilter, setSessionTypeFilter] = useState(null);
+  const { workshops, getWorkshopsFromServer, handleGetSession } = useWorkshop();
+  const { handleGetSessionByWorkshop, setSessions, sessions } = useSession;
 
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
       initialSessionReservationValues,
-      SessionReservationSchema,
+      sessionReservationValidationSchema,
       handleSubmitForm,
     );
-
+  const [startTime, setStartTime] = useState(null);
+  const [workshopId, setWorkshopId] = useState(null);
   useEffect(() => {
     if (!users || users.length === 0) {
       getUsersFromServer();
     }
-  }, [users, getUsersFromServer]);
+    if (!workshops || workshops.length === 0) {
+      getWorkshopsFromServer();
+    }
+  }, [users, getUsersFromServer, workshops, getWorkshopsFromServer]);
 
   const getFormTitle = () => {
     return isEditMode
@@ -50,6 +79,12 @@ function SessionReservationForm({
   const getSubmitButtonText = () => {
     return isEditMode ? "Update" : "Create";
   };
+  const sessionsByWorkshop = async (workshopId) => {
+    const workshopSessions = await handleGetSessionByWorkshop(workshopId);
+    setSessions(workshopSessions);
+  };
+  const filterdSessionsBydate = (startTime) =>
+    sessions.filter((session) => session.startTime === startTime);
 
   if (!formDetails || !users) {
     return (
@@ -97,25 +132,44 @@ function SessionReservationForm({
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <MyTextField
-              name="checkIn"
-              label="Check in"
+              name="startTime"
+              label="session date"
               type="date"
-              value={formDetails.checkIn || ""}
-              onChange={handleChange}
-              error={errors.checkIn}
+              value={startTime || null}
+              onChange={() => {
+                setStartTime(startTime);
+              }}
+              error={errors.startTime}
+              helperText={errors.startTime}
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              name="checkOut"
-              label="Check out"
-              type="date"
-              value={formDetails.checkOut || ""}
-              onChange={handleChange}
-              error={errors.checkOut}
-              helperText={errors.checkOut}
+            <Autocomplete
+              options={workshops}
+              getOptionLabel={(option) => option.title || ""}
+              value={
+                workshops.find((workshop) => workshop._id === workshopId) ||
+                null
+              }
+              onChange={(event, newValue) => {
+                // newValue הוא האובייקט של הסדנא שנבחרה. אם המשתמש מחק את הבחירה (לחץ על ה-X), זה יהיה null
+                if (newValue) {
+                  setWorkshopId(newValue._id);
+                } else {
+                  setWorkshopId(""); // אם ניקו את השדה
+                }
+              }}
+              renderInput={(params) => (
+                <MyTextField
+                  {...params}
+                  label="Select workshop"
+                  error={!!errors.workshopId}
+                  helperText={errors.workshopId}
+                />
+              )}
             />
           </Grid>
+
           <Grid size={{ xs: 12, md: 6 }}>
             <MyTextField
               name="guestsCount"
@@ -126,37 +180,19 @@ function SessionReservationForm({
               error={errors.guestsCount}
             />
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              select
-              fullWidth
-              label="Filter by Session Type"
-              value={SessionTypeFilter}
-              onChange={(e) => setSessionTypeFilter(e.target.value)} // מעדכן רק את משתנה העזר
-            >
-              <MenuItem value="Single">Single</MenuItem>
-              <MenuItem value="Double">Double</MenuItem>
-              <MenuItem value="Suite">Suite</MenuItem>
-              <MenuItem value="Shared">Shared</MenuItem>
-              <MenuItem value="Studio">Studio</MenuItem>
-            </MyTextField>
-          </Grid>
 
           <Grid size={12}>
-            {/* <AvailableSessionsSection
-              SessionType={SessionTypeFilter}
-              checkIn={formDetails.checkIn}
-              checkOut={formDetails.checkOut}
-              guestsCount={formDetails.guestsCount}
-              selectedSessionId={formDetails.SessionId}
-              onSelectSession={(Session) =>
+            <AvailableSessionsSection
+              selectedWorkshopId={workshopId}
+              startTime={startTime}
+              onSelectSession={(session) =>
                 setFormDetails((prev) => ({
                   ...prev,
-                  SessionId: Session._id,
+                  sessionId: session._id,
                 }))
               }
-              error={errors.SessionId}
-            /> */}
+              error={errors.sessionId}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField
@@ -186,89 +222,109 @@ function SessionReservationForm({
               />
             </Grid>
           )}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              select
-              fullWidth
-              label="Meal Plan"
-              value={formDetails.extraPreferences?.mealPlan || ""}
-              onChange={(e) =>
-                setFormDetails((prev) => ({
-                  ...prev,
-                  extraPreferences: {
-                    ...prev.extraPreferences,
-                    mealPlan: e.target.value,
-                  },
-                }))
-              }
-              error={!!errors["extraPreferences.mealPlan"]}
-              helperText={errors["extraPreferences.mealPlan"]}
+          <Grid size={12}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              Level
+            </Typography>
+            <RadioGroup
+              name="level"
+              value={formDetails.level}
+              onChange={handleChange}
+              sx={{ mb: 3 }}
             >
-              <MenuItem value="Breakfast only">Breakfast only</MenuItem>
-              <MenuItem value="Half board">Half board</MenuItem>
-              <MenuItem value="Full board">Full board</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formDetails.extraPreferences?.rentScooter || false}
-                  onChange={(e) =>
-                    setFormDetails((prev) => ({
-                      ...prev,
-                      extraPreferences: {
-                        ...prev.extraPreferences,
-                        rentScooter: e.target.checked,
-                      },
-                    }))
-                  }
+              {levels.map((lvl) => (
+                <FormControlLabel
+                  key={lvl}
+                  value={lvl}
+                  control={<Radio />}
+                  label={lvl}
                 />
-              }
-              label="Rent scooter"
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={
-                    formDetails.extraPreferences?.shuttleFromFerry || false
-                  }
-                  onChange={(e) =>
-                    setFormDetails((prev) => ({
-                      ...prev,
-                      extraPreferences: {
-                        ...prev.extraPreferences,
-                        shuttleFromFerry: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-              }
-              label="Shuttle from ferry"
-            />
+              ))}
+            </RadioGroup>
           </Grid>
           <Grid size={12}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Special requests"
-              value={formDetails.extraPreferences?.specialRequests || ""}
-              onChange={(e) =>
-                setFormDetails((prev) => ({
-                  ...prev,
-                  extraPreferences: {
-                    ...prev.extraPreferences,
-                    specialRequests: e.target.value,
-                  },
-                }))
-              }
-              error={!!errors["extraPreferences.specialRequests"]}
-              helperText={errors["extraPreferences.specialRequests"]}
-            />
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              Goals
+            </Typography>
+            {goalOptions.map((goal) => (
+              <FormControlLabel
+                key={goal}
+                control={
+                  <Checkbox
+                    checked={formDetails.goals?.includes(goal)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setFormDetails((prev) => ({
+                        ...prev,
+                        goals: checked
+                          ? [...prev.goals, goal]
+                          : prev.goals.filter((g) => g !== goal),
+                      }));
+                    }}
+                  />
+                }
+                label={goal}
+              />
+            ))}
           </Grid>
+
+          <Grid size={12}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              Injuries
+            </Typography>
+            <RadioGroup
+              name="injuriesNotes"
+              value={formDetails.injuriesNotes}
+              onChange={handleChange}
+              sx={{ mb: 3 }}
+            >
+              {injuriesOptions.map((item) => (
+                <FormControlLabel
+                  key={item}
+                  value={item}
+                  control={<Radio />}
+                  label={item}
+                />
+              ))}
+            </RadioGroup>
+          </Grid>
+
+          <Typography variant="subtitle1" sx={{ mb: 1 }}>
+            Extras
+          </Typography>
+          {extraOptions.map((extra) => (
+            <FormControlLabel
+              key={extra}
+              control={
+                <Checkbox
+                  checked={formDetails.extras?.includes(extra)}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+
+                    setFormDetails((prev) => ({
+                      ...prev,
+                      extras: checked
+                        ? [...prev.extras, extra]
+                        : prev.extras.filter((ex) => ex !== extra),
+                    }));
+                  }}
+                />
+              }
+              label={extra}
+            />
+          ))}
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            label="Instructor Notes"
+            name="instructorNotes"
+            value={formDetails.instructorNotes}
+            onChange={handleChange}
+            error={!!errors.instructorNotes}
+            helperText={errors.instructorNotes}
+            sx={{ mb: 3 }}
+          />
           <Grid size={12} sx={{ mt: 2 }}>
             <Button
               onClick={handleSubmit}
