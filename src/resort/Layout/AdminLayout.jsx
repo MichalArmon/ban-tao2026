@@ -52,6 +52,10 @@ const Pages = [
     label: "room reservations",
     path: ADMIN_ROUTES.roomReservation,
   },
+  {
+    label: "workshop reservations",
+    path: ADMIN_ROUTES.workshopReservation,
+  },
 ];
 
 function AdminLayout() {

@@ -1,5 +1,5 @@
 import { useSessionReservation } from "../../../providers/SessionReservationProvider";
-import initialSessionReservationValues from "../../helpers/SessionReservations/initialValues/fullSessionReservations/initialSessionReservationValues";
+import initialSessionReservationValues from "../../helpers/sessionReservations/initialValues/fullSessionReservations/initialSessionReservationValues";
 
 initialSessionReservationValues;
 import SessionReservationForm from "./SessionReservationForm";

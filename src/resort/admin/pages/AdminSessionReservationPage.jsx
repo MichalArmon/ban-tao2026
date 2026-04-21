@@ -8,21 +8,21 @@ import {
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useState } from "react";
-
-import sessionReservationsDataList from "../components/sessionReservations/sessionReservationsDataList";
-CreateSe;
 import { useSessionReservation } from "../../providers/SessionReservationProvider";
 
-function AdminsessionReservationsPage() {
-  const { isDialogOpen, setIsDialogOpen, setsessionReservation } =
-    usesessionReservation();
+import SessionReservationsDataList from "../components/sessionReservations/SessionReservationsDataList";
+import CreateSessionReservation from "../components/sessionReservations/CreateSessionReservation";
+
+function AdminSessionReservationsPage() {
+  const { isDialogOpen, setIsDialogOpen, setSessionReservation } =
+    useSessionReservation();
   return (
     <Box sx={{ position: "relative", minHeight: "80vh" }}>
       <Fab
         sx={{ position: "fixed", bottom: 20, right: 20 }}
         color="primary"
         onClick={() => {
-          setsessionReservation(null);
+          setSessionReservation(null);
           setIsDialogOpen(true);
         }}
       >
@@ -36,14 +36,14 @@ function AdminsessionReservationsPage() {
         fullWidth
         maxWidth="xl"
       >
-        <DialogTitle>Create New session Reservation</DialogTitle>
+        <DialogTitle>Create New Session Reservation</DialogTitle>
         <DialogContent dividers>
-          <CreatesessionReservation />
+          <CreateSessionReservation />
         </DialogContent>
       </Dialog>
-      <sessionReservationsDataList />
+      <SessionReservationsDataList />
     </Box>
   );
 }
 
-export default AdminsessionReservationsPage;
+export default AdminSessionReservationsPage;

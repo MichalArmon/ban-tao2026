@@ -17,10 +17,8 @@ import {
 import useForm from "../../../hooks/useForm";
 
 import { useEffect, useState } from "react";
-session;
 
 import { useUser } from "../../../providers/UserProvider";
-import AvailableSessionsSection from "../Sessions/SessionsAvailability.jsx/AvailableSessionsSection";
 
 function SessionReservationForm({
   initialSessionReservationValues,
@@ -145,7 +143,7 @@ function SessionReservationForm({
           </Grid>
 
           <Grid size={12}>
-            <AvailableSessionsSection
+            {/* <AvailableSessionsSection
               SessionType={SessionTypeFilter}
               checkIn={formDetails.checkIn}
               checkOut={formDetails.checkOut}
@@ -158,7 +156,7 @@ function SessionReservationForm({
                 }))
               }
               error={errors.SessionId}
-            />
+            /> */}
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField

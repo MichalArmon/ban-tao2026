@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
-import normalizeSessionReservation from "../admin/helpers/sessionReservation/normalization/normalizeSessionReservationDetails";
+import normalizeSessionReservation from "../admin/helpers/sessionReservations/normalization/normalizeSessionReservationDetails";
 
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routerDict";

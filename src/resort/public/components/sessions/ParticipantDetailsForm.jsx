@@ -14,7 +14,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import useForm from "../../../hooks/useForm";
-import initialParticipantDetailsValues from "../../../admin/helpers/sessionReservation/initialValues/initialValuesParticipantDetails";
+import initialParticipantDetailsValues from "../../../admin/helpers/sessionReservations/initialValues/initialValuesParticipantDetails";
 import participantDetailsSchema from "../../../admin/models/sessionReservation/participantDetailsSchema";
 import { useSessionReservation } from "../../../providers/SessionReservationProvider";
 
