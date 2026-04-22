@@ -52,6 +52,9 @@ export default function SessionReservationProvider({ children }) {
         "ID Saved to storage:",
         sessionStorage.getItem("currentSessionReservationId"),
       );
+
+      getSessionReservationsFromServer();
+      setIsDialogOpen(false);
       return newId;
     } catch (error) {
       console.log(error);

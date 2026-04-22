@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import normalizeSessionDetails from "../admin/helpers/Sessions/normalization/normalizeSessionDetails";
 
 const URL = "http://localhost:8000";
@@ -13,6 +13,9 @@ const SessionContext = createContext();
 export default function SessionProvider({ children }) {
   const [session, setSession] = useState(null);
   const [sessions, setSessions] = useState([]);
+  const [filteredSessions, setFilteredSessions] = useState([]);
+  const [workshopId, setWorkshopId] = useState("");
+  const [startTime, setStartTime] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [reservationId, setReservationId] = useState("");
 
@@ -22,8 +25,6 @@ export default function SessionProvider({ children }) {
     const sessionsData = response.data;
     setSessions(sessionsData);
     return sessionsData;
-
-    console.log(sessionsData);
   };
 
   // ✔️✔️✔️GET Session by id ✔️✔️✔️
@@ -103,6 +104,27 @@ export default function SessionProvider({ children }) {
       console.log(error);
     }
   };
+  // ✔️✔️✔️ Sessions AVAILABILITY ✔️✔️✔️
+
+  const handleSessionsAvailability = useCallback(
+    async ({ startTime, workshopId }) => {
+      try {
+        setFilteredSessions(null);
+
+        const response = await axios.get(
+          `${URL}/workshop-sessions/availability?startTime=${startTime}&workshopId=${workshopId}`,
+        );
+
+        setFilteredSessions(response.data);
+        console.log("sessions:", response.data);
+
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [],
+  );
 
   return (
     <SessionContext.Provider
@@ -119,6 +141,13 @@ export default function SessionProvider({ children }) {
         isDialogOpen,
         setIsDialogOpen,
         handleGetSessionByWorkshop,
+        handleSessionsAvailability,
+        setFilteredSessions,
+        filteredSessions,
+        startTime,
+        setStartTime,
+        workshopId,
+        setWorkshopId,
       }}
     >
       {children}

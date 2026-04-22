@@ -2,17 +2,19 @@ function normalizeSessionReservation(values) {
   const sessionReservationDetailsForServer = {
     sessionId: values.sessionId,
     userId: values.userId,
-    guestsCount: values.guestsCount,
-    expiresAt: values.expiresAt,
+    guestsCount: Number(values.guestsCount),
+    expiresAt: values.expiresAt || null,
+    status: values.status || "pending",
 
     participantDetails: {
-      level: values.level,
-      goals: values.goals,
-      injuriesNotes: values.injuriesNotes,
-      extras: values.extras,
-      instructorNotes: values.instructorNotes,
+      level: values.participantDetails?.level || null,
+      goals: values.participantDetails?.goals || [],
+      injuriesNotes: values.participantDetails?.injuriesNotes || "",
+      extras: values.participantDetails?.extras || [],
+      instructorNotes: values.participantDetails?.instructorNotes || "",
     },
   };
+
   return sessionReservationDetailsForServer;
 }
 

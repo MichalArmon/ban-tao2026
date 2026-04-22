@@ -51,7 +51,7 @@ function SessionReservationForm({
 }) {
   const { users, getUsersFromServer } = useUser();
   const { workshops, getWorkshopsFromServer, handleGetSession } = useWorkshop();
-  const { handleGetSessionByWorkshop, setSessions, sessions } = useSession;
+  const { handleGetSessionByWorkshop, setSessions, sessions } = useSession();
 
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
@@ -68,7 +68,7 @@ function SessionReservationForm({
     if (!workshops || workshops.length === 0) {
       getWorkshopsFromServer();
     }
-  }, [users, getUsersFromServer, workshops, getWorkshopsFromServer]);
+  }, []);
 
   const getFormTitle = () => {
     return isEditMode
@@ -135,9 +135,9 @@ function SessionReservationForm({
               name="startTime"
               label="session date"
               type="date"
-              value={startTime || null}
-              onChange={() => {
-                setStartTime(startTime);
+              value={startTime || ""}
+              onChange={(e) => {
+                setStartTime(e.target.value);
               }}
               error={errors.startTime}
               helperText={errors.startTime}
@@ -175,16 +175,18 @@ function SessionReservationForm({
               name="guestsCount"
               label="guestsCount"
               type="number"
-              value={formDetails.guestsCount || ""}
+              value={formDetails.guestsCount || null}
               onChange={handleChange}
               error={errors.guestsCount}
+              helperText={errors.guestsCount}
             />
           </Grid>
 
           <Grid size={12}>
             <AvailableSessionsSection
-              selectedWorkshopId={workshopId}
+              workshopId={workshopId}
               startTime={startTime}
+              selectedSessionId={formDetails.sessionId}
               onSelectSession={(session) =>
                 setFormDetails((prev) => ({
                   ...prev,
@@ -200,7 +202,7 @@ function SessionReservationForm({
               fullWidth
               name="status"
               label="Reservation status"
-              value={formDetails.status || "confirmed"}
+              value={formDetails.status || "pending"}
               onChange={handleChange}
               error={!!errors.status}
               helperText={errors.status}
@@ -228,8 +230,16 @@ function SessionReservationForm({
             </Typography>
             <RadioGroup
               name="level"
-              value={formDetails.level}
-              onChange={handleChange}
+              value={formDetails.participantDetails?.level || ""}
+              onChange={(e) =>
+                setFormDetails((prev) => ({
+                  ...prev,
+                  participantDetails: {
+                    ...prev.participantDetails,
+                    level: e.target.value,
+                  },
+                }))
+              }
               sx={{ mb: 3 }}
             >
               {levels.map((lvl) => (
@@ -251,15 +261,28 @@ function SessionReservationForm({
                 key={goal}
                 control={
                   <Checkbox
-                    checked={formDetails.goals?.includes(goal)}
+                    // קריאה נכונה מהאובייקט הפנימי
+                    checked={
+                      formDetails.participantDetails?.goals?.includes(goal) ||
+                      false
+                    }
                     onChange={(e) => {
                       const checked = e.target.checked;
-                      setFormDetails((prev) => ({
-                        ...prev,
-                        goals: checked
-                          ? [...prev.goals, goal]
-                          : prev.goals.filter((g) => g !== goal),
-                      }));
+                      setFormDetails((prev) => {
+                        // שולפים את המערך הקיים, או מערך ריק אם לא קיים
+                        const currentGoals =
+                          prev.participantDetails?.goals || [];
+                        return {
+                          ...prev, // שומרים את כל הטופס החיצוני
+                          participantDetails: {
+                            ...prev.participantDetails, // שומרים את כל פרטי המשתתף האחרים
+                            // מעדכנים רק את המטרות
+                            goals: checked
+                              ? [...currentGoals, goal]
+                              : currentGoals.filter((g) => g !== goal),
+                          },
+                        };
+                      });
                     }}
                   />
                 }
@@ -274,8 +297,18 @@ function SessionReservationForm({
             </Typography>
             <RadioGroup
               name="injuriesNotes"
-              value={formDetails.injuriesNotes}
-              onChange={handleChange}
+              // קריאה מהאובייקט הפנימי
+              value={formDetails.participantDetails?.injuriesNotes || ""}
+              // כתיבה פנימה במקום להשתמש ב-handleChange הרגיל
+              onChange={(e) => {
+                setFormDetails((prev) => ({
+                  ...prev,
+                  participantDetails: {
+                    ...prev.participantDetails,
+                    injuriesNotes: e.target.value,
+                  },
+                }));
+              }}
               sx={{ mb: 3 }}
             >
               {injuriesOptions.map((item) => (
@@ -297,16 +330,27 @@ function SessionReservationForm({
               key={extra}
               control={
                 <Checkbox
-                  checked={formDetails.extras?.includes(extra)}
+                  // קריאה נכונה מהאובייקט הפנימי
+                  checked={
+                    formDetails.participantDetails?.extras?.includes(extra) ||
+                    false
+                  }
                   onChange={(e) => {
                     const checked = e.target.checked;
-
-                    setFormDetails((prev) => ({
-                      ...prev,
-                      extras: checked
-                        ? [...prev.extras, extra]
-                        : prev.extras.filter((ex) => ex !== extra),
-                    }));
+                    setFormDetails((prev) => {
+                      // שולפים את המערך הקיים, או מערך ריק
+                      const currentExtras =
+                        prev.participantDetails?.extras || [];
+                      return {
+                        ...prev,
+                        participantDetails: {
+                          ...prev.participantDetails,
+                          extras: checked
+                            ? [...currentExtras, extra]
+                            : currentExtras.filter((ex) => ex !== extra),
+                        },
+                      };
+                    });
                   }}
                 />
               }
@@ -319,8 +363,18 @@ function SessionReservationForm({
             rows={3}
             label="Instructor Notes"
             name="instructorNotes"
-            value={formDetails.instructorNotes}
-            onChange={handleChange}
+            // קריאה מהאובייקט הפנימי
+            value={formDetails.participantDetails?.instructorNotes || ""}
+            // כתיבה פנימה
+            onChange={(e) => {
+              setFormDetails((prev) => ({
+                ...prev,
+                participantDetails: {
+                  ...prev.participantDetails,
+                  instructorNotes: e.target.value,
+                },
+              }));
+            }}
             error={!!errors.instructorNotes}
             helperText={errors.instructorNotes}
             sx={{ mb: 3 }}

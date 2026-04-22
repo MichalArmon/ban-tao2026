@@ -10,7 +10,6 @@ export default function initialEditSessionReservationDetailsValues(
       level: reservation?.participantDetails?.level || "",
       goals: reservation?.participantDetails?.goals || [],
       injuriesNotes: reservation?.participantDetails?.injuriesNotes || "",
-      specialRequests: reservation?.participantDetails?.specialRequests || "",
     },
   };
 
