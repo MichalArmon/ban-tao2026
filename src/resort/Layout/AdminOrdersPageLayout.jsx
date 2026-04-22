@@ -1,18 +1,9 @@
 import { ADMIN_ROUTES } from "../../routes/routerDict";
 import Header from "./header/Header";
 
-import {
-  CardGiftcard,
-  AppRegistration,
-  Favorite,
-  Home,
-  Person,
-  School,
-  Style,
-  Login,
-} from "@mui/icons-material";
 import Main from "./main/Main";
 import { Outlet } from "react-router-dom";
+import AdminOrderPageNev from "./header/AdminOrderPageNev";
 
 const Pages = [
   {
@@ -50,15 +41,16 @@ const Pages = [
   },
 ];
 
-function AdminLayout() {
+function AdminOrdersPageLayout() {
   return (
     <>
       <Header Pages={Pages} />
-      <Main paddingTop={10}>
+      <AdminOrderPageNev />
+      <Main paddingTop={1}>
         <Outlet />
       </Main>
     </>
   );
 }
 
-export default AdminLayout;
+export default AdminOrdersPageLayout;

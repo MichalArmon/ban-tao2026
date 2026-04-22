@@ -27,6 +27,7 @@ import AdminRecRulesPage from "./resort/admin/pages/AdminRecRulesPage";
 import FullPageCard from "./resort/public/components/FullPageCard";
 import AdminRoomReservationsPage from "./resort/admin/pages/AdminRoomReservationPage";
 import AdminSessionReservationsPage from "./resort/admin/pages/AdminSessionReservationPage";
+import AdminOrdersPageLayout from "./resort/Layout/AdminOrdersPageLayout";
 
 function App() {
   const { setUser } = useUser();
@@ -64,17 +65,20 @@ function App() {
 
         <Route path={ADMIN_ROUTES.workshops} element={<AdminWorkshopsPage />} />
         <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
-        <Route path={ADMIN_ROUTES.orders} element={<AdminOrdersPage />} />
+
         <Route path={ADMIN_ROUTES.sessions} element={<AdminSessionsPage />} />
         <Route path={ADMIN_ROUTES.recRules} element={<AdminRecRulesPage />} />
-        <Route
-          path={ADMIN_ROUTES.roomReservation}
-          element={<AdminRoomReservationsPage />}
-        />
-        <Route
-          path={ADMIN_ROUTES.workshopReservation}
-          element={<AdminSessionReservationsPage />}
-        />
+        <Route path={ADMIN_ROUTES.orders} element={<AdminOrdersPageLayout />}>
+          <Route index element={<AdminOrdersPage />} />
+          <Route
+            path={ADMIN_ROUTES.roomReservation}
+            element={<AdminRoomReservationsPage />}
+          />
+          <Route
+            path={ADMIN_ROUTES.workshopReservation}
+            element={<AdminSessionReservationsPage />}
+          />
+        </Route>
 
         <Route
           path={ADMIN_ROUTES.treatments}
