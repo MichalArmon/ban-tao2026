@@ -206,7 +206,7 @@ function SessionReservationsDataList() {
         <DialogContent dividers>
           {sessionReservationSelected && (
             <EditSessionReservation
-              SessionReservationSelected={sessionReservationSelected}
+              sessionReservationSelected={sessionReservationSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}

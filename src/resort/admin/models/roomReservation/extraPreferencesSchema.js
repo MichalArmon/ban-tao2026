@@ -21,6 +21,13 @@ const extraPreferencesSchema = {
   specialRequests: Joi.string().allow("").trim().messages({
     "string.base": "Special requests must be text",
   }),
+  status: Joi.string()
+    .valid("pending", "confirmed", "cancelled")
+    .required()
+    .messages({
+      "any.only": "Status must be pending, confirmed, or cancelled",
+      "any.required": "Status is required",
+    }),
 };
 
 export default extraPreferencesSchema;

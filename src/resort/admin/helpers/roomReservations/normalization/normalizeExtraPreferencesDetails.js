@@ -5,6 +5,7 @@ function normalizeExtraPreferences(values) {
     shuttleFromFerry: values.shuttleFromFerry,
 
     specialRequests: values.specialRequests,
+    status: values.status,
   };
   return extraPreferencesDetailsForServer;
 }

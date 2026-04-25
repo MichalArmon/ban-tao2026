@@ -50,8 +50,13 @@ function SessionReservationForm({
   isEditMode,
 }) {
   const { users, getUsersFromServer } = useUser();
-  const { workshops, getWorkshopsFromServer, handleGetSession } = useWorkshop();
-  const { handleGetSessionByWorkshop, setSessions, sessions } = useSession();
+  const { workshops, getWorkshopsFromServer } = useWorkshop();
+  const {
+    handleGetSessionByWorkshop,
+    setSessions,
+    sessions,
+    handleGetSession,
+  } = useSession();
 
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
@@ -69,6 +74,31 @@ function SessionReservationForm({
       getWorkshopsFromServer();
     }
   }, []);
+
+  useEffect(() => {
+    const loadSessionDataForEdit = async () => {
+      if (isEditMode && formDetails.sessionId) {
+        const session = await handleGetSession(formDetails.sessionId);
+
+        if (!session) return;
+
+        // 👉 workshop
+        if (session.workshopId && !workshopId) {
+          setWorkshopId(session.workshopId);
+        }
+
+        // 👉 date
+
+        if (session.startTime && !startTime) {
+          // אם זה ISO → צריך לחתוך לפורמט של input type="date"
+          const formattedDate = session.startTime.split("T")[0];
+          setStartTime(formattedDate);
+        }
+      }
+    };
+
+    loadSessionDataForEdit();
+  }, [isEditMode, formDetails.sessionId]);
 
   const getFormTitle = () => {
     return isEditMode

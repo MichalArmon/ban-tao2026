@@ -8,7 +8,7 @@ import initialEditRoomReservationValues from "../../helpers/roomReservations/ini
 function EditRoomReservation({ roomReservationSelected, setIsDialogOpen }) {
   const {
     handleGetRoomReservation,
-    handleSubmitEditRoomReservation,
+    handleEditRoomReservation,
     roomReservation,
   } = useRoomReservation();
   useEffect(() => {
@@ -26,7 +26,7 @@ function EditRoomReservation({ roomReservationSelected, setIsDialogOpen }) {
 
   const handleSaveAndCloseEdit = async (formData) => {
     try {
-      await handleSubmitEditRoomReservation(roomReservationSelected, formData);
+      await handleEditRoomReservation(roomReservationSelected, formData);
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error saving RoomReservation:", error);

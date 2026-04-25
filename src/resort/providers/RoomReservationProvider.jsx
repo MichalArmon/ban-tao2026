@@ -72,6 +72,7 @@ export default function RoomReservationProvider({ children }) {
         roomReservationDetailsForServer,
       );
       console.log(response);
+      getRoomReservationsFromServer();
     } catch (error) {
       console.error("General Error Caught:", error);
       if (error.response) {

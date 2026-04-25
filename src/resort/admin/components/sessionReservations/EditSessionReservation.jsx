@@ -4,27 +4,26 @@ import { useSessionReservation } from "../../../providers/SessionReservationProv
 import SessionReservationForm from "./SessionReservationForm";
 import { Typography } from "@mui/material";
 import initialEditSessionReservationDetailsValues from "../../helpers/sessionReservations/initialValues/fullSessionReservations/initialEditValuesSessionReservationDetails";
-initialEditSessionReservationDetailsValues;
 
 function EditSessionReservation({
-  SessionReservationSelected,
+  sessionReservationSelected,
   setIsDialogOpen,
 }) {
   const {
     handleGetSessionReservation,
-    handleSubmitEditSessionReservation,
-    SessionReservation,
+    handleEditSessionReservation,
+    sessionReservation,
   } = useSessionReservation();
   useEffect(() => {
-    if (SessionReservationSelected) {
-      handleGetSessionReservation(SessionReservationSelected);
+    if (sessionReservationSelected) {
+      handleGetSessionReservation(sessionReservationSelected);
+      console.log(sessionReservation);
     }
-  }, [SessionReservationSelected]);
-  console.log(SessionReservation);
+  }, [sessionReservationSelected]);
 
   if (
-    !SessionReservation ||
-    SessionReservation._id !== SessionReservationSelected
+    !sessionReservation ||
+    sessionReservation._id !== sessionReservationSelected
   ) {
     return (
       <Typography sx={{ p: 4, textAlign: "center" }}>Loading...</Typography>
@@ -33,10 +32,7 @@ function EditSessionReservation({
 
   const handleSaveAndCloseEdit = async (formData) => {
     try {
-      await handleSubmitEditSessionReservation(
-        SessionReservationSelected,
-        formData,
-      );
+      await handleEditSessionReservation(sessionReservationSelected, formData);
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error saving SessionReservation:", error);
@@ -47,9 +43,9 @@ function EditSessionReservation({
     <>
       <SessionReservationForm
         isEditMode={true}
-        key={SessionReservation._id}
-        initialSessionReservationValues={initialEditSessionReservationValues(
-          SessionReservation,
+        key={sessionReservation._id}
+        initialSessionReservationValues={initialEditSessionReservationDetailsValues(
+          sessionReservation,
         )}
         handleSubmitForm={handleSaveAndCloseEdit}
       />

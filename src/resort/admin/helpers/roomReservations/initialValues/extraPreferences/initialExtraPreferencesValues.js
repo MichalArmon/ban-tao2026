@@ -3,6 +3,7 @@ const initialExtraPreferencesValues = {
   rentScooter: false,
   shuttleFromFerry: false,
   specialRequests: "",
+  status: "pending",
 };
 
 export default initialExtraPreferencesValues;

@@ -4,6 +4,7 @@ export default function initialEditSessionReservationDetailsValues(
   const initialEditSessionReservationDetailsValuesOBJ = {
     userId: reservation?.userId || "",
     sessionId: reservation?.sessionId || "",
+    guestsCount: reservation?.guestsCount || "",
     // --- התוספות ---
 
     participantDetails: {
