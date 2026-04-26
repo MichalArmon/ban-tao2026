@@ -143,7 +143,7 @@ export default function TreatmentReservationProvider({ children }) {
     <TreatmentReservationContext.Provider
       value={{
         getTreatmentReservationsFromServer,
-        TreatmentReservations,
+        treatmentReservations,
         setTreatmentReservations,
         handleEditExtraPreferencesDetails,
 
@@ -158,8 +158,6 @@ export default function TreatmentReservationProvider({ children }) {
         setTreatmentReservation,
 
         setFilteredTreatmentReservations,
-
-        guestCount,
       }}
     >
       {children}

@@ -1,18 +1,18 @@
-import { useRoomReservation } from "../../../providers/RoomReservationProvider";
-import initialRoomReservationValues from "../../helpers/roomReservations/initialValues/fullRoomReservations/initialRoomReservationValues";
+import { useTreatmentReservation } from "../../../providers/TreatmentReservationProvider";
+import initialTreatmentReservationValues from "../../helpers/treatmentReservations/initialValues/fullTreatmentReservations/initialTreatmentReservationValues";
 
-initialRoomReservationValues;
-import RoomReservationForm from "./RoomReservationForm";
-function CreateRoomReservation() {
-  const { handleCreateRoomReservation } = useRoomReservation();
+initialTreatmentReservationValues;
+import TreatmentReservationForm from "./TreatmentReservationForm";
+function CreateTreatmentReservation() {
+  const { handleCreateTreatmentReservation } = useTreatmentReservation();
 
   return (
-    <RoomReservationForm
+    <TreatmentReservationForm
       isEditMode={false}
-      initialRoomReservationValues={initialRoomReservationValues}
-      handleSubmitForm={handleCreateRoomReservation}
+      initialTreatmentReservationValues={initialTreatmentReservationValues}
+      handleSubmitForm={handleCreateTreatmentReservation}
     />
   );
 }
 
-export default CreateRoomReservation;
+export default CreateTreatmentReservation;

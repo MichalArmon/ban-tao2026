@@ -1,4 +1,5 @@
 import axios from "axios";
+import dayjs from "dayjs";
 import { createContext, useContext, useState } from "react";
 import normalizeTreatmentDetails from "../admin/helpers/treatments/normalization/normalizeTreatmentDetails";
 const URL = "http://localhost:8000";
@@ -13,11 +14,12 @@ export default function TreatmentProvider({ children }) {
   const [treatment, setTreatment] = useState(null);
   const [treatments, setTreatments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [date, setDate] = useState(today);
+  const [date, setDate] = useState("");
+  const [filteredTreatments, setFilteredTreatments] = useState([]);
   const [guestsCount, setGuestsCount] = useState(0);
 
   // ✔️✔️✔️ Treatment AVAILABILITY ✔️✔️✔️
-  const handleGetTreatmentsAvailability = async ({ date, treatmentId }) => {
+  const handleGetTreatmentsAvailability = async (treatmentId, date) => {
     try {
       setTreatment(null);
 
@@ -29,8 +31,9 @@ export default function TreatmentProvider({ children }) {
 
       setDate(date);
       setTreatment(treatment);
-      setGuestsCount(guestsCount);
-      return response.data;
+
+      setFilteredTreatments(response.data.availableTimes);
+      return response.data.availableTimes;
     } catch (error) {
       console.log(error);
     }
@@ -126,6 +129,10 @@ export default function TreatmentProvider({ children }) {
         isDialogOpen,
         setIsDialogOpen,
         handleGetTreatmentsAvailability,
+        setFilteredTreatments,
+        filteredTreatments,
+        date,
+        setDate,
       }}
     >
       {children}

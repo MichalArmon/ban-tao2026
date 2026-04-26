@@ -30,7 +30,7 @@ import { formatDate } from "../../../utils/date/dateUtils";
 function TreatmentReservationsDataList() {
   const {
     getTreatmentReservationsFromServer,
-    TreatmentReservations,
+    treatmentReservations,
     handleDeleteTreatmentReservation,
   } = useTreatmentReservation();
   const { getUsersFromServer, users, setUsers } = useUser();
@@ -52,9 +52,9 @@ function TreatmentReservationsDataList() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const getTreatmentTitle = (treatmentId) => {
     const treatment = treatments.find(
-      (Treatment) => Treatment._id === TreatmentId,
+      (treatment) => treatment._id === treatmentId,
     );
-    return Treatment ? Treatment.title : "Unknown User";
+    return treatment ? treatment.title : "Unknown User";
   };
 
   const getUserName = (userId) => {
@@ -63,7 +63,7 @@ function TreatmentReservationsDataList() {
   };
 
   // 1. קודם בודקים אם המשתנים קיימים בכלל. אם לא - סימן שאנחנו עדיין מחכים לשרת.
-  if (!TreatmentReservations || !users || !treatments) {
+  if (!treatmentReservations || !users || !treatments) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
         Loading data...
@@ -73,7 +73,7 @@ function TreatmentReservationsDataList() {
 
   // 2. אם הגענו לכאן, המשתנים בוודאות קיימים והם מערכים. עכשיו בטוח לבדוק את האורך שלהם.
   if (
-    TreatmentReservations.length === 0 ||
+    treatmentReservations.length === 0 ||
     users.length === 0 ||
     treatments.length === 0
   ) {

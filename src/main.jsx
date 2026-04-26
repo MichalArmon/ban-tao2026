@@ -20,6 +20,7 @@ import SessionProvider from "./resort/providers/SessionProvider.jsx";
 import RecRuleProvider from "./resort/providers/RecRuleProvider.jsx";
 import SessionReservationProvider from "./resort/providers/SessionReservationProvider.jsx";
 import RoomReservationProvider from "./resort/providers/RoomReservationProvider.jsx";
+import TreatmentReservationProvider from "./resort/providers/TreatmentReservationProvider.jsx";
 
 RoomReservationProvider;
 createRoot(document.getElementById("root")).render(
@@ -35,11 +36,13 @@ createRoot(document.getElementById("root")).render(
                     <RecRuleProvider>
                       <SessionProvider>
                         <RoomReservationProvider>
-                          <SessionReservationProvider>
-                            <OrderProvider>
-                              <App />
-                            </OrderProvider>
-                          </SessionReservationProvider>
+                          <TreatmentReservationProvider>
+                            <SessionReservationProvider>
+                              <OrderProvider>
+                                <App />
+                              </OrderProvider>
+                            </SessionReservationProvider>
+                          </TreatmentReservationProvider>
                         </RoomReservationProvider>
                       </SessionProvider>
                     </RecRuleProvider>

@@ -1,64 +1,126 @@
-import MyTextField from "../../../../Form/MyTextField";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Button,
   Box,
   FormControlLabel,
-  Switch,
   Typography,
   Paper,
   MenuItem,
-  FormGroup,
   Checkbox,
   Autocomplete,
   TextField,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 
+import MyTextField from "../../../../Form/MyTextField";
 import useForm from "../../../hooks/useForm";
 
-import { useEffect, useState } from "react";
-import roomReservationSchema from "../../models/roomReservation/roomReservationSchema";
-
 import { useUser } from "../../../providers/UserProvider";
-import AvailableRoomsSection from "../rooms/roomsAvailability.jsx/AvailableRoomsSection";
+import { useTreatment } from "../../../providers/TreatmentProvider"; // ספק הטיפולים שלך
+import treatmentReservationValidationSchema from "../../models/treatmentReservation/treatmentReservationSchema";
 
-function RoomReservationForm({
-  initialRoomReservationValues,
+// 👇 השאלות המעודכנות לעולם הספא והטיפולים
+const pressureLevels = ["Light & Relaxing", "Medium", "Firm / Deep Tissue"];
+
+const focusAreasOptions = [
+  "Neck & Shoulders",
+  "Lower Back",
+  "Legs & Feet",
+  "Scalp & Face",
+];
+
+const medicalConditionsOptions = [
+  "No special conditions",
+  "Skin sensitivities / Allergies to nuts or oils",
+  "Recent surgery or injury",
+  "Pregnant",
+];
+
+const extraSpaOptions = [
+  "Aromatherapy essential oils",
+  "Hot stones",
+  "Dry brushing",
+  "After-treatment herbal tea",
+];
+
+function TreatmentReservationForm({
+  initialTreatmentReservationValues,
   handleSubmitForm,
   isEditMode,
 }) {
   const { users, getUsersFromServer } = useUser();
-  const [roomTypeFilter, setRoomTypeFilter] = useState(null);
+  const {
+    treatments,
+    getTreatmentsFromServer,
+    handleGetTreatmentsAvailability,
+    date,
+    setDate,
+  } = useTreatment(); // הבאת הטיפולים מהשרת
 
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
     useForm(
-      initialRoomReservationValues,
-      roomReservationSchema,
+      initialTreatmentReservationValues,
+      treatmentReservationValidationSchema,
       handleSubmitForm,
     );
+
+  const [treatmentId, setTreatmentId] = useState(null);
+  useEffect(() => {
+    const check = async () => {
+      if (treatmentId && date) {
+        const availableHours = await handleGetTreatmentsAvailability(
+          treatmentId,
+          date,
+        );
+
+        console.log(availableHours);
+      }
+    };
+    check();
+  }, [treatmentId, date]);
 
   useEffect(() => {
     if (!users || users.length === 0) {
       getUsersFromServer();
     }
-  }, [users, getUsersFromServer]);
+    if (!treatments || treatments.length === 0) {
+      getTreatmentsFromServer();
+    }
+  }, []);
+
+  useEffect(() => {
+    const loadReservationDataForEdit = async () => {
+      if (isEditMode && formDetails.treatmentId) {
+        if (!treatmentId) {
+          setTreatmentId(formDetails.treatmentId);
+        }
+        if (formDetails.date && !date) {
+          const formattedDate = formDetails.date.split("T")[0];
+          setDate(formattedDate);
+        }
+      }
+    };
+    loadReservationDataForEdit();
+  }, [isEditMode, formDetails.treatmentId]);
 
   const getFormTitle = () => {
-    return isEditMode ? "Edit room reservation" : "Create room reservation";
+    return isEditMode ? "Edit Spa Reservation" : "Create Spa Reservation";
   };
 
   const getSubmitButtonText = () => {
     return isEditMode ? "Update" : "Create";
   };
 
-  if (!formDetails || !users) {
+  if (!formDetails || !users || !treatments) {
     return (
       <Typography sx={{ p: 4, textAlign: "center" }}>
-        Loading room reservation data...
+        Loading Spa reservation data...
       </Typography>
     );
   }
-  console.log("Current formDetails state:", formDetails);
+
   return (
     <Box sx={{ p: 4, justifyContent: "center" }}>
       <Paper
@@ -70,7 +132,8 @@ function RoomReservationForm({
         </Typography>
 
         <Grid container spacing={2}>
-          <Grid size={12}>
+          {/* בחירת אורח */}
+          <Grid item size={{ sm: 12, md: 6 }}>
             <Autocomplete
               options={users}
               getOptionLabel={(option) =>
@@ -86,196 +149,260 @@ function RoomReservationForm({
                 }));
               }}
               renderInput={(params) => (
-                <TextField
+                <MyTextField
                   {...params}
-                  label="Select Customer"
+                  label="Select Guest"
                   error={!!errors.userId}
                   helperText={errors.userId}
                 />
               )}
             />
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              name="checkIn"
-              label="Check in"
-              type="date"
-              value={formDetails.checkIn || ""}
-              onChange={handleChange}
-              error={errors.checkIn}
+
+          {/* בחירת טיפול */}
+          <Grid item size={{ sm: 12, md: 6 }}>
+            <Autocomplete
+              options={treatments}
+              getOptionLabel={(option) => option.title || ""}
+              value={treatments.find((t) => t._id === treatmentId) || null}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setTreatmentId(newValue._id);
+                  setFormDetails((prev) => ({
+                    ...prev,
+                    treatmentId: newValue._id,
+                  }));
+                } else {
+                  setTreatmentId("");
+                  setFormDetails((prev) => ({
+                    ...prev,
+                    treatmentId: "",
+                  }));
+                }
+              }}
+              renderInput={(params) => (
+                <MyTextField
+                  {...params}
+                  label="Select Spa Treatment"
+                  error={!!errors.treatmentId}
+                  helperText={errors.treatmentId}
+                />
+              )}
             />
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              name="checkOut"
-              label="Check out"
-              type="date"
-              value={formDetails.checkOut || ""}
-              onChange={handleChange}
-              error={errors.checkOut}
-              helperText={errors.checkOut}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              name="guestsCount"
-              label="guestsCount"
-              type="number"
-              value={formDetails.guestsCount || ""}
-              onChange={handleChange}
-              error={errors.guestsCount}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <MyTextField
-              select
-              fullWidth
-              label="Filter by Room Type"
-              value={roomTypeFilter}
-              onChange={(e) => setRoomTypeFilter(e.target.value)} // מעדכן רק את משתנה העזר
-            >
-              <MenuItem value="Single">Single</MenuItem>
-              <MenuItem value="Double">Double</MenuItem>
-              <MenuItem value="Suite">Suite</MenuItem>
-              <MenuItem value="Shared">Shared</MenuItem>
-              <MenuItem value="Studio">Studio</MenuItem>
-            </MyTextField>
           </Grid>
 
-          <Grid size={12}>
-            <AvailableRoomsSection
-              roomType={roomTypeFilter}
-              checkIn={formDetails.checkIn}
-              checkOut={formDetails.checkOut}
-              guestsCount={formDetails.guestsCount}
-              selectedRoomId={formDetails.roomId}
-              onSelectRoom={(room) =>
+          {/* תאריך הטיפול */}
+          <Grid item size={{ sm: 12, md: 6 }}>
+            <MyTextField
+              name="date"
+              label="Treatment Date"
+              type="date"
+              value={date || ""}
+              onChange={(e) => {
+                setDate(e.target.value);
                 setFormDetails((prev) => ({
                   ...prev,
-                  roomId: room._id,
-                }))
-              }
-              error={errors.roomId}
+                  date: e.target.value,
+                }));
+              }}
+              error={errors.date}
+              helperText={errors.date}
             />
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
+
+          <Grid item size={{ sm: 12, md: 6 }}>
+            <Box></Box>
+          </Grid>
+
+          {/* סטטוס */}
+          <Grid item size={{ sm: 12, md: 12 }}>
+            <MyTextField
               select
               fullWidth
               name="status"
-              label="Reservation status"
-              value={formDetails.status || "confirmed"}
+              label="Reservation Status"
+              value={formDetails.status || "pending"}
               onChange={handleChange}
               error={!!errors.status}
               helperText={errors.status}
             >
               <MenuItem value="pending">Pending</MenuItem>
               <MenuItem value="confirmed">Confirmed</MenuItem>
+              <MenuItem value="completed">Completed</MenuItem>
               <MenuItem value="cancelled">Cancelled</MenuItem>
-            </TextField>
+            </MyTextField>
           </Grid>
-          {/* מציג את השדה רק אם אנחנו במצב עריכה, ונועל אותו לשינויים */}
-          {isEditMode && (
-            <Grid size={{ xs: 12, md: 6 }}>
-              <MyTextField
-                name="expiresAt"
-                label="Expires at"
-                type="date"
-                value={formDetails.expiresAt || ""}
-                disabled={true} // הופך את השדה לאפור ומונע הקלדה
-              />
-            </Grid>
-          )}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              select
-              fullWidth
-              label="Meal Plan"
-              value={formDetails.extraPreferences?.mealPlan || ""}
+
+          {/* --- שאלון ספא (Participant Details) --- */}
+
+          <Grid item size={{ sm: 12, md: 12 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{ mb: 1, mt: 2, fontWeight: "bold" }}
+            >
+              Massage Pressure Preference
+            </Typography>
+            <RadioGroup
+              row
+              name="pressureLevel"
+              value={formDetails.participantDetails?.pressureLevel || ""}
               onChange={(e) =>
                 setFormDetails((prev) => ({
                   ...prev,
-                  extraPreferences: {
-                    ...prev.extraPreferences,
-                    mealPlan: e.target.value,
+                  participantDetails: {
+                    ...prev.participantDetails,
+                    pressureLevel: e.target.value,
                   },
                 }))
               }
-              error={!!errors["extraPreferences.mealPlan"]}
-              helperText={errors["extraPreferences.mealPlan"]}
+              sx={{ mb: 2 }}
             >
-              <MenuItem value="Breakfast only">Breakfast only</MenuItem>
-              <MenuItem value="Half board">Half board</MenuItem>
-              <MenuItem value="Full board">Full board</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formDetails.extraPreferences?.rentScooter || false}
-                  onChange={(e) =>
-                    setFormDetails((prev) => ({
-                      ...prev,
-                      extraPreferences: {
-                        ...prev.extraPreferences,
-                        rentScooter: e.target.checked,
-                      },
-                    }))
-                  }
+              {pressureLevels.map((lvl) => (
+                <FormControlLabel
+                  key={lvl}
+                  value={lvl}
+                  control={<Radio />}
+                  label={lvl}
                 />
-              }
-              label="Rent scooter"
-            />
+              ))}
+            </RadioGroup>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={
-                    formDetails.extraPreferences?.shuttleFromFerry || false
-                  }
-                  onChange={(e) =>
-                    setFormDetails((prev) => ({
-                      ...prev,
-                      extraPreferences: {
-                        ...prev.extraPreferences,
-                        shuttleFromFerry: e.target.checked,
-                      },
-                    }))
-                  }
+
+          <Grid item size={{ sm: 12, md: 12 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: "bold" }}>
+              Focus Areas
+            </Typography>
+            {focusAreasOptions.map((area) => (
+              <FormControlLabel
+                key={area}
+                control={
+                  <Checkbox
+                    checked={
+                      formDetails.participantDetails?.focusAreas?.includes(
+                        area,
+                      ) || false
+                    }
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setFormDetails((prev) => {
+                        const currentAreas =
+                          prev.participantDetails?.focusAreas || [];
+                        return {
+                          ...prev,
+                          participantDetails: {
+                            ...prev.participantDetails,
+                            focusAreas: checked
+                              ? [...currentAreas, area]
+                              : currentAreas.filter((a) => a !== area),
+                          },
+                        };
+                      });
+                    }}
+                  />
+                }
+                label={area}
+              />
+            ))}
+          </Grid>
+
+          <Grid item size={{ sm: 12, md: 12 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{ mb: 1, mt: 2, fontWeight: "bold" }}
+            >
+              Medical Conditions / Allergies
+            </Typography>
+            <RadioGroup
+              name="medicalConditions"
+              value={formDetails.participantDetails?.medicalConditions || ""}
+              onChange={(e) => {
+                setFormDetails((prev) => ({
+                  ...prev,
+                  participantDetails: {
+                    ...prev.participantDetails,
+                    medicalConditions: e.target.value,
+                  },
+                }));
+              }}
+              sx={{ mb: 2 }}
+            >
+              {medicalConditionsOptions.map((item) => (
+                <FormControlLabel
+                  key={item}
+                  value={item}
+                  control={<Radio />}
+                  label={item}
                 />
-              }
-              label="Shuttle from ferry"
-            />
+              ))}
+            </RadioGroup>
           </Grid>
-          <Grid size={12}>
+
+          <Grid item size={{ sm: 12, md: 12 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: "bold" }}>
+              Spa Extras
+            </Typography>
+            {extraSpaOptions.map((extra) => (
+              <FormControlLabel
+                key={extra}
+                control={
+                  <Checkbox
+                    checked={
+                      formDetails.participantDetails?.extras?.includes(extra) ||
+                      false
+                    }
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setFormDetails((prev) => {
+                        const currentExtras =
+                          prev.participantDetails?.extras || [];
+                        return {
+                          ...prev,
+                          participantDetails: {
+                            ...prev.participantDetails,
+                            extras: checked
+                              ? [...currentExtras, extra]
+                              : currentExtras.filter((ex) => ex !== extra),
+                          },
+                        };
+                      });
+                    }}
+                  />
+                }
+                label={extra}
+              />
+            ))}
+          </Grid>
+
+          <Grid item size={{ sm: 12, md: 12 }}>
             <TextField
               fullWidth
               multiline
-              rows={4}
-              label="Special requests"
-              value={formDetails.extraPreferences?.specialRequests || ""}
-              onChange={(e) =>
+              rows={3}
+              label="Therapist Notes (Special Requests)"
+              name="therapistNotes"
+              value={formDetails.participantDetails?.therapistNotes || ""}
+              onChange={(e) => {
                 setFormDetails((prev) => ({
                   ...prev,
-                  extraPreferences: {
-                    ...prev.extraPreferences,
-                    specialRequests: e.target.value,
+                  participantDetails: {
+                    ...prev.participantDetails,
+                    therapistNotes: e.target.value,
                   },
-                }))
-              }
-              error={!!errors["extraPreferences.specialRequests"]}
-              helperText={errors["extraPreferences.specialRequests"]}
+                }));
+              }}
+              sx={{ mb: 3, mt: 1 }}
             />
           </Grid>
-          <Grid size={12} sx={{ mt: 2 }}>
+
+          {/* כפתור שמירה */}
+          <Grid item xs={12} sx={{ mt: 2 }}>
             <Button
               onClick={handleSubmit}
               variant="contained"
               color="primary"
               fullWidth
               size="large"
+              sx={{ bgcolor: "#8D6E63", "&:hover": { bgcolor: "#6D4C41" } }} // צבעים שמתאימים לספא
             >
               {getSubmitButtonText()}
             </Button>
@@ -285,4 +412,5 @@ function RoomReservationForm({
     </Box>
   );
 }
-export default RoomReservationForm;
+
+export default TreatmentReservationForm;

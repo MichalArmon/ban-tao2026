@@ -50,6 +50,7 @@ export const ADMIN_ROUTES = {
   // 👇 אלה נהיים children (ללא / בהתחלה!)
   roomReservation: "room-reservations",
   workshopReservation: "workshop-reservations",
+  treatmentReservation: "treatment-reservations",
 
   recRules: "/admin/rules",
 };

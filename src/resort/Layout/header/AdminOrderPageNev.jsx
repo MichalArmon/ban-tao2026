@@ -5,12 +5,16 @@ import { ADMIN_ROUTES } from "../../../routes/routerDict";
 
 const Pages = [
   {
-    label: "room reservations",
+    label: "Room reservations",
     path: ADMIN_ROUTES.roomReservation,
   },
   {
-    label: "workshop reservations",
+    label: "Workshop reservations",
     path: ADMIN_ROUTES.workshopReservation,
+  },
+  {
+    label: "Treatment reservations",
+    path: ADMIN_ROUTES.treatmentReservation,
   },
 ];
 

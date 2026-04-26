@@ -1,24 +1,30 @@
 import { useEffect } from "react";
-import { useRoomReservation } from "../../../providers/RoomReservationProvider";
+import { useTreatmentReservation } from "../../../providers/TreatmentReservationProvider";
 
-import RoomReservationForm from "./RoomReservationForm";
+import TreatmentReservationForm from "./TreatmentReservationForm";
 import { Typography } from "@mui/material";
-import initialEditRoomReservationValues from "../../helpers/roomReservations/initialValues/fullRoomReservations/initialEditRoomReservationValues";
+import initialEditTreatmentReservationValues from "../../helpers/treatmentReservations/initialValues/fullTreatmentReservations/initialEditTreatmentReservationValues";
 
-function EditRoomReservation({ roomReservationSelected, setIsDialogOpen }) {
+function EditTreatmentReservation({
+  treatmentReservationSelected,
+  setIsDialogOpen,
+}) {
   const {
-    handleGetRoomReservation,
-    handleEditRoomReservation,
-    roomReservation,
-  } = useRoomReservation();
+    handleGetTreatmentReservation,
+    handleEditTreatmentReservation,
+    TreatmentReservation,
+  } = useTreatmentReservation();
   useEffect(() => {
-    if (roomReservationSelected) {
-      handleGetRoomReservation(roomReservationSelected);
+    if (TreatmentReservationSelected) {
+      handleGetTreatmentReservation(treatmentReservationSelected);
     }
-  }, [roomReservationSelected]);
-  console.log(roomReservation);
+  }, [treatmentReservationSelected]);
+  console.log(treatmentReservation);
 
-  if (!roomReservation || roomReservation._id !== roomReservationSelected) {
+  if (
+    !treatmentReservation ||
+    treatmentReservation._id !== treatmentReservationSelected
+  ) {
     return (
       <Typography sx={{ p: 4, textAlign: "center" }}>Loading...</Typography>
     );
@@ -26,20 +32,23 @@ function EditRoomReservation({ roomReservationSelected, setIsDialogOpen }) {
 
   const handleSaveAndCloseEdit = async (formData) => {
     try {
-      await handleEditRoomReservation(roomReservationSelected, formData);
+      await handleEditTreatmentReservation(
+        treatmentReservationSelected,
+        formData,
+      );
       setIsDialogOpen(false);
     } catch (error) {
-      console.error("Error saving RoomReservation:", error);
+      console.error("Error saving TreatmentReservation:", error);
     }
   };
 
   return (
     <>
-      <RoomReservationForm
+      <TreatmentReservationForm
         isEditMode={true}
-        key={roomReservation._id}
-        initialRoomReservationValues={initialEditRoomReservationValues(
-          roomReservation,
+        key={TreatmentReservation._id}
+        initialTreatmentReservationValues={initialEditTreatmentReservationValues(
+          TreatmentReservation,
         )}
         handleSubmitForm={handleSaveAndCloseEdit}
       />
@@ -47,4 +56,4 @@ function EditRoomReservation({ roomReservationSelected, setIsDialogOpen }) {
   );
 }
 
-export default EditRoomReservation;
+export default EditTreatmentReservation;
