@@ -19,12 +19,18 @@ export default function initialEditTreatmentReservationValues(reservation) {
       : "",
 
     // --- התוספות ---
-    extraPreferences: {
-      mealPlan: reservation?.extraPreferences?.mealPlan || "",
-      rentScooter: reservation?.extraPreferences?.rentScooter || false,
-      shuttleFromFerry:
-        reservation?.extraPreferences?.shuttleFromFerry || false,
-      specialRequests: reservation?.extraPreferences?.specialRequests || "",
+    treatmentParticipantDetails: {
+      pressureLevels:
+        reservation?.treatmentParticipantDetails?.pressureLevels || "",
+      focusAreasOptions:
+        reservation?.treatmentParticipantDetails?.focusAreasOptions || "",
+      medicalConditionsOptions:
+        reservation?.treatmentParticipantDetails?.medicalConditionsOptions ||
+        "",
+      extraSpaOption:
+        reservation?.treatmentParticipantDetails?.extraSpaOption || "",
+      specialRequests:
+        reservation?.treatmentParticipantDetails?.specialRequests || "",
     },
   };
 

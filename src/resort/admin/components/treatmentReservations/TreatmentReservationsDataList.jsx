@@ -21,37 +21,40 @@ import {
 
 import React, { useEffect, useState } from "react";
 
-import { useRoomReservation } from "../../../providers/RoomReservationProvider";
-import EditRoomReservation from "./EditRoomReservation";
+import { useTreatmentReservation } from "../../../providers/TreatmentReservationProvider";
+import EditTreatmentReservation from "./EditTreatmentReservation";
 import { useUser } from "../../../providers/UserProvider";
-import { useRoom } from "../../../providers/RoomProvider";
+import { useTreatment } from "../../../providers/TreatmentProvider";
 import { formatDate } from "../../../utils/date/dateUtils";
 
-function RoomReservationsDataList() {
+function TreatmentReservationsDataList() {
   const {
-    getRoomReservationsFromServer,
-    roomReservations,
-    handleDeleteRoomReservation,
-  } = useRoomReservation();
+    getTreatmentReservationsFromServer,
+    TreatmentReservations,
+    handleDeleteTreatmentReservation,
+  } = useTreatmentReservation();
   const { getUsersFromServer, users, setUsers } = useUser();
-  const { getRoomsFromServer, rooms, setRooms } = useRoom();
+  const { getTreatmentsFromServer, treatments, setTreatments } = useTreatment();
   useEffect(() => {
     const gatInitialData = async () => {
       const currentUsers = await getUsersFromServer();
-      const currentRooms = await getRoomsFromServer();
-      await getRoomReservationsFromServer();
+      const currentTreatments = await getTreatmentsFromServer();
+      await getTreatmentReservationsFromServer();
 
       setUsers(currentUsers);
-      setRooms(currentRooms);
+      setTreatments(currentTreatments);
     };
     gatInitialData();
-    console.log(roomReservations);
+    console.log(treatmentReservations);
   }, []);
-  const [roomReservationSelected, setRoomReservationSelected] = useState(null);
+  const [treatmentReservationSelected, setTreatmentReservationSelected] =
+    useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const getRoomTitle = (roomId) => {
-    const room = rooms.find((room) => room._id === roomId);
-    return room ? room.title : "Unknown User";
+  const getTreatmentTitle = (treatmentId) => {
+    const treatment = treatments.find(
+      (Treatment) => Treatment._id === TreatmentId,
+    );
+    return Treatment ? Treatment.title : "Unknown User";
   };
 
   const getUserName = (userId) => {
@@ -60,7 +63,7 @@ function RoomReservationsDataList() {
   };
 
   // 1. קודם בודקים אם המשתנים קיימים בכלל. אם לא - סימן שאנחנו עדיין מחכים לשרת.
-  if (!roomReservations || !users || !rooms) {
+  if (!TreatmentReservations || !users || !treatments) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
         Loading data...
@@ -70,13 +73,13 @@ function RoomReservationsDataList() {
 
   // 2. אם הגענו לכאן, המשתנים בוודאות קיימים והם מערכים. עכשיו בטוח לבדוק את האורך שלהם.
   if (
-    roomReservations.length === 0 ||
+    TreatmentReservations.length === 0 ||
     users.length === 0 ||
-    rooms.length === 0
+    treatments.length === 0
   ) {
     return (
       <Typography sx={{ textAlign: "center", mt: 5 }}>
-        NO RoomReservations to show!
+        NO TreatmentReservations to show!
       </Typography>
     );
   }
@@ -113,10 +116,10 @@ function RoomReservationsDataList() {
               }}
             >
               <TableCell sx={{ top: 0 }}>Reservation ID</TableCell>
-              <TableCell sx={{ top: 0 }}>Room id</TableCell>
+              <TableCell sx={{ top: 0 }}>Treatment id</TableCell>
               <TableCell sx={{ top: 0 }}>User id</TableCell>
-              <TableCell sx={{ top: 0 }}>Check in</TableCell>
-              <TableCell sx={{ top: 0 }}>Check out</TableCell>
+              <TableCell sx={{ top: 0 }}>date</TableCell>
+              <TableCell sx={{ top: 0 }}>Start time</TableCell>
               <TableCell sx={{ top: 0 }}>Status</TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
               <TableCell sx={{ top: 0 }}></TableCell>
@@ -134,19 +137,25 @@ function RoomReservationsDataList() {
               bgcolor: "white",
             }}
           >
-            {roomReservations.map((roomReservation, i) => (
+            {treatmentReservations.map((treatmentReservation, i) => (
               <TableRow key={i}>
-                <TableCell>{roomReservation._id}</TableCell>
-                <TableCell>{getRoomTitle(roomReservation.roomId)}</TableCell>
-                <TableCell>{getUserName(roomReservation.userId)}</TableCell>
-                <TableCell>{formatDate(roomReservation.checkIn)}</TableCell>
-                <TableCell>{formatDate(roomReservation.checkOut)}</TableCell>
-                <TableCell>{roomReservation.status}</TableCell>
+                <TableCell>{treatmentReservation._id}</TableCell>
+                <TableCell>
+                  {getTreatmentTitle(treatmentReservation.TreatmentId)}
+                </TableCell>
+                <TableCell>
+                  {getUserName(treatmentReservation.userId)}
+                </TableCell>
+                <TableCell>{formatDate(treatmentReservation.date)}</TableCell>
+                <TableCell>
+                  {/* {formatDate(TreatmentReservation.checkOut)} */}
+                </TableCell>
+                <TableCell>{treatmentReservation.status}</TableCell>
                 <TableCell>
                   <Button
                     onClick={() => {
                       setIsDialogOpen(true);
-                      setRoomReservationSelected(roomReservation._id);
+                      setTreatmentReservationSelected(treatmentReservation._id);
                     }}
                   >
                     <Edit />
@@ -155,7 +164,9 @@ function RoomReservationsDataList() {
                 <TableCell>
                   <Button
                     onClick={() => {
-                      handleDeleteRoomReservation(roomReservation._id);
+                      handleDeleteTreatmentReservation(
+                        treatmentReservation._id,
+                      );
                     }}
                   >
                     <Delete />
@@ -171,16 +182,16 @@ function RoomReservationsDataList() {
         open={isDialogOpen}
         onClose={() => {
           setIsDialogOpen(false);
-          setRoomReservationSelected(null);
+          setTreatmentReservationSelected(null);
         }}
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Edit RoomReservation</DialogTitle>
+        <DialogTitle>Edit TreatmentReservation</DialogTitle>
         <DialogContent dividers>
-          {roomReservationSelected && (
-            <EditRoomReservation
-              roomReservationSelected={roomReservationSelected}
+          {treatmentReservationSelected && (
+            <EditTreatmentReservation
+              treatmentReservationSelected={treatmentReservationSelected}
               setIsDialogOpen={setIsDialogOpen}
             />
           )}
@@ -190,4 +201,4 @@ function RoomReservationsDataList() {
   );
 }
 
-export default RoomReservationsDataList;
+export default TreatmentReservationsDataList;

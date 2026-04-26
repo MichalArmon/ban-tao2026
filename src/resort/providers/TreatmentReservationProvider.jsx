@@ -3,55 +3,56 @@ import { createContext, useContext, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routerDict";
-import { useRoom } from "./RoomProvider";
+import { useTreatment } from "./TreatmentProvider";
 import { useUser } from "./UserProvider";
-import normalizeRoomReservation from "../admin/helpers/roomReservations/normalization/normalizeRoomReservationDetails";
+import normalizeTreatmentReservation from "../admin/helpers/treatmentReservations/normalization/normalizeTreatmentReservationDetails";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
-const RoomReservationContext = createContext();
+const TreatmentReservationContext = createContext();
 
 // 2.create provider
-export default function RoomReservationProvider({ children }) {
-  const { checkIn, setCheckIn, guestsCount, checkOut, setCheckOut } = useRoom();
-  const [roomReservation, setRoomReservation] = useState(null);
-  const [roomReservations, setRoomReservations] = useState([]);
+export default function TreatmentReservationProvider({ children }) {
+  const { date, treatmentId } = useTreatment();
+  const [treatmentReservation, setTreatmentReservation] = useState(null);
+  const [treatmentReservations, setTreatmentReservations] = useState([]);
 
   const [reservationId, setReservationId] = useState("");
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const [filteredRoomReservations, setFilteredRoomReservations] = useState([]);
+  const [filteredTreatmentReservations, setFilteredTreatmentReservations] =
+    useState([]);
   const { user } = useUser();
   const navigate = useNavigate();
 
-  // ✔️✔️✔️GET RoomReservationS ✔️✔️✔️
-  const getRoomReservationsFromServer = async () => {
-    const response = await axios.get(`${URL}/room-reservations`);
-    const roomReservationData = response.data;
-    setRoomReservations(roomReservationData);
-    console.log(roomReservationData);
-    return roomReservationData;
+  // ✔️✔️✔️GET TreatmentReservationS ✔️✔️✔️
+  const getTreatmentReservationsFromServer = async () => {
+    const response = await axios.get(`${URL}/treatment-reservations`);
+    const treatmentReservationData = response.data;
+    setTreatmentReservations(treatmentReservationData);
+    console.log(treatmentReservationData);
+    return treatmentReservationData;
   };
 
-  // ✔️✔️✔️ CREATE Room RESERVATION ✔️✔️✔️
+  // ✔️✔️✔️ CREATE Treatment RESERVATION ✔️✔️✔️
 
-  const handleCreateRoomReservation = async (reservation) => {
+  const handleCreateTreatmentReservation = async (reservation) => {
     try {
-      sessionStorage.removeItem("currentRoomReservationId");
+      sessionStorage.removeItem("currentTreatmentReservationId");
       const response = await axios.post(
-        `${URL}/room-reservations`,
+        `${URL}/treatment-reservations`,
         reservation,
       );
 
       const newId = response.data?._id;
       setReservationId(newId);
-      sessionStorage.setItem("currentRoomReservationId", String(newId));
+      sessionStorage.setItem("currentTreatmentReservationId", String(newId));
       console.log(
         "ID Saved to storage:",
-        sessionStorage.getItem("currentRoomReservationId"),
+        sessionStorage.getItem("currentTreatmentReservationId"),
       );
-      await getRoomReservationsFromServer();
+      await getTreatmentReservationsFromServer();
       setIsDialogOpen(false);
       return newId;
     } catch (error) {
@@ -60,19 +61,20 @@ export default function RoomReservationProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️EDIT Room Reservation /admin✔️✔️✔️
+  // ✔️✔️✔️EDIT Treatment Reservation /admin✔️✔️✔️
 
-  const handleEditRoomReservation = async (id, data) => {
-    const roomReservationDetailsForServer = normalizeRoomReservation(data);
+  const handleEditTreatmentReservation = async (id, data) => {
+    const treatmentReservationDetailsForServer =
+      normalizeTreatmentReservation(data);
 
     try {
-      console.log("data for server", roomReservationDetailsForServer);
+      console.log("data for server", treatmentReservationDetailsForServer);
       const response = await axios.put(
-        `${URL}/room-reservations/${id}`,
-        roomReservationDetailsForServer,
+        `${URL}/treatment-reservations/${id}`,
+        treatmentReservationDetailsForServer,
       );
       console.log(response);
-      getRoomReservationsFromServer();
+      getTreatmentReservationsFromServer();
     } catch (error) {
       console.error("General Error Caught:", error);
       if (error.response) {
@@ -81,14 +83,15 @@ export default function RoomReservationProvider({ children }) {
       }
     }
   };
-  // ✔️✔️✔️EDIT Room Reservation/ParticipantDetails ✔️✔️✔️
+  // ✔️✔️✔️EDIT Treatment Reservation/ParticipantDetails ✔️✔️✔️
   const handleEditExtraPreferencesDetails = async (id, formData) => {
     try {
       const payload = {
-        extraPreferencesDetails: {
-          mealPlan: formData.level,
-          rentScooter: formData.rentScooter,
-          shuttleFromFerry: formData.shuttleFromFerry,
+        treatmentParticipantDetails: {
+          pressureLevels: formData.pressureLevels,
+          focusAreasOptions: formData.focusAreasOptions,
+          medicalConditionsOptions: formData.medicalConditionsOptions,
+          extraSpaOptions: formData.extraSpaOptions,
           specialRequests: formData.specialRequests,
         },
         status: formData.status,
@@ -98,12 +101,12 @@ export default function RoomReservationProvider({ children }) {
       console.log("payload:", payload);
 
       const response = await axios.put(
-        `${URL}/room-reservations/${id}`,
+        `${URL}/treatment-reservations/${id}`,
         payload,
       );
 
       console.log("update success:", response.data);
-      getRoomReservationsFromServer();
+      getTreatmentReservationsFromServer();
       return response.data;
     } catch (error) {
       console.error("General Error Caught:", error);
@@ -111,23 +114,25 @@ export default function RoomReservationProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️DELETE RoomReservation ✔️✔️✔️
-  const handleDeleteRoomReservation = async (id) => {
+  // ✔️✔️✔️DELETE TreatmentReservation ✔️✔️✔️
+  const handleDeleteTreatmentReservation = async (id) => {
     try {
-      const response = await axios.delete(`${URL}/room-reservations/${id}`);
-      await getRoomReservationsFromServer();
+      const response = await axios.delete(
+        `${URL}/treatment-reservations/${id}`,
+      );
+      await getTreatmentReservationsFromServer();
     } catch (error) {
       console.log(error);
     }
   };
 
-  // ✔️✔️✔️GET Room Reservation ✔️✔️✔️
-  const handleGetRoomReservation = async (id) => {
+  // ✔️✔️✔️GET Treatment Reservation ✔️✔️✔️
+  const handleGetTreatmentReservation = async (id) => {
     try {
-      setRoomReservation(null);
-      const response = await axios.get(`${URL}/room-reservations/${id}`);
+      setTreatmentReservation(null);
+      const response = await axios.get(`${URL}/treatment-reservations/${id}`);
       console.log(response);
-      setRoomReservation(response.data);
+      setTreatmentReservation(response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -135,43 +140,39 @@ export default function RoomReservationProvider({ children }) {
   };
 
   return (
-    <RoomReservationContext.Provider
+    <TreatmentReservationContext.Provider
       value={{
-        getRoomReservationsFromServer,
-        roomReservations,
-        setRoomReservations,
+        getTreatmentReservationsFromServer,
+        TreatmentReservations,
+        setTreatmentReservations,
         handleEditExtraPreferencesDetails,
 
-        filteredRoomReservations,
+        filteredTreatmentReservations,
         isDialogOpen,
         setIsDialogOpen,
-        handleCreateRoomReservation,
-        handleDeleteRoomReservation,
-        handleGetRoomReservation,
-        handleEditRoomReservation,
-        roomReservation,
-        setRoomReservation,
+        handleCreateTreatmentReservation,
+        handleDeleteTreatmentReservation,
+        handleGetTreatmentReservation,
+        handleEditTreatmentReservation,
+        treatmentReservation,
+        setTreatmentReservation,
 
-        setFilteredRoomReservations,
-        checkIn,
-        setCheckIn,
-        checkOut,
-        setCheckOut,
+        setFilteredTreatmentReservations,
 
-        guestsCount,
+        guestCount,
       }}
     >
       {children}
-    </RoomReservationContext.Provider>
+    </TreatmentReservationContext.Provider>
   );
 }
 
 // 3. create custom hook for using the context(optional)
-export const useRoomReservation = () => {
-  const context = useContext(RoomReservationContext);
+export const useTreatmentReservation = () => {
+  const context = useContext(TreatmentReservationContext);
   if (!context) {
     throw new Error(
-      "You used the message context of the RoomReservation provider!",
+      "You used the message context of the TreatmentReservation provider!",
     );
   }
   return context;

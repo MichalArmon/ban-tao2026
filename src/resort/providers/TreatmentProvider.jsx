@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 import normalizeTreatmentDetails from "../admin/helpers/treatments/normalization/normalizeTreatmentDetails";
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
+const today = dayjs().format("ddd, MMM D, YYYY");
 
 // 1.create context
 const TreatmentContext = createContext();
@@ -12,6 +13,28 @@ export default function TreatmentProvider({ children }) {
   const [treatment, setTreatment] = useState(null);
   const [treatments, setTreatments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [date, setDate] = useState(today);
+  const [guestsCount, setGuestsCount] = useState(0);
+
+  // ✔️✔️✔️ Treatment AVAILABILITY ✔️✔️✔️
+  const handleGetTreatmentsAvailability = async ({ date, treatmentId }) => {
+    try {
+      setTreatment(null);
+
+      const response = await axios.get(
+        `${URL}/treatments/daily-availability?date=${date}&treatmentId=${treatmentId}`,
+      );
+      const treatment = await handleGetTreatment(treatmentId);
+      console.log(response);
+
+      setDate(date);
+      setTreatment(treatment);
+      setGuestsCount(guestsCount);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // ✔️✔️✔️GET TREATMENTS ✔️✔️✔️
   const getTreatmentsFromServer = async () => {
@@ -34,7 +57,7 @@ export default function TreatmentProvider({ children }) {
     }
   };
 
-  // ✔️✔️✔️CREATE ROOM ✔️✔️✔️
+  // ✔️✔️✔️CREATE Treatment ✔️✔️✔️
 
   const handleSubmitCreateTreatment = async (data) => {
     const TreatmentDetailsForServer = normalizeTreatmentDetails(data);
@@ -102,6 +125,7 @@ export default function TreatmentProvider({ children }) {
         treatment,
         isDialogOpen,
         setIsDialogOpen,
+        handleGetTreatmentsAvailability,
       }}
     >
       {children}
@@ -113,7 +137,7 @@ export default function TreatmentProvider({ children }) {
 export const useTreatment = () => {
   const context = useContext(TreatmentContext);
   if (!context) {
-    throw new Error("You used the message context of the room provider!");
+    throw new Error("You used the message context of the Treatment provider!");
   }
   return context;
 };

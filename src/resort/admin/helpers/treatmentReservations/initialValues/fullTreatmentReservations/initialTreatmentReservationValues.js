@@ -19,7 +19,7 @@ const initialTreatmentReservationValues = {
     focusAreasOptions: "",
     medicalConditionsOptions: "",
     extraSpaOptions: "",
-    instructorNotes: "",
+    specialRequests: "",
   },
 };
 

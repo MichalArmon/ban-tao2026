@@ -7,7 +7,7 @@ export default function initialEditTreatmentParticipantDetailsValues(
     medicalConditionsOptions:
       treatmentParticipantDetails?.medicalConditionsOptions || "",
     extraSpaOptions: treatmentParticipantDetails?.extraSpaOptions || "",
-    instructorNotes: treatmentParticipantDetails?.instructorNotes || "",
+    specialRequests: treatmentParticipantDetails?.specialRequests || "",
 
     status: treatmentParticipantDetails?.status,
   };
