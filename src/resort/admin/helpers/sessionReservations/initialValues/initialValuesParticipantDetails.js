@@ -4,6 +4,7 @@ const initialParticipantDetailsValues = {
   injuriesNotes: "",
   extras: [],
   instructorNotes: "",
+  status: "pending",
 };
 
 export default initialParticipantDetailsValues;

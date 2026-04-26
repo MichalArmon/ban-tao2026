@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const participantDetailsSchema = {
-  level: Joi.string()
+  pressureLevels: Joi.string()
     .valid("beginner", "intermediate", "advanced")
     .allow("")
     .messages({
@@ -9,13 +9,12 @@ const participantDetailsSchema = {
       "string.empty": "Level cannot be empty",
     }),
 
-  goals: Joi.array().items(Joi.string().trim()).messages({
-    "array.base": "Goals must be an array of strings",
+  focusAreasOptions: Joi.string().allow("").trim(),
+
+  medicalConditionsOptions: Joi.array().items(Joi.string().trim()).messages({
+    "array.base": "Extras must be an array of strings",
   }),
-
-  injuriesNotes: Joi.string().allow("").trim(),
-
-  extras: Joi.array().items(Joi.string().trim()).messages({
+  extraSpaOptions: Joi.array().items(Joi.string().trim()).messages({
     "array.base": "Extras must be an array of strings",
   }),
   status: Joi.string()

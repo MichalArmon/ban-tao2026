@@ -75,6 +75,7 @@ export default function SessionReservationProvider({ children }) {
         sessionReservationDetailsForServer,
       );
       console.log(response);
+      await getSessionReservationsFromServer();
     } catch (error) {
       console.error("General Error Caught:", error);
       if (error.response) {
@@ -94,6 +95,7 @@ export default function SessionReservationProvider({ children }) {
           extras: formData.extras,
           instructorNotes: formData.instructorNotes,
         },
+        status: formData.status,
       };
 
       console.log("reservation id:", id);
@@ -105,6 +107,8 @@ export default function SessionReservationProvider({ children }) {
       );
 
       console.log("update success:", response.data);
+      await getSessionReservationsFromServer();
+
       return response.data;
     } catch (error) {
       console.error("General Error Caught:", error);

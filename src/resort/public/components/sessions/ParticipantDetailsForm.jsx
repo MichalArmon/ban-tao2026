@@ -48,7 +48,7 @@ function ParticipantDetailsForm() {
       );
       const reservationAfterUpdate = await handleEditParticipantDetails(
         reservationId,
-        formData,
+        { ...formData, status: "confirmed" },
       );
       if (!reservationAfterUpdate) {
         return (

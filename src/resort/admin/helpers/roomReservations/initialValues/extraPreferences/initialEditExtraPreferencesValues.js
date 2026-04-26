@@ -4,6 +4,7 @@ export default function initialEditExtraPreferencesValues(extraPreferences) {
     rentScooter: extraPreferences?.rentScooter || false,
     shuttleFromFerry: extraPreferences?.shuttleFromFerry || false,
     specialRequests: extraPreferences?.specialRequests || "",
+    status: extraPreferences?.status,
   };
 
   return initialEditExtraPreferencesValuesOBJ;

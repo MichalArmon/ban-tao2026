@@ -6,6 +6,7 @@ function normalizeParticipantDetails(values) {
       injuriesNotes: values.injuriesNotes,
       extras: values.extras,
       instructorNotes: values.instructorNotes,
+      status: values.status,
     },
   };
 }
