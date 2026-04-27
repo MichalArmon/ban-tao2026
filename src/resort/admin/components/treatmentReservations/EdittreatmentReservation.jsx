@@ -12,10 +12,10 @@ function EditTreatmentReservation({
   const {
     handleGetTreatmentReservation,
     handleEditTreatmentReservation,
-    TreatmentReservation,
+    treatmentReservation,
   } = useTreatmentReservation();
   useEffect(() => {
-    if (TreatmentReservationSelected) {
+    if (treatmentReservationSelected) {
       handleGetTreatmentReservation(treatmentReservationSelected);
     }
   }, [treatmentReservationSelected]);
@@ -46,9 +46,9 @@ function EditTreatmentReservation({
     <>
       <TreatmentReservationForm
         isEditMode={true}
-        key={TreatmentReservation._id}
+        key={treatmentReservation._id}
         initialTreatmentReservationValues={initialEditTreatmentReservationValues(
-          TreatmentReservation,
+          treatmentReservation,
         )}
         handleSubmitForm={handleSaveAndCloseEdit}
       />

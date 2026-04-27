@@ -9,6 +9,8 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import { useState } from "react";
+import TreatmentModal from "./TreatmentModel";
 
 function TreatmentListSection({
   imgSrc,
@@ -22,7 +24,12 @@ function TreatmentListSection({
   intensity,
   price,
   reverse = false,
+  treatmentId,
 }) {
+  const [open, setOpen] = useState(false);
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
       <Grid
@@ -87,7 +94,14 @@ function TreatmentListSection({
               </Stack>
             )}
             <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
-              <Button variant="contained">Book Now</Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                Book Now
+              </Button>
 
               {/* 🟣 כפתור שפותח את הלו״ז */}
               <Button variant="text" onClick={() => {}}>
@@ -97,6 +111,12 @@ function TreatmentListSection({
           </Stack>
         </Grid>
       </Grid>
+      <TreatmentModal
+        open={open}
+        onClose={onClose}
+        treatmentId={treatmentId}
+        title={title}
+      />
     </Container>
   );
 }

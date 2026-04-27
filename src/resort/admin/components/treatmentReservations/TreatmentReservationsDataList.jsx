@@ -54,7 +54,7 @@ function TreatmentReservationsDataList() {
     const treatment = treatments.find(
       (treatment) => treatment._id === treatmentId,
     );
-    return treatment ? treatment.title : "Unknown User";
+    return treatment ? treatment.title : "Unknown Treatment";
   };
 
   const getUserName = (userId) => {
@@ -141,15 +141,13 @@ function TreatmentReservationsDataList() {
               <TableRow key={i}>
                 <TableCell>{treatmentReservation._id}</TableCell>
                 <TableCell>
-                  {getTreatmentTitle(treatmentReservation.TreatmentId)}
+                  {getTreatmentTitle(treatmentReservation.treatmentId)}
                 </TableCell>
                 <TableCell>
                   {getUserName(treatmentReservation.userId)}
                 </TableCell>
                 <TableCell>{formatDate(treatmentReservation.date)}</TableCell>
-                <TableCell>
-                  {/* {formatDate(TreatmentReservation.checkOut)} */}
-                </TableCell>
+                <TableCell>{treatmentReservation.startTime}</TableCell>
                 <TableCell>{treatmentReservation.status}</TableCell>
                 <TableCell>
                   <Button

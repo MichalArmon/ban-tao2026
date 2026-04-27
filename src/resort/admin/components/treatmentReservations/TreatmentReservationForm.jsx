@@ -12,6 +12,7 @@ import {
   TextField,
   RadioGroup,
   Radio,
+  Chip,
 } from "@mui/material";
 
 import MyTextField from "../../../../Form/MyTextField";
@@ -57,6 +58,8 @@ function TreatmentReservationForm({
     handleGetTreatmentsAvailability,
     date,
     setDate,
+    filteredTreatments,
+    setFilteredTreatments,
   } = useTreatment(); // הבאת הטיפולים מהשרת
 
   const { handleChange, handleSubmit, errors, formDetails, setFormDetails } =
@@ -76,6 +79,7 @@ function TreatmentReservationForm({
         );
 
         console.log(availableHours);
+        console.log(filteredTreatments);
       }
     };
     check();
@@ -200,10 +204,7 @@ function TreatmentReservationForm({
               value={date || ""}
               onChange={(e) => {
                 setDate(e.target.value);
-                setFormDetails((prev) => ({
-                  ...prev,
-                  date: e.target.value,
-                }));
+                setFormDetails((prev) => ({ ...prev, date: e.target.value }));
               }}
               error={errors.date}
               helperText={errors.date}
@@ -211,7 +212,39 @@ function TreatmentReservationForm({
           </Grid>
 
           <Grid item size={{ sm: 12, md: 6 }}>
-            <Box></Box>
+            <Paper
+              variant="outlined"
+              sx={{ padding: 2, display: "flex", gap: 1, flexWrap: "wrap" }}
+            >
+              {/* בודקים אם יש בכלל שעות במערך לפני שמציירים אותן */}
+              {filteredTreatments && filteredTreatments.length > 0 ? (
+                filteredTreatments.map((time) => (
+                  <Chip
+                    key={time}
+                    label={time}
+                    // אם השעה הזו נבחרה, נצבע אותה בצבע בולט. אם לא, היא תישאר עם מסגרת בלבד
+                    variant={
+                      formDetails.startTime === time ? "filled" : "outlined"
+                    }
+                    color={
+                      formDetails.startTime === time ? "primary" : "default"
+                    }
+                    onClick={() => {
+                      // שומרים את השעה שנבחרה לתוך הטופס!
+                      setFormDetails((prev) => ({
+                        ...prev,
+                        startTime: time,
+                      }));
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  />
+                ))
+              ) : (
+                <Typography variant="body2" color="textSecondary">
+                  Please select a treatment and date to see available times.
+                </Typography>
+              )}
+            </Paper>
           </Grid>
 
           {/* סטטוס */}
@@ -244,14 +277,16 @@ function TreatmentReservationForm({
             </Typography>
             <RadioGroup
               row
-              name="pressureLevel"
-              value={formDetails.participantDetails?.pressureLevel || ""}
+              name="pressureLevels"
+              value={
+                formDetails.treatmentParticipantDetails?.pressureLevels || ""
+              }
               onChange={(e) =>
                 setFormDetails((prev) => ({
                   ...prev,
-                  participantDetails: {
-                    ...prev.participantDetails,
-                    pressureLevel: e.target.value,
+                  treatmentParticipantDetails: {
+                    ...prev.treatmentParticipantDetails,
+                    pressureLevels: e.target.value,
                   },
                 }))
               }

@@ -29,7 +29,13 @@ const treatmentReservationValidationSchema = {
   expiresAt: Joi.date().iso().allow("", null).optional().messages({
     "date.format": "Expiration date must be a valid date format",
   }),
-
+  date: Joi.alternatives()
+    .try(Joi.date(), Joi.string())
+    .allow("", null)
+    .required(),
+  startTime: Joi.string().allow("", null).required(),
+  durationAtBooking: Joi.number().allow("", null).optional(),
+  priceAtBooking: Joi.number().allow("", null).optional(),
   // אובייקט פנימי - ממש כמו במבנה הנתונים שלך
   treatmentParticipantDetails: Joi.object({
     pressureLevels: Joi.string().allow(null, "").messages({
@@ -46,7 +52,7 @@ const treatmentReservationValidationSchema = {
     extraSpaOptions: Joi.string().allow("").messages({
       "string.base": "הערות פציעה חייבות להיות טקסט",
     }),
-    instructorNotes: Joi.string().allow("").messages({
+    specialRequests: Joi.string().allow("").messages({
       "string.base": "הערות פציעה חייבות להיות טקסט",
     }),
   }),
