@@ -52,6 +52,10 @@ function App() {
         <Route path="rooms/:id/order" element={<OrderPage type="room" />} />
         <Route path="rooms/:slug/" element={<FullPageCard />} />
         <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
+        <Route
+          path="treatments/:id/order"
+          element={<OrderPage type="treatment" />}
+        />
         <Route path={ROUTES.workshops} element={<WorkshopsPage />} />
         <Route
           path="workshops/:id/order"

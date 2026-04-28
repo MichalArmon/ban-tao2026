@@ -1,9 +1,10 @@
 const initialTreatmentParticipantDetailsValues = {
   pressureLevels: "",
-  focusAreasOptions: "",
+  focusAreasOptions: [],
   medicalConditionsOptions: "",
-  extraSpaOptions: "",
+  extraSpaOptions: [],
   specialRequests: "",
+
   status: "pending",
 };
 

@@ -20,11 +20,12 @@ function TreatmentListSection({
   level,
   category,
   bullets,
-
+  currency,
   intensity,
   price,
   reverse = false,
   treatmentId,
+  duration,
 }) {
   const [open, setOpen] = useState(false);
   const onClose = () => {
@@ -116,6 +117,9 @@ function TreatmentListSection({
         onClose={onClose}
         treatmentId={treatmentId}
         title={title}
+        price={price}
+        currency={currency}
+        duration={duration}
       />
     </Container>
   );

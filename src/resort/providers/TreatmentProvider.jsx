@@ -55,6 +55,7 @@ export default function TreatmentProvider({ children }) {
       const response = await axios.get(`${URL}/treatments/${id}`);
       console.log(response);
       setTreatment(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
     }

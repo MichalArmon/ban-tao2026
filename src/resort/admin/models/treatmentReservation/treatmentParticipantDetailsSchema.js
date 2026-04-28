@@ -1,22 +1,12 @@
 import Joi from "joi";
 
-const participantDetailsSchema = {
-  pressureLevels: Joi.string()
-    .valid("beginner", "intermediate", "advanced")
-    .allow("")
-    .messages({
-      "any.only": "Level must be beginner, intermediate, or advanced",
-      "string.empty": "Level cannot be empty",
-    }),
+const treatmentParticipantDetailsSchema = {
+  pressureLevels: Joi.string().allow(null, ""),
 
-  focusAreasOptions: Joi.string().allow("").trim(),
+  focusAreasOptions: Joi.array().items(Joi.string()).default([]),
 
-  medicalConditionsOptions: Joi.array().items(Joi.string().trim()).messages({
-    "array.base": "Extras must be an array of strings",
-  }),
-  extraSpaOptions: Joi.array().items(Joi.string().trim()).messages({
-    "array.base": "Extras must be an array of strings",
-  }),
+  medicalConditionsOptions: Joi.string().allow(null, ""),
+  extraSpaOptions: Joi.array().items(Joi.string()).default([]),
   status: Joi.string()
     .valid("pending", "confirmed", "cancelled")
     .default("pending")
@@ -26,7 +16,7 @@ const participantDetailsSchema = {
       "any.required": "Status is required",
     }),
 
-  instructorNotes: Joi.string().allow("").trim(),
+  specialRequests: Joi.string().allow("").trim(),
 };
 
-export default participantDetailsSchema;
+export default treatmentParticipantDetailsSchema;

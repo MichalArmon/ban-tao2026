@@ -25,6 +25,8 @@ function TreatmentList() {
           intensity={treatment.intensity}
           bullets={treatment.bullets}
           treatmentId={treatment._id}
+          currency={treatment.currency}
+          duration={treatment.duration}
         />
       ))}
     </Box>
