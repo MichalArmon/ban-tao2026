@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { createContext, useContext, useState } from "react";
 import normalizeTreatmentDetails from "../admin/helpers/treatments/normalization/normalizeTreatmentDetails";
+import { useLoading } from "./LoadingProvider";
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
 const today = dayjs().format("ddd, MMM D, YYYY");
@@ -11,6 +12,7 @@ const TreatmentContext = createContext();
 
 // 2.create provider
 export default function TreatmentProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const [treatment, setTreatment] = useState(null);
   const [treatments, setTreatments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);

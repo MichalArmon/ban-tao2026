@@ -21,6 +21,7 @@ import RecRuleProvider from "./resort/providers/RecRuleProvider.jsx";
 import SessionReservationProvider from "./resort/providers/SessionReservationProvider.jsx";
 import RoomReservationProvider from "./resort/providers/RoomReservationProvider.jsx";
 import TreatmentReservationProvider from "./resort/providers/TreatmentReservationProvider.jsx";
+import LoadingProvider from "./resort/providers/LoadingProvider.jsx";
 
 RoomReservationProvider;
 createRoot(document.getElementById("root")).render(
@@ -28,29 +29,31 @@ createRoot(document.getElementById("root")).render(
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <SnackBarProvider>
-            <UserProvider>
-              <WorkshopProvider>
-                <TreatmentProvider>
-                  <RoomProvider>
-                    <RecRuleProvider>
-                      <SessionProvider>
-                        <RoomReservationProvider>
-                          <TreatmentReservationProvider>
-                            <SessionReservationProvider>
-                              <OrderProvider>
-                                <App />
-                              </OrderProvider>
-                            </SessionReservationProvider>
-                          </TreatmentReservationProvider>
-                        </RoomReservationProvider>
-                      </SessionProvider>
-                    </RecRuleProvider>
-                  </RoomProvider>
-                </TreatmentProvider>
-              </WorkshopProvider>
-            </UserProvider>
-          </SnackBarProvider>
+          <LoadingProvider>
+            <SnackBarProvider>
+              <UserProvider>
+                <WorkshopProvider>
+                  <TreatmentProvider>
+                    <RoomProvider>
+                      <RecRuleProvider>
+                        <SessionProvider>
+                          <RoomReservationProvider>
+                            <TreatmentReservationProvider>
+                              <SessionReservationProvider>
+                                <OrderProvider>
+                                  <App />
+                                </OrderProvider>
+                              </SessionReservationProvider>
+                            </TreatmentReservationProvider>
+                          </RoomReservationProvider>
+                        </SessionProvider>
+                      </RecRuleProvider>
+                    </RoomProvider>
+                  </TreatmentProvider>
+                </WorkshopProvider>
+              </UserProvider>
+            </SnackBarProvider>
+          </LoadingProvider>
         </ThemeProvider>
       </BrowserRouter>
     </LocalizationProvider>

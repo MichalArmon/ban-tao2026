@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routerDict";
 import { useTreatment } from "./TreatmentProvider";
 import { useUser } from "./UserProvider";
+import { useLoading } from "./LoadingProvider";
 import normalizeTreatmentReservation from "../admin/helpers/treatmentReservations/normalization/normalizeTreatmentReservationDetails";
 
 const URL = "http://localhost:8000";
@@ -13,6 +14,7 @@ const TreatmentReservationContext = createContext();
 
 // 2.create provider
 export default function TreatmentReservationProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const { date, treatmentId } = useTreatment();
   const [treatmentReservation, setTreatmentReservation] = useState(null);
   const [treatmentReservations, setTreatmentReservations] = useState([]);

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
+import { useLoading } from "./LoadingProvider";
 
 import { useSnackBar } from "./SnackBarProvider";
 import dayjs from "dayjs";
@@ -13,6 +14,7 @@ const RecRuleContext = createContext();
 
 // 2.create provider
 export default function RecRuleProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const [recRule, setRecRule] = useState(null);
   const [recRules, setRecRules] = useState([]);
 

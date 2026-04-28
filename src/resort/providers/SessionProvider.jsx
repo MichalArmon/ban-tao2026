@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState, useCallback } from "react";
 import normalizeSessionDetails from "../admin/helpers/Sessions/normalization/normalizeSessionDetails";
+import { useLoading } from "./LoadingProvider";
 
 const URL = "http://localhost:8000";
 
@@ -11,6 +12,7 @@ const SessionContext = createContext();
 
 // 2.create provider
 export default function SessionProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const [session, setSession] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);

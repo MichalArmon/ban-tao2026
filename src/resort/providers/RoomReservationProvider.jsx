@@ -6,6 +6,7 @@ import { ROUTES } from "../../routes/routerDict";
 import { useRoom } from "./RoomProvider";
 import { useUser } from "./UserProvider";
 import normalizeRoomReservation from "../admin/helpers/roomReservations/normalization/normalizeRoomReservationDetails";
+import { useLoading } from "./LoadingProvider";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -13,6 +14,7 @@ const RoomReservationContext = createContext();
 
 // 2.create provider
 export default function RoomReservationProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const { checkIn, setCheckIn, guestsCount, checkOut, setCheckOut } = useRoom();
   const [roomReservation, setRoomReservation] = useState(null);
   const [roomReservations, setRoomReservations] = useState([]);

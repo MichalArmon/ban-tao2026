@@ -1,11 +1,12 @@
 import { Snackbar, Alert } from "@mui/material";
 import { createContext, useContext, useState, useEffect } from "react";
-
+import { useLoading } from "./LoadingProvider";
 // 1.create context
 const SnackBarContext = createContext();
 
 // 2.create provider
 export default function SnackBarProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const [isSnackOpen, setIsSnackOpen] = useState(false);
   const [snackColor, setSnackColor] = useState("success");
   const [snackVariant, setSnackVariant] = useState("filled");

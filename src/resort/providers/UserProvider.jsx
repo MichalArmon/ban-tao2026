@@ -10,6 +10,7 @@ import {
 } from "../../../services/localStorageService";
 import normalizeRegisterDetails from "../admin/helpers/users/normalization/normalizeRegisterDetails";
 import normalizeLoginDetails from "../admin/helpers/users/normalization/normalizeLoginDetails";
+import { useLoading } from "./LoadingProvider";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -17,6 +18,7 @@ const UserContext = createContext();
 
 // 2.create provider
 export default function UserProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);

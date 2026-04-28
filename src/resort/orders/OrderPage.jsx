@@ -1,15 +1,4 @@
-import {
-  Typography,
-  Grid,
-  Box,
-  Card,
-  CardMedia,
-  CardContent,
-  Rating,
-  Stack,
-  Button,
-  Divider,
-} from "@mui/material";
+import { Typography, Grid, Box } from "@mui/material";
 
 import { useEffect } from "react";
 
@@ -31,6 +20,7 @@ import { useTreatmentReservation } from "../providers/TreatmentReservationProvid
 import { useTreatment } from "../providers/TreatmentProvider";
 import OrderCardTreatment from "./components/cards/OrderCardTreatmen";
 import CreateTreatmentParticipantDetails from "../admin/components/treatmentReservations/treatmentParticipantDetails/CreateTreatmentParticipantDetails";
+import { useLoading } from "../providers/LoadingProvider";
 
 function OrderPage({ type }) {
   const { handleGetRoom, room, checkIn, checkOut } = useRoom();
@@ -41,6 +31,7 @@ function OrderPage({ type }) {
   const { handleGetSessionReservation } = useSessionReservation();
   const { handleGetTreatmentReservation } = useTreatmentReservation();
   const { handleGetWorkshop, workshop } = useWorkshop();
+  const { isLoading, setIsLoading } = useLoading();
   const getWorkShop = async () => {
     const reservation = await handleGetSessionReservation(id);
     if (!reservation?.sessionId) return;
@@ -58,30 +49,31 @@ function OrderPage({ type }) {
   };
 
   useEffect(() => {
-    if (type === "room") {
-      handleGetRoom(id);
-    }
-    if (type === "workshop") {
-      getWorkShop();
-    }
-    if (type === "treatment") {
-      getTreatment();
-    }
-  }, [id, type]);
-  if (type === "workshop" && (!session || !workshop)) {
-    return (
-      <Box bgcolor="red" height="1300px">
-        Loading...
-      </Box>
-    );
-  }
+    const fetchData = async () => {
+      setIsLoading(true); // 🔥 לפני הכל
 
-  if (type === "room" && !room) {
-    return <Box>Loading...</Box>;
-  }
-  if (type === "treatment" && !treatment) {
-    return <Box>Loading...</Box>;
-  }
+      if (type === "room") {
+        await handleGetRoom(id);
+      }
+      if (type === "workshop") {
+        await getWorkShop();
+      }
+      if (type === "treatment") {
+        await getTreatment();
+      }
+
+      setIsLoading(false); // 🔥 אחרי הכל
+    };
+
+    fetchData();
+  }, [id, type]);
+
+  // ✨ תיקון 2: עצירת הרינדור (מונע את השגיאה "Cannot read properties of null") ✨
+  // ברגע שהספינר הגלובלי דולק מה-useEffect, פה פשוט נחזיר כלום
+  // כדי לא לנסות לרנדר את הכרטיסיות עם נתונים ריקים
+  if (type === "room" && !room) return null;
+  if (type === "workshop" && (!session || !workshop)) return null;
+  if (type === "treatment" && !treatment) return null;
 
   console.log("session:", session);
   console.log("workshop:", workshop);

@@ -21,10 +21,11 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../providers/UserProvider";
 import { useSessionReservation } from "../../../providers/SessionReservationProvider";
 import { useSnackBar } from "../../../providers/SnackBarProvider";
+import { useLoading } from "../../../providers/LoadingProvider";
 
 export default function WorkshopModal({ open, onClose, workshopId }) {
   const [groupedSessions, setGroupedSessions] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, setIsLoading } = useLoading();
   const [weekOffset, setWeekOffset] = useState(0);
   const navigate = useNavigate();
   const { user } = useUser();

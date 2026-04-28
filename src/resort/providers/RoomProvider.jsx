@@ -6,7 +6,7 @@ import { useSnackBar } from "./SnackBarProvider";
 import dayjs from "dayjs";
 import { useUser } from "./UserProvider";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../routes/routerDict";
+import { useLoading } from "./LoadingProvider";
 
 const URL = "http://localhost:8000";
 // const URL = "http://localhost:3000/api/v1";
@@ -18,6 +18,7 @@ const tomorrow = dayjs().add(1, "day").format("ddd, MMM D, YYYY");
 
 // 2.create provider
 export default function RoomProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const [room, setRoom] = useState(null);
   const [rooms, setRooms] = useState([]);
   const [checkIn, setCheckIn] = useState(today);
@@ -34,12 +35,21 @@ export default function RoomProvider({ children }) {
   const { setSnack } = useSnackBar();
   // ✔️✔️✔️GET ROOMS ✔️✔️✔️
   const getRoomsFromServer = async () => {
-    const response = await axios.get(`${URL}/rooms`);
-    const roomData = response.data;
-    setRooms(roomData);
-    setFilteredRooms(roomData);
-    console.log(roomData);
-    return roomData;
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${URL}/rooms`);
+      const roomData = response.data;
+
+      setRooms(roomData);
+      setFilteredRooms(roomData);
+
+      console.log(roomData);
+      return roomData;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (event) => {
@@ -78,11 +88,14 @@ export default function RoomProvider({ children }) {
     const roomDetailsForServer = normalizeRoomDetails(data);
 
     try {
+      setIsLoading(true); // 🔥 הוספה
+
       console.log("data for server", roomDetailsForServer);
       const response = await axios.put(
         `${URL}/rooms/${id}`,
         roomDetailsForServer,
       );
+
       console.log(response);
       getRoomsFromServer();
     } catch (error) {
@@ -91,6 +104,8 @@ export default function RoomProvider({ children }) {
         console.log(error.response.data);
         alert(error.response.data.message);
       }
+    } finally {
+      setIsLoading(false); // 🔥 הוספה
     }
   };
 
@@ -109,6 +124,7 @@ export default function RoomProvider({ children }) {
     try {
       console.log("handleGetRoomBySlug got slug:", slug);
       setRoom(null);
+      setIsLoading(true);
 
       const response = await axios.get(`${URL}/rooms/${slug}`);
       console.log("server response:", response);
@@ -117,18 +133,25 @@ export default function RoomProvider({ children }) {
       return response.data;
     } catch (error) {
       console.log("get room by slug error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   // ✔️✔️✔️GET ROOM By ID✔️✔️✔️
   const handleGetRoom = async (id) => {
     try {
+      setIsLoading(true);
       setRoom(null);
+
       const response = await axios.get(`${URL}/rooms/id/${id}`);
       console.log(response);
+
       setRoom(response.data);
       return response.data;
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import normalizeSessionReservation from "../admin/helpers/sessionReservations/normalization/normalizeSessionReservationDetails";
-
+import { useLoading } from "./LoadingProvider";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routerDict";
 import { useRoom } from "./RoomProvider";
@@ -13,6 +13,7 @@ const SessionReservationContext = createContext();
 
 // 2.create provider
 export default function SessionReservationProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const { checkIn, setCheckIn, guestsCount, checkOut, setCheckOut } = useRoom();
   const [sessionReservation, setSessionReservation] = useState(null);
   const [sessionReservations, setSessionReservations] = useState([]);

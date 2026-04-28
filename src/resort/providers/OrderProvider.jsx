@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
+import { useLoading } from "./LoadingProvider";
 
 import dayjs from "dayjs";
 
@@ -14,6 +15,7 @@ const OrderContext = createContext();
 
 // 2.create provider
 export default function OrderProvider({ children }) {
+  const { setIsLoading } = useLoading();
   const { checkIn, setCheckIn, guestsCount, checkOut, setCheckOut } = useRoom();
   const [order, setOrder] = useState(null);
   const [orders, setOrders] = useState([]);
