@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import LikeButton from "../../../components/ui/LikeButton";
 
 function RoomListSection({
   imgSrc,
@@ -21,6 +22,7 @@ function RoomListSection({
   maxGuests,
   sizeM2,
   bedType,
+  id,
 }) {
   const facilities = [
     {
@@ -58,6 +60,7 @@ function RoomListSection({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            position: "relative",
           }}
         >
           <Box
@@ -73,6 +76,9 @@ function RoomListSection({
               boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
             }}
           />
+          <Box sx={{ position: "absolute", top: 16, left: 16 }}>
+            <LikeButton entityId={id} entityType={"rooms"} />
+          </Box>
         </Grid>
 
         {/* TEXT */}
@@ -123,6 +129,7 @@ function RoomListSection({
               display="flex"
               flexDirection="column"
               justifyContent="space-between"
+              position="relative"
             >
               <Paper
                 elevation={0}
@@ -162,7 +169,6 @@ function RoomListSection({
               <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
                 <Button variant="contained">Book Now</Button>
 
-                {/* 🟣 כפתור שפותח את הלו״ז */}
                 <Button
                   variant="text"
                   onClick={() => {

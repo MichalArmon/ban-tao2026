@@ -7,6 +7,7 @@ import {
   getUser,
   setTokenInLocalStorage,
   removeToken,
+  getToken,
 } from "../../../services/localStorageService";
 import normalizeRegisterDetails from "../admin/helpers/users/normalization/normalizeRegisterDetails";
 import normalizeLoginDetails from "../admin/helpers/users/normalization/normalizeLoginDetails";
@@ -24,14 +25,13 @@ export default function UserProvider({ children }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [OpenLogin, setOpenLogin] = useState(false);
   const [openSignup, setOpenSignup] = useState(false);
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    if (!user) {
-      getUser();
-    }
-  }, []);
   const { setSnack } = useSnackBar();
+  const [favorites, setFavorites] = useState({
+    rooms: [],
+    treatments: [],
+    workshops: [],
+  });
+
   // ✔️✔️✔️GET Users ✔️✔️✔️
   const getUsersFromServer = async () => {
     const response = await axios.get(`${URL}/users`);
@@ -76,6 +76,7 @@ export default function UserProvider({ children }) {
       console.log(user);
       setOpenLogin(false);
       setUser(user);
+      handleGetUserFavorites();
       setSnack("success", "You are Logged in successfully!");
     } catch (error) {
       setSnack("error", error.response.data.message);
@@ -153,12 +154,62 @@ export default function UserProvider({ children }) {
     }
   };
 
+  // ✔️✔️✔️LIKE ✔️✔️✔️
+  const handleLike = async (entityId, entityType) => {
+    const token = getToken();
+    if (!token) {
+      console.log("Authentication error: please login!");
+      return;
+    }
+
+    try {
+      const response = await axios.patch(
+        `${URL}/users/like`,
+        {
+          entityId,
+          entityType,
+        },
+        { headers: { "x-auth-token": token } },
+      );
+      console.log(response.data.message);
+      const massage = response.data.message;
+      setSnack("warning", massage);
+      setFavorites(response.data.favorites);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // ✔️✔️✔️GET  USER FAVORITE ✔️✔️✔️
+  const handleGetUserFavorites = async () => {
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      const response = await axios.get(`${URL}/users/my-favorites`, {
+        headers: { "x-auth-token": token },
+      });
+      setFavorites(response.data);
+    } catch (error) {
+      console.error("Failed to fetch favorites", error);
+    }
+  };
+  useEffect(() => {
+    if (!user) {
+      getUser();
+    }
+    handleGetUserFavorites();
+  }, []);
+
   return (
     <UserContext.Provider
       value={{
         getUsersFromServer,
         users,
         setUsers,
+        handleLike,
+        handleGetUserFavorites,
+        favorites,
 
         isDialogOpen,
         setIsDialogOpen,
