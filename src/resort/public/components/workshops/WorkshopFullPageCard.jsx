@@ -180,47 +180,29 @@ export default function WorkshopFullPageCard() {
       <Divider sx={{ my: { xs: 3, md: 4 } }} />
 
       {/* ===== Content blocks ===== */}
-      <Grid container spacing={4}>
+      <Grid container spacing={5} maxWidth="lg">
         {/* במובייל Quick Facts קודם, על אזור רחב (full-bleed) */}
-        <Grid item xs={12} md={5} order={{ xs: 1, md: 2 }}>
-          <Box
+        <Grid item size={{ md: 3, xs: 12 }} order={{ xs: 1, md: 2 }}>
+          <Paper
+            elevation={0}
             sx={{
-              mx: { xs: -2, md: 0 }, // שוליים שליליים לביטול padding של ה-Container במובייל
-              px: { xs: 2, md: 0 }, // מחזירים padding פנימי נוח
+              p: { xs: 2.5, md: 3 },
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: { xs: 0, md: 2 },
+              bgcolor: "background.paper",
             }}
           >
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 2.5, md: 3 },
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: { xs: 0, md: 2 }, // במובייל קצה-לקצה
-                bgcolor: "background.paper",
-              }}
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, mb: 2, color: "text.secondary" }}
             >
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, mb: 2, color: "text.secondary" }}
-              >
-                Workshop Quick Facts
-              </Typography>
-
-              <Grid container spacing={1.5}>
-                {/* {facilities.map((f, i) => (
-                  <Grid key={i} item xs={6} md={12}>
-                    <Stack direction="row" alignItems="center" spacing={1.2}>
-                      <Box color="primary.main">{f.icon}</Box>
-                      <Typography variant="body1">{f.label}</Typography>
-                    </Stack>
-                  </Grid>
-                ))} */}
-              </Grid>
-            </Paper>
-          </Box>
+              Workshop Quick Facts
+            </Typography>
+          </Paper>
         </Grid>
 
-        <Grid item xs={12} md={7} order={{ xs: 2, md: 1 }}>
+        <Grid item size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>
           <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
             Workshop Description
           </Typography>
@@ -234,7 +216,7 @@ export default function WorkshopFullPageCard() {
           <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
             Workshop Amenities
           </Typography>
-          {!!workshop.features?.length && (
+          {!!workshop.tags?.length && (
             <Stack
               direction="row"
               spacing={1}
@@ -242,8 +224,8 @@ export default function WorkshopFullPageCard() {
               useFlexGap
               sx={{ mb: 3 }}
             >
-              {workshop.tags.map((f) => (
-                <Chip key={f} label={f} variant="outlined" size="medium" />
+              {workshop.tags.map((tag) => (
+                <Chip key={tag} label={tag} variant="outlined" size="medium" />
               ))}
             </Stack>
           )}
