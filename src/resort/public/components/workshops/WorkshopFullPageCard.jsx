@@ -1,4 +1,4 @@
-// src/pages/rooms/Room.jsx
+// src/pages/Workshops/Room.jsx
 import { useMemo, useState, useEffect } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 
@@ -14,19 +14,20 @@ import {
   Paper,
 } from "@mui/material";
 import { Hotel, SquareFoot, People } from "@mui/icons-material";
-import { useRoom } from "../../providers/RoomProvider";
-import AnimatedTitle from "../../components/ui/AnimatedTitle";
-import { useLoading } from "../../providers/LoadingProvider";
+
+import { useWorkshop } from "../../../providers/WorkshopProvider";
+import AnimatedTitle from "../../../components/ui/AnimatedTitle";
+import { useLoading } from "../../../providers/LoadingProvider";
 
 const FALLBACK_IMG =
   "https://images.pexels.com/photos/7598360/pexels-photo-7598360.jpeg";
 
-export default function FullPageCard() {
+export default function WorkshopFullPageCard() {
   const { setIsLoading } = useLoading();
   const [mainImage, setMainImage] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [currentGallery, setCurrentGallery] = useState([]);
-  const { handleGetRoomBySlug, room } = useRoom();
+  const { handleGetWorkshopBySlug, workshop } = useWorkshop();
   const navigate = useNavigate();
   const { slug } = useParams();
   console.log("params slug =", slug);
@@ -34,20 +35,20 @@ export default function FullPageCard() {
   useEffect(() => {
     if (slug) {
       console.log("slug:", slug);
-      handleGetRoomBySlug(slug);
+      handleGetWorkshopBySlug(slug);
     }
   }, [slug]);
 
   useEffect(() => {
-    if (room) {
-      console.log("room:", room);
-      setMainImage(room.hero.url || FALLBACK_IMG);
+    if (workshop) {
+      console.log("workshop:", workshop);
+      setMainImage(workshop.hero.url || FALLBACK_IMG);
       setImgLoaded(true);
-      const newGallery = room.gallery?.map((image) => image.url) || [];
+      const newGallery = workshop.gallery?.map((image) => image.url) || [];
       setCurrentGallery(newGallery);
       console.log(newGallery);
     }
-  }, [room]);
+  }, [workshop]);
 
   const handleImageChange = (newImgSrc) => {
     if (!newImgSrc || newImgSrc === mainImage) return;
@@ -55,32 +56,32 @@ export default function FullPageCard() {
     setMainImage(newImgSrc);
   };
 
-  if (!room) {
+  if (!workshop) {
     setIsLoading(true);
     return null;
   }
 
-  const facilities = [
-    {
-      label: `${room.maxGuests ?? 2} guests`,
-      icon: <People sx={{ fontSize: 16 }} />,
-    },
-    {
-      label: `${room.sizeM2 ?? 30} m²`,
-      icon: <SquareFoot sx={{ fontSize: 16 }} />,
-    },
-    {
-      label: room.bedType ?? "King size",
-      icon: <Hotel sx={{ fontSize: 16 }} />,
-    },
-  ];
+  // const facilities = [
+  //   {
+  //     label: `${workshop.maxGuests ?? 2} guests`,
+  //     icon: <People sx={{ fontSize: 16 }} />,
+  //   },
+  //   {
+  //     label: `${workshop.sizeM2 ?? 30} m²`,
+  //     icon: <SquareFoot sx={{ fontSize: 16 }} />,
+  //   },
+  //   {
+  //     label: workshop.bedType ?? "King size",
+  //     icon: <Hotel sx={{ fontSize: 16 }} />,
+  //   },
+  // ];
 
   return (
     <Container
       maxWidth="xl"
       sx={{ pt: { xs: 2, md: 4 }, pb: { xs: 4, md: 8 }, mt: 10 }}
     >
-      <AnimatedTitle>{room.title}</AnimatedTitle>
+      <AnimatedTitle>{workshop.title}</AnimatedTitle>
       {/* ===== Hero + Gallery =====
           מובייל: טור (hero למעלה, גלריה מתחת, גלילה אופקית)
           דסקטופ: שורה (hero משמאל, גלריה צידית מימין)
@@ -107,7 +108,7 @@ export default function FullPageCard() {
               <Box
                 component="img"
                 src={mainImage}
-                alt={room.title}
+                alt={workshop.title}
                 onError={() => setMainImage(FALLBACK_IMG)}
                 sx={{
                   width: "100%",
@@ -202,18 +203,18 @@ export default function FullPageCard() {
                 variant="h6"
                 sx={{ fontWeight: 600, mb: 2, color: "text.secondary" }}
               >
-                Room Quick Facts
+                Workshop Quick Facts
               </Typography>
 
               <Grid container spacing={1.5}>
-                {facilities.map((f, i) => (
+                {/* {facilities.map((f, i) => (
                   <Grid key={i} item xs={6} md={12}>
                     <Stack direction="row" alignItems="center" spacing={1.2}>
                       <Box color="primary.main">{f.icon}</Box>
                       <Typography variant="body1">{f.label}</Typography>
                     </Stack>
                   </Grid>
-                ))}
+                ))} */}
               </Grid>
             </Paper>
           </Box>
@@ -221,16 +222,19 @@ export default function FullPageCard() {
 
         <Grid item xs={12} md={7} order={{ xs: 2, md: 1 }}>
           <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
-            Room Description
+            Workshop Description
           </Typography>
           <Typography variant="body1" sx={{ mb: 3, whiteSpace: "pre-line" }}>
-            {room.blurb}
+            {workshop.blurb}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 3, whiteSpace: "pre-line" }}>
+            {workshop.description}
           </Typography>
 
           <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
-            Room Amenities
+            Workshop Amenities
           </Typography>
-          {!!room.features?.length && (
+          {!!workshop.features?.length && (
             <Stack
               direction="row"
               spacing={1}
@@ -238,7 +242,7 @@ export default function FullPageCard() {
               useFlexGap
               sx={{ mb: 3 }}
             >
-              {room.features.map((f) => (
+              {workshop.tags.map((f) => (
                 <Chip key={f} label={f} variant="outlined" size="medium" />
               ))}
             </Stack>

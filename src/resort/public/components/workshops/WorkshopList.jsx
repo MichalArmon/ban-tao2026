@@ -27,6 +27,7 @@ function WorkshopList() {
           bullets={workshop.bullets}
           workshopId={workshop._id}
           key={workshop._id}
+          slug={workshop.slug}
         />
       ))}
     </Box>

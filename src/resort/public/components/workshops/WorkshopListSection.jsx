@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import WorkshopModal from "./WorkshopModel";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function WorkshopListSection({
   imgSrc,
@@ -20,6 +21,7 @@ function WorkshopListSection({
   level,
   category,
   bullets,
+  slug,
 
   intensity,
   price,
@@ -27,6 +29,7 @@ function WorkshopListSection({
   workshopId,
 }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const onClose = () => {
     setOpen(false);
   };
@@ -100,11 +103,16 @@ function WorkshopListSection({
                   setOpen(true);
                 }}
               >
-                Book Now
+                See Schedule
               </Button>
 
-              <Button variant="text" onClick={() => {}}>
-                See Schedule
+              <Button
+                variant="text"
+                onClick={() => {
+                  navigate(`/resort/workshops/${slug}`);
+                }}
+              >
+                Learn More
               </Button>
             </Stack>
           </Stack>

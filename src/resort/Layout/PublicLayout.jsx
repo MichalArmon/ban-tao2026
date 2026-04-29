@@ -4,6 +4,7 @@ import Header from "./header/Header";
 import Main from "./main/Main";
 import { Outlet } from "react-router-dom";
 import UserExtraNav from "./header/UserExtraNav";
+import Footer from "./footer/Footer";
 
 const Pages = [
   {
@@ -41,6 +42,7 @@ function PublicLayout(props) {
       <Main>
         <Outlet />
       </Main>
+      <Footer />
     </>
   );
 }

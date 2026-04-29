@@ -29,6 +29,24 @@ export default function WorkshopProvider({ children }) {
       setIsLoading(false);
     }
   };
+  // ✔️✔️✔️GET WORKSHOP By SLUG✔️✔️✔️
+  const handleGetWorkshopBySlug = async (slug) => {
+    try {
+      console.log("handleGetWorkshopBySlug got slug:", slug);
+      setWorkshop(null);
+      setIsLoading(true);
+
+      const response = await axios.get(`${URL}/workshops/${slug}`);
+      console.log("server response:", response);
+
+      setWorkshop(response.data);
+      return response.data;
+    } catch (error) {
+      console.log("get Workshop by slug error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // ✔️✔️✔️GET Workshop by id ✔️✔️✔️
   const handleGetWorkshop = async (id) => {
@@ -148,6 +166,7 @@ export default function WorkshopProvider({ children }) {
         getWorkshopTitle,
         getWorkshopDuration,
         getWorkshopDetails,
+        handleGetWorkshopBySlug,
       }}
     >
       {children}
@@ -159,7 +178,7 @@ export default function WorkshopProvider({ children }) {
 export const useWorkshop = () => {
   const context = useContext(WorkshopContext);
   if (!context) {
-    throw new Error("You used the message context of the room provider!");
+    throw new Error("You used the message context of the Workshop provider!");
   }
   return context;
 };

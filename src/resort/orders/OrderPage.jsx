@@ -31,46 +31,44 @@ function OrderPage({ type }) {
   const { handleGetSessionReservation } = useSessionReservation();
   const { handleGetTreatmentReservation } = useTreatmentReservation();
   const { handleGetWorkshop, workshop } = useWorkshop();
-  const { isLoading, setIsLoading } = useLoading();
+
   const getWorkShop = async () => {
     const reservation = await handleGetSessionReservation(id);
     if (!reservation?.sessionId) return;
 
     const currentSession = await handleGetSession(reservation.sessionId);
     if (!currentSession?.workshopId) return;
+
     setSession(currentSession);
     await handleGetWorkshop(currentSession.workshopId);
   };
+
   const getTreatment = async () => {
     const reservation = await handleGetTreatmentReservation(id);
+    if (!reservation?.treatmentId) return;
+
     const currentTreatment = await handleGetTreatment(reservation.treatmentId);
     setTreatment(currentTreatment);
-    if (!reservation?.treatmentId) return;
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true); // 🔥 לפני הכל
-
       if (type === "room") {
         await handleGetRoom(id);
       }
+
       if (type === "workshop") {
         await getWorkShop();
       }
+
       if (type === "treatment") {
         await getTreatment();
       }
-
-      setIsLoading(false); // 🔥 אחרי הכל
     };
 
     fetchData();
   }, [id, type]);
 
-  // ✨ תיקון 2: עצירת הרינדור (מונע את השגיאה "Cannot read properties of null") ✨
-  // ברגע שהספינר הגלובלי דולק מה-useEffect, פה פשוט נחזיר כלום
-  // כדי לא לנסות לרנדר את הכרטיסיות עם נתונים ריקים
   if (type === "room" && !room) return null;
   if (type === "workshop" && (!session || !workshop)) return null;
   if (type === "treatment" && !treatment) return null;
@@ -88,7 +86,6 @@ function OrderPage({ type }) {
       spacing={6}
     >
       {/* LEFT SECTION 👈👈 */}
-
       <Grid size={{ md: 7, xs: 12 }}>
         <Box
           sx={{
@@ -102,21 +99,24 @@ function OrderPage({ type }) {
             {type === "room" && "Complete booking details"}
             {type === "workshop" && "Complete participant Details"}
             {type === "treatment" && "Complete other Details"}
-            {/* האופציה השלישית */}
           </Typography>
+
           {type === "room" && <CreateExtraPreferences />}
           {type === "workshop" && <ParticipantDetailsForm reservationId={id} />}
           {type === "treatment" && <CreateTreatmentParticipantDetails />}
         </Box>
       </Grid>
+
       {/* RIGHT SECTION 👉👉 */}
       <Grid size={{ md: 5, xs: 12 }}>
         {type === "workshop" && (
           <OrderCardWorkshop service={workshop} date={session.startTime} />
         )}
+
         {type === "room" && (
           <OrderCardRoom service={room} checkIn={checkIn} checkOut={checkOut} />
         )}
+
         {type === "treatment" && <OrderCardTreatment service={treatment} />}
       </Grid>
     </Grid>
