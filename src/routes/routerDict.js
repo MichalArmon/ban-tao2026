@@ -1,6 +1,7 @@
 export const ROUTES = {
   home: "/resort",
-  about: "/resort/about",
+  // about: "/resort/about",
+  contact: "/resort/contact",
   register: "/resort/register",
   login: "/resort/login",
   rooms: "/resort/rooms",

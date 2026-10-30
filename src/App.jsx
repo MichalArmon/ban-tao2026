@@ -30,6 +30,7 @@ import AdminSessionReservationsPage from "./resort/admin/pages/AdminSessionReser
 import AdminOrdersPageLayout from "./resort/Layout/AdminOrdersPageLayout";
 import AdminTreatmentReservationsPage from "./resort/admin/pages/AdminTreatmentReservationPage";
 import WorkshopFullPageCard from "./resort/public/components/workshops/WorkshopFullPageCard";
+import ContactSection from "./resort/public/components/showcase/ContactSection";
 
 function App() {
   const { setUser } = useUser();
@@ -47,6 +48,7 @@ function App() {
       <Route path="/" element={<Navigate to="/resort" replace />} />
       <Route path="/resort" element={<PublicLayout />}>
         <Route path={ROUTES.home} element={<HomePage />} />
+        <Route path={ROUTES.contact} element={<ContactSection />} />
         <Route path={ROUTES.register} element={<RegisterPage />} />
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.rooms} element={<RoomsPage />} />

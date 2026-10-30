@@ -10,6 +10,7 @@ import SimpleParallax from "../components/showcase/SimpleParallax";
 import TwoImageGrid from "../components/showcase/TwoImageGrid";
 import Pblock from "../components/showcase/Pblock";
 import TwinImages from "../components/showcase/TwinImages";
+import ContactSection from "../components/showcase/ContactSection";
 
 function HomePage() {
   return (
@@ -27,6 +28,7 @@ function HomePage() {
         align="left"
       />
       <TwinImages />
+      <ContactSection />
 
       <CreateAvailability />
       <RoomsAvailabilityList />

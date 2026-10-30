@@ -3,7 +3,7 @@ import { Button, Typography, Box, keyframes, Stack } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 export default function Hero() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
@@ -127,7 +127,7 @@ export default function Hero() {
             mb: 1,
           }}
         >
-          Discover Our World
+          Welcome To Our World
         </Typography>
 
         {/* כותרת ראשית */}
@@ -182,8 +182,8 @@ export default function Hero() {
               "&:hover": { bgcolor: "primary.dark" },
             }}
           >
-            TO OUR WEBSITE
-            <ArrowForwardIosRoundedIcon
+            CHECK AVAILABILITY
+            <KeyboardArrowDownRoundedIcon
               sx={{
                 fontSize: 18,
                 ml: 0.5,
@@ -198,7 +198,7 @@ export default function Hero() {
 
           <Button
             component={RouterLink}
-            to="/contact"
+            to="/resort/contact"
             variant="outlined"
             size="large"
             sx={{

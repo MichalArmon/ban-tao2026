@@ -13,8 +13,8 @@ const Pages = [
     icon: null,
   },
   {
-    label: "About",
-    path: ROUTES.about,
+    label: "Contact",
+    path: ROUTES.contact,
     icon: null,
   },
   {
