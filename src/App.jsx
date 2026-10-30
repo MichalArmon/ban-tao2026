@@ -31,6 +31,7 @@ import AdminOrdersPageLayout from "./resort/Layout/AdminOrdersPageLayout";
 import AdminTreatmentReservationsPage from "./resort/admin/pages/AdminTreatmentReservationPage";
 import WorkshopFullPageCard from "./resort/public/components/workshops/WorkshopFullPageCard";
 import ContactSection from "./resort/public/components/showcase/ContactSection";
+import ScrollToTop from "./resort/components/ScrollToTop";
 
 function App() {
   const { setUser } = useUser();
@@ -44,61 +45,63 @@ function App() {
   }, [setUser]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/resort" replace />} />
-      <Route path="/resort" element={<PublicLayout />}>
-        <Route path={ROUTES.home} element={<HomePage />} />
-        <Route path={ROUTES.contact} element={<ContactSection />} />
-        <Route path={ROUTES.register} element={<RegisterPage />} />
-        <Route path={ROUTES.login} element={<LoginPage />} />
-        <Route path={ROUTES.rooms} element={<RoomsPage />} />
-        <Route path="rooms/:id/order" element={<OrderPage type="room" />} />
-        <Route path="rooms/:slug/" element={<FullPageCard />} />
-        <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
-        <Route
-          path="treatments/:id/order"
-          element={<OrderPage type="treatment" />}
-        />
-        <Route path={ROUTES.workshops} element={<WorkshopsPage />} />
-        <Route path="workshops/:slug/" element={<WorkshopFullPageCard />} />
-        <Route
-          path="workshops/:id/order"
-          element={<OrderPage type="workshop" />}
-        />
-        <Route path={ROUTES.thankYou} element={<ThankYouPage />} />
-      </Route>
-
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
-        <Route path={ADMIN_ROUTES.rooms} element={<AdminRoomsPage />} />
-
-        <Route path={ADMIN_ROUTES.workshops} element={<AdminWorkshopsPage />} />
-        <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
-
-        <Route path={ADMIN_ROUTES.sessions} element={<AdminSessionsPage />} />
-        <Route path={ADMIN_ROUTES.recRules} element={<AdminRecRulesPage />} />
-        <Route path={ADMIN_ROUTES.orders} element={<AdminOrdersPageLayout />}>
-          <Route index element={<AdminOrdersPage />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Navigate to="/resort" replace />} />
+        <Route path="/resort" element={<PublicLayout />}>
+          <Route path={ROUTES.home} element={<HomePage />} />
+          <Route path={ROUTES.contact} element={<ContactSection />} />
+          <Route path={ROUTES.register} element={<RegisterPage />} />
+          <Route path={ROUTES.login} element={<LoginPage />} />
+          <Route path={ROUTES.rooms} element={<RoomsPage />} />
+          <Route path="rooms/:id/order" element={<OrderPage type="room" />} />
+          <Route path="rooms/:slug/" element={<FullPageCard />} />
+          <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
           <Route
-            path={ADMIN_ROUTES.roomReservation}
-            element={<AdminRoomReservationsPage />}
+            path="treatments/:id/order"
+            element={<OrderPage type="treatment" />}
           />
+          <Route path={ROUTES.workshops} element={<WorkshopsPage />} />
+          <Route path="workshops/:slug/" element={<WorkshopFullPageCard />} />
           <Route
-            path={ADMIN_ROUTES.workshopReservation}
-            element={<AdminSessionReservationsPage />}
+            path="workshops/:id/order"
+            element={<OrderPage type="workshop" />}
           />
+          <Route path={ROUTES.thankYou} element={<ThankYouPage />} />
+        </Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path={ADMIN_ROUTES.home} element={<HomePage />} />
+          <Route path={ADMIN_ROUTES.rooms} element={<AdminRoomsPage />} />
           <Route
-            path={ADMIN_ROUTES.treatmentReservation}
-            element={<AdminTreatmentReservationsPage />}
+            path={ADMIN_ROUTES.workshops}
+            element={<AdminWorkshopsPage />}
+          />
+          <Route path={ADMIN_ROUTES.users} element={<AdminUsersPage />} />
+          <Route path={ADMIN_ROUTES.sessions} element={<AdminSessionsPage />} />
+          <Route path={ADMIN_ROUTES.recRules} element={<AdminRecRulesPage />} />
+          <Route path={ADMIN_ROUTES.orders} element={<AdminOrdersPageLayout />}>
+            <Route index element={<AdminOrdersPage />} />
+            <Route
+              path={ADMIN_ROUTES.roomReservation}
+              element={<AdminRoomReservationsPage />}
+            />
+            <Route
+              path={ADMIN_ROUTES.workshopReservation}
+              element={<AdminSessionReservationsPage />}
+            />
+            <Route
+              path={ADMIN_ROUTES.treatmentReservation}
+              element={<AdminTreatmentReservationsPage />}
+            />
+          </Route>
+          <Route
+            path={ADMIN_ROUTES.treatments}
+            element={<AdminTreatmentsPage />}
           />
         </Route>
-
-        <Route
-          path={ADMIN_ROUTES.treatments}
-          element={<AdminTreatmentsPage />}
-        />
-      </Route>
-    </Routes>
+      </Routes>
+    </>
   );
 }
 

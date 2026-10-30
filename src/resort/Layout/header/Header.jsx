@@ -1,9 +1,28 @@
 import { AppBar, Toolbar, Box, Tabs, Tab } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
+const ROOT = "/resort";
 
 export default function Header({ Pages, top = 0, ...props }) {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const [selected, setSelected] = useState("Home");
+
+  const handleLogoClick = (event) => {
+    event.preventDefault();
+
+    if (pathname !== ROOT && pathname !== `${ROOT}/`) {
+      navigate(ROOT);
+    }
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  };
 
   return (
     <AppBar
@@ -28,35 +47,40 @@ export default function Header({ Pages, top = 0, ...props }) {
           gap: { md: 2 },
         }}
       >
+        {/* NAVIGATION */}
         <Tabs
           onChange={(_e, newValue) => setSelected(newValue)}
           value={selected}
-          display="flex"
           sx={{
             justifyContent: "space-around",
             width: "100%",
           }}
           TabIndicatorProps={{
             style: {
-              display: "none", // This hides the indicator
+              display: "none",
             },
           }}
         >
           {Pages.map((page) => (
             <Tab
+              key={page.label}
               icon={page.icon}
               component={Link}
               to={page.path}
               value={page.label}
-              key={page.label}
               label={page.label}
               sx={{
                 textTransform: "none",
                 color: "primary.main",
                 fontSize: 16,
-                "&.Mui-selected": { fontWeight: 600, color: "primary.main" },
+
+                "&.Mui-selected": {
+                  fontWeight: 600,
+                  color: "primary.main",
+                },
+
                 "&:hover": {
-                  color: "primary.main", // Color on hover
+                  color: "primary.main",
                   opacity: 1,
                   fontWeight: 600,
                   fontSize: 16.5,
@@ -65,7 +89,37 @@ export default function Header({ Pages, top = 0, ...props }) {
             />
           ))}
         </Tabs>
-        <Box>Logo</Box>
+
+        {/* CENTER LOGO */}
+        <Box
+          component={Link}
+          to={ROOT}
+          onClick={handleLogoClick}
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 1,
+            cursor: "pointer",
+            textDecoration: "none",
+          }}
+        >
+          <Box
+            component="img"
+            src="/logo_B.svg"
+            alt="Ban Tao Resort - Back to Home"
+            sx={{
+              width: 120,
+              height: 120,
+              objectFit: "contain",
+              transition: "transform 0.3s ease",
+
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
+          />
+        </Box>
       </Toolbar>
     </AppBar>
   );

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 import CreateAvailability from "../../Availability/components/CreateAvailability";
 import RoomsAvailabilityList from "../../Availability/components/RoomsAvailabilityList";
@@ -16,22 +16,40 @@ function HomePage() {
   return (
     <Box sx={{ width: "100%" }}>
       <Hero />
+
       <IntroBlock />
 
-      <SimpleParallax image="/landscape2.jpg"></SimpleParallax>
+      <SimpleParallax image="/landscape2.jpg" />
 
       <ParallaxSection />
+
       <TwoImageGrid />
+
       <Pblock
         title="THOUGHTFUL DESIGN INSIDE AND OUT"
-        text="SOL LIVING | PHANGAN sets a new standard for design . Every element of your villa has been meticulously crafted to combine beauty with functionality ."
+        text="SOL LIVING | PHANGAN sets a new standard for design. Every element of your villa has been meticulously crafted to combine beauty with functionality."
         align="left"
       />
-      <TwinImages />
-      <ContactSection />
 
-      <CreateAvailability />
-      <RoomsAvailabilityList />
+      <TwinImages />
+
+      <SimpleParallax image="/landscape4.jpg" />
+
+      {/* CONTACT SECTION */}
+      {/* <ContactSection /> */}
+
+      {/* AVAILABILITY SECTION */}
+      <Container
+        id="availability"
+        maxWidth="lg"
+        sx={{
+          py: { xs: 4, md: 6 },
+          scrollMarginTop: "120px",
+        }}
+      >
+        <CreateAvailability />
+        <RoomsAvailabilityList />
+      </Container>
     </Box>
   );
 }
