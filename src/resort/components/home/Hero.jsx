@@ -13,35 +13,64 @@ const COLORS = {
   white: "#FFFFFF",
 };
 
+const INTRO_STORAGE_KEY = "banTaoIntroSeen";
+const START_FADE_AFTER_MS = 2200;
+const VIDEO_FADE_MS = 450;
+const WHITE_LAG_AFTER_VIDEO_MS = 60;
+const FALLBACK_TIMEOUT_MS = 4000;
+
 export default function Hero() {
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [showLoader, setShowLoader] = useState(true);
+
+  const [showLoader, setShowLoader] = useState(() => {
+    try {
+      return sessionStorage.getItem(INTRO_STORAGE_KEY) !== "true";
+    } catch {
+      return true;
+    }
+  });
+
   const [fadeVideo, setFadeVideo] = useState(false);
 
-  const START_FADE_AFTER_MS = 3800;
-  const VIDEO_FADE_MS = 450;
-  const WHITE_LAG_AFTER_VIDEO_MS = 60;
-
   useEffect(() => {
-    const fallback = setTimeout(() => setShowLoader(false), 5000);
+    if (!showLoader) return;
+
+    const fallback = setTimeout(() => {
+      try {
+        sessionStorage.setItem(INTRO_STORAGE_KEY, "true");
+      } catch {
+        // Continue without storage if it is unavailable.
+      }
+      setShowLoader(false);
+    }, FALLBACK_TIMEOUT_MS);
+
     return () => clearTimeout(fallback);
-  }, []);
+  }, [showLoader]);
 
   useEffect(() => {
-    if (!imgLoaded) return;
+    if (!showLoader || !imgLoaded) return;
 
-    const t1 = setTimeout(() => setFadeVideo(true), START_FADE_AFTER_MS);
+    const fadeTimer = setTimeout(() => {
+      setFadeVideo(true);
+    }, START_FADE_AFTER_MS);
 
-    const t2 = setTimeout(
-      () => setShowLoader(false),
+    const finishTimer = setTimeout(
+      () => {
+        try {
+          sessionStorage.setItem(INTRO_STORAGE_KEY, "true");
+        } catch {
+          // Continue without storage if it is unavailable.
+        }
+        setShowLoader(false);
+      },
       START_FADE_AFTER_MS + VIDEO_FADE_MS + WHITE_LAG_AFTER_VIDEO_MS,
     );
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
+      clearTimeout(fadeTimer);
+      clearTimeout(finishTimer);
     };
-  }, [imgLoaded]);
+  }, [imgLoaded, showLoader]);
 
   const scrollToAvailability = () => {
     document.getElementById("availability")?.scrollIntoView({
@@ -98,39 +127,37 @@ export default function Hero() {
       />
 
       {/* INTRO LOADER */}
-      <Box
-        aria-hidden={!showLoader}
-        sx={{
-          position: "fixed",
-          inset: 0,
-          zIndex: (theme) => theme.zIndex.modal + 1,
-          bgcolor: "background.default",
-          display: "grid",
-          placeItems: "center",
-          opacity: showLoader ? 1 : 0,
-          pointerEvents: showLoader ? "auto" : "none",
-          visibility: showLoader ? "visible" : "hidden",
-          transition: "opacity 600ms ease, visibility 600ms ease",
-        }}
-      >
+      {showLoader && (
         <Box
-          component="video"
-          src="/resortweb.webm"
-          autoPlay
-          muted
-          playsInline
           sx={{
-            width: { xs: "85vw", sm: 420, md: 680 },
-            maxWidth: "100%",
-            height: "auto",
+            position: "fixed",
+            inset: 0,
+            zIndex: (theme) => theme.zIndex.modal + 1,
+            bgcolor: "background.default",
+            display: "grid",
+            placeItems: "center",
             opacity: fadeVideo ? 0 : 1,
             transition: `opacity ${VIDEO_FADE_MS}ms ease`,
             "@media (prefers-reduced-motion: reduce)": {
               transition: "none",
             },
           }}
-        />
-      </Box>
+        >
+          <Box
+            component="video"
+            src="/resortweb.webm"
+            autoPlay
+            muted
+            playsInline
+            aria-label="Ban Tao Village introduction animation"
+            sx={{
+              width: { xs: "85vw", sm: 420, md: 680 },
+              maxWidth: "100%",
+              height: "auto",
+            }}
+          />
+        </Box>
+      )}
 
       {/* MAIN CONTENT */}
       <Box
@@ -179,7 +206,9 @@ export default function Hero() {
         <Box
           component={motion.div}
           initial={{ scaleX: 0 }}
-          animate={{ scaleX: showLoader ? 0 : 1 }}
+          animate={{
+            scaleX: showLoader ? 0 : 1,
+          }}
           transition={{
             duration: 0.9,
             delay: 0.2,
@@ -291,15 +320,12 @@ export default function Hero() {
               minWidth: { xs: "100%", sm: 240 },
               minHeight: 54,
               px: 4,
-
               borderRadius: 0,
               bgcolor: COLORS.brown,
               color: COLORS.white,
-
               fontSize: 12,
               fontWeight: 600,
               letterSpacing: "0.1em",
-
               boxShadow: "0 6px 20px rgba(0,0,0,0.18)",
               transition: "all 0.3s ease",
 
@@ -332,17 +358,14 @@ export default function Hero() {
               minWidth: { xs: "100%", sm: 190 },
               minHeight: 54,
               px: 4,
-
               borderRadius: 0,
               color: COLORS.white,
               borderColor: "rgba(255,255,255,0.65)",
               bgcolor: "rgba(255,255,255,0.07)",
               backdropFilter: "blur(6px)",
-
               fontSize: 12,
               fontWeight: 600,
               letterSpacing: "0.1em",
-
               transition: "all 0.3s ease",
 
               "&:hover": {
@@ -368,8 +391,13 @@ export default function Hero() {
         <Box
           component={motion.div}
           initial={{ opacity: 0 }}
-          animate={{ opacity: showLoader ? 0 : 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
+          animate={{
+            opacity: showLoader ? 0 : 1,
+          }}
+          transition={{
+            duration: 1,
+            delay: 0.8,
+          }}
           sx={{
             mt: { xs: 8, md: 10 },
             display: "flex",

@@ -11,8 +11,22 @@ import TwoImageGrid from "../components/showcase/TwoImageGrid";
 import Pblock from "../components/showcase/Pblock";
 import TwinImages from "../components/showcase/TwinImages";
 import ContactSection from "../components/showcase/ContactSection";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 function HomePage() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash === "#availability") {
+      requestAnimationFrame(() => {
+        document.getElementById("availability")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [hash]);
   return (
     <Box sx={{ width: "100%" }}>
       <Hero />

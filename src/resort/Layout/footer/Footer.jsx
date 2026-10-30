@@ -7,181 +7,367 @@ import {
   Divider,
 } from "@mui/material";
 
+import { Link as RouterLink } from "react-router-dom";
+import { motion } from "motion/react";
+
+import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
+import InstagramIcon from "@mui/icons-material/Instagram";
+
+const COLORS = {
+  green: "#34483D",
+  greenDark: "#27382F",
+  cream: "#F7F5EF",
+  sand: "#A28B72",
+  muted: "#B8C2B8",
+  border: "rgba(247,245,239,0.17)",
+};
+
+const navigationLinks = [
+  { label: "Home", to: "/resort" },
+  { label: "Rooms", to: "/resort/rooms" },
+  { label: "Treatments", to: "/resort/treatments" },
+  { label: "Workshops", to: "/resort/workshops" },
+];
+
+const informationLinks = [{ label: "Contact", to: "/resort/contact" }];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+};
+
 function Footer() {
   return (
     <Box
       component="footer"
       sx={{
         width: "100%",
-        bgcolor: "primary.dark",
-        color: "background.default",
+        bgcolor: COLORS.green,
+        color: COLORS.cream,
         mt: 8,
-
         overflow: "hidden",
       }}
     >
-      {/* CTA SECTION */}
+      {/* TOP CALL TO ACTION */}
       <Container maxWidth="lg">
         <Box
+          component={motion.div}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
           sx={{
-            py: { xs: 5, md: 7 },
+            py: { xs: 7, md: 10 },
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             alignItems: { xs: "flex-start", md: "center" },
             justifyContent: "space-between",
-            gap: 3,
+            gap: { xs: 4, md: 6 },
           }}
         >
-          <Typography
-            variant="h3"
-            sx={{
-              fontWeight: 500,
-              maxWidth: 520,
-              lineHeight: 1.15,
-            }}
-          >
-            Let’s find harmony together.
-          </Typography>
+          <Box sx={{ maxWidth: 650 }}>
+            <Typography
+              sx={{
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.24em",
+                color: COLORS.sand,
+                mb: 2.5,
+              }}
+            >
+              YOUR ISLAND ESCAPE AWAITS
+            </Typography>
+
+            <Typography
+              component="h2"
+              sx={{
+                fontFamily: "Georgia, serif",
+                fontSize: {
+                  xs: "clamp(34px, 8vw, 48px)",
+                  md: "clamp(48px, 4.5vw, 65px)",
+                },
+                fontWeight: 400,
+                lineHeight: 1.15,
+                letterSpacing: "-0.03em",
+                color: COLORS.cream,
+              }}
+            >
+              A little closer
+              <Box component="span" sx={{ display: "block" }}>
+                to paradise.
+              </Box>
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: { xs: 13, md: 15 },
+                lineHeight: 1.9,
+                color: COLORS.muted,
+                mt: 2.5,
+                maxWidth: 440,
+              }}
+            >
+              Whether you're planning your stay or simply have a question, we'd
+              love to hear from you.
+            </Typography>
+          </Box>
 
           <Button
+            component={RouterLink}
+            to="/resort/contact"
             variant="outlined"
+            endIcon={<ArrowOutwardRoundedIcon />}
             sx={{
-              minWidth: { xs: "100%", md: 360 },
-              py: 1.8,
-              color: "background.default",
-              borderColor: "background.default",
+              minWidth: { xs: "100%", sm: 220 },
+              minHeight: 56,
+              px: 4,
+              py: 1.7,
               borderRadius: 0,
-              textTransform: "none",
-              fontWeight: 700,
+              borderColor: "rgba(247,245,239,0.68)",
+              color: COLORS.cream,
+              bgcolor: "transparent",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.13em",
+              whiteSpace: "nowrap",
+              transition: "all 0.3s ease",
+
               "&:hover": {
-                borderColor: "background.default",
-                bgcolor: "rgba(255,255,255,0.08)",
+                borderColor: COLORS.cream,
+                bgcolor: "rgba(247,245,239,0.08)",
+                transform: "translateY(-3px)",
+              },
+
+              "& .MuiButton-endIcon": {
+                transition: "transform 0.3s ease",
+              },
+
+              "&:hover .MuiButton-endIcon": {
+                transform: "translate(3px, -3px)",
               },
             }}
           >
-            Submit
+            GET IN TOUCH
           </Button>
         </Box>
       </Container>
 
-      <Divider sx={{ borderColor: "rgba(255,255,255,0.16)" }} />
+      <Divider sx={{ borderColor: COLORS.border }} />
 
       {/* MAIN FOOTER */}
       <Container maxWidth="lg">
         <Box
+          component={motion.div}
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           sx={{
-            py: { xs: 5, md: 7 },
+            py: { xs: 6, md: 8 },
             display: "grid",
             gridTemplateColumns: {
-              xs: "1fr",
-              sm: "1fr 1fr",
-              md: "1.6fr 1fr 1fr 1fr",
+              xs: "1fr 1fr",
+              md: "2fr 1fr 1fr 1fr",
             },
-            gap: 4,
+            columnGap: { xs: 3, md: 5 },
+            rowGap: { xs: 5, md: 4 },
           }}
         >
           {/* BRAND */}
-          <Box>
-            <Typography
-              variant="h4"
+          <Box sx={{ gridColumn: { xs: "1 / -1", md: "auto" } }}>
+            <Box
+              component={RouterLink}
+              to="/resort"
+              aria-label="Ban Tao Village Home"
               sx={{
-                fontWeight: 800,
-                letterSpacing: 2,
+                display: "inline-block",
+                textDecoration: "none",
                 mb: 2,
               }}
             >
-              BAN TAO
-            </Typography>
-
-            <Typography variant="body2" sx={{ opacity: 0.75, maxWidth: 280 }}>
-              A peaceful resort experience designed for rest, movement,
-              treatments, workshops, and mindful retreats.
-            </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Georgia, serif",
+                  fontSize: 32,
+                  fontWeight: 400,
+                  letterSpacing: "0.12em",
+                  color: COLORS.cream,
+                }}
+              >
+                BAN TAO
+              </Typography>
+            </Box>
 
             <Typography
-              variant="body2"
               sx={{
-                mt: 3,
-                fontWeight: 700,
+                fontSize: 13,
+                lineHeight: 1.9,
+                color: COLORS.muted,
+                maxWidth: 270,
               }}
             >
-              Open daily · Koh Phangan, Thailand
+              An intimate island sanctuary where thoughtful design, nature, and
+              well-being come together.
             </Typography>
+
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1.5}
+              sx={{ mt: 3 }}
+            >
+              <Box
+                sx={{
+                  width: 22,
+                  height: 1,
+                  bgcolor: COLORS.sand,
+                }}
+              />
+
+              <Typography
+                sx={{
+                  fontSize: 10,
+                  letterSpacing: "0.14em",
+                  color: COLORS.cream,
+                }}
+              >
+                KOH PHANGAN · THAILAND
+              </Typography>
+            </Stack>
           </Box>
 
-          {/* COLUMN 1 */}
-          <FooterColumn
-            title="Explore"
-            links={["Rooms", "Treatments", "Workshops", "Retreats"]}
-          />
+          {/* NAVIGATION */}
+          <FooterColumn title="THE VILLAGE" links={navigationLinks} />
 
-          {/* COLUMN 2 */}
-          <FooterColumn
-            title="Quick Links"
-            links={["About", "Reservations", "Events", "Contact"]}
-          />
+          {/* INFORMATION */}
+          <FooterColumn title="INFORMATION" links={informationLinks} />
 
-          {/* COLUMN 3 */}
-          <FooterColumn
-            title="Stay In Touch"
-            links={["Facebook", "Instagram", "YouTube", "Spotify"]}
-          />
+          {/* SOCIAL */}
+          <Box>
+            <FooterHeading>STAY CONNECTED</FooterHeading>
+
+            <Typography
+              sx={{
+                fontSize: 13,
+                lineHeight: 1.9,
+                color: COLORS.muted,
+                mb: 2,
+              }}
+            >
+              Follow the rhythm of island life.
+            </Typography>
+
+            {/* Social icons can be linked when
+                the official profiles are available. */}
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <InstagramIcon
+                sx={{
+                  fontSize: 20,
+                  color: COLORS.cream,
+                  opacity: 0.75,
+                }}
+              />
+
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  color: COLORS.muted,
+                }}
+              >
+                Instagram
+              </Typography>
+            </Stack>
+          </Box>
         </Box>
+
+        <Divider sx={{ borderColor: COLORS.border }} />
 
         {/* BOTTOM BAR */}
         <Box
           sx={{
-            py: 3,
+            py: { xs: 3, md: 3.5 },
             display: "flex",
-            justifyContent: "space-between",
             flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "flex-start", sm: "center" },
+            justifyContent: "space-between",
             gap: 2,
-            color: "text.disabled",
           }}
         >
-          <Typography variant="caption">
-            Copyright © 2026 Ban Tao Village. All rights reserved.
+          <Typography
+            sx={{
+              fontSize: 11,
+              color: COLORS.muted,
+              letterSpacing: "0.025em",
+            }}
+          >
+            © 2026 Ban Tao Village. All rights reserved.
           </Typography>
 
-          <Stack direction="row" spacing={3}>
-            <Typography variant="caption">Privacy</Typography>
-            <Typography variant="caption">Terms</Typography>
-          </Stack>
+          <Typography
+            sx={{
+              fontSize: 10,
+              letterSpacing: "0.16em",
+              color: COLORS.sand,
+            }}
+          >
+            DESIGNED WITH INTENTION
+          </Typography>
         </Box>
       </Container>
     </Box>
   );
 }
 
+function FooterHeading({ children }) {
+  return (
+    <Typography
+      sx={{
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: "0.18em",
+        color: COLORS.cream,
+        mb: 2.5,
+      }}
+    >
+      {children}
+    </Typography>
+  );
+}
+
 function FooterColumn({ title, links }) {
   return (
     <Box>
-      <Typography
-        variant="subtitle2"
-        sx={{
-          fontWeight: 700,
-          mb: 2,
-          color: "background.default",
-        }}
-      >
-        {title}
-      </Typography>
+      <FooterHeading>{title}</FooterHeading>
 
-      <Stack spacing={1}>
+      <Stack spacing={1.5}>
         {links.map((link) => (
           <Typography
-            key={link}
-            variant="body2"
+            key={link.to}
+            component={RouterLink}
+            to={link.to}
             sx={{
-              opacity: 0.75,
-              cursor: "pointer",
+              display: "block",
+              width: "fit-content",
+              fontSize: 13,
+              fontWeight: 400,
+              lineHeight: 1.7,
+              color: COLORS.muted,
+              textDecoration: "none",
+              transition: "color 0.25s ease",
+
               "&:hover": {
-                opacity: 1,
-                textDecoration: "underline",
+                color: COLORS.cream,
               },
             }}
           >
-            {link}
+            {link.label}
           </Typography>
         ))}
       </Stack>

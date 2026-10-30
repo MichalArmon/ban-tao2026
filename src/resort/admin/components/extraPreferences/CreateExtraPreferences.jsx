@@ -1,14 +1,26 @@
-import { useOrder } from "../../../providers/OrderProvider";
+import { useNavigate } from "react-router-dom";
+
 import { useRoomReservation } from "../../../providers/RoomReservationProvider";
+import { useSnackBar } from "../../../providers/SnackBarProvider";
+import { ROUTES } from "../../../../routes/routerDict";
+
 import initialExtraPreferencesValues from "../../helpers/roomReservations/initialValues/extraPreferences/initialExtraPreferencesValues";
 import ExtraPreferencesForm from "./ExtraPreferencesForm";
 
 function CreateExtraPreferences() {
   const { handleEditExtraPreferencesDetails } = useRoomReservation();
+  const { setSnack } = useSnackBar();
+  const navigate = useNavigate();
 
   const handleSaveAndCloseEdit = async (formData) => {
+    const reservationId = sessionStorage.getItem("currentRoomReservationId");
+
+    if (!reservationId) {
+      setSnack("error", "Reservation ID was not found.");
+      return;
+    }
+
     try {
-      const reservationId = sessionStorage.getItem("currentRoomReservationId");
       const reservationAfterUpdate = await handleEditExtraPreferencesDetails(
         reservationId,
         {
@@ -18,18 +30,23 @@ function CreateExtraPreferences() {
       );
 
       if (!reservationAfterUpdate) {
-        return (
-          <Box bgcolor="red" height="1300">
-            sfsfsfs
-          </Box>
-        );
+        setSnack("error", "Could not confirm your reservation.");
+        return;
       }
 
-      return reservationAfterUpdate;
+      setSnack("success", "Your reservation has been confirmed!");
+
+      navigate(ROUTES.thankYou, {
+        state: {
+          reservation: reservationAfterUpdate,
+        },
+      });
     } catch (error) {
-      console.error("Error saving ExtraPreferences:", error);
+      console.error("Reservation confirmation failed:", error);
+      setSnack("error", "Something went wrong. Please try again.");
     }
   };
+
   return (
     <ExtraPreferencesForm
       initialExtraPreferencesValues={initialExtraPreferencesValues}

@@ -104,7 +104,7 @@ export default function Header({ Pages, top = 0, ...props }) {
           top,
           justifyContent: "center",
           borderBottom: `1px solid ${COLORS.border}`,
-          boxShadow: "0 4px 20px rgba(40,36,30,0.035)",
+          boxShadow: "0 4px 20px rgba(40,36,30,0.025)",
         })}
       >
         <Toolbar
