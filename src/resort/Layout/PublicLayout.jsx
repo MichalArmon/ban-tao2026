@@ -37,8 +37,7 @@ const Pages = [
 function PublicLayout(props) {
   return (
     <>
-      <UserExtraNav />
-      <Header Pages={Pages} top={props.offsetTop || 35} />
+      <Header Pages={Pages} />
 
       <Main>
         <Outlet />

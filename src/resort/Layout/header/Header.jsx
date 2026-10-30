@@ -1,17 +1,61 @@
-import { AppBar, Toolbar, Box, Tabs, Tab } from "@mui/material";
 import { useState } from "react";
+
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  IconButton,
+  Drawer,
+  Stack,
+  Typography,
+  Dialog,
+  DialogContent,
+} from "@mui/material";
+
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
+import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+
+import { useUser } from "../../providers/UserProvider";
+import CreateLogin from "../../public/users/components/CreateLogin";
+import CreateRegister from "../../public/users/components/CreateRegister";
+import UserMenu from "../../public/users/components/UserMenu";
 
 const ROOT = "/resort";
+
+const COLORS = {
+  cream: "#F7F5EF",
+  green: "#34483D",
+  brown: "#766354",
+  brownDark: "#554539",
+  sand: "#A28B72",
+  border: "#EAE5DD",
+};
 
 export default function Header({ Pages, top = 0, ...props }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [selected, setSelected] = useState("Home");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const {
+    user,
+    handleLogOutUser,
+    OpenLogin,
+    setOpenLogin,
+    openSignup,
+    setOpenSignup,
+  } = useUser();
 
   const handleLogoClick = (event) => {
     event.preventDefault();
+    setMenuOpen(false);
 
     if (pathname !== ROOT && pathname !== `${ROOT}/`) {
       navigate(ROOT);
@@ -24,103 +68,391 @@ export default function Header({ Pages, top = 0, ...props }) {
     });
   };
 
+  const isActivePage = (path) => {
+    if (path === ROOT || path === `${ROOT}/`) {
+      return pathname === ROOT || pathname === `${ROOT}/`;
+    }
+
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
+
+  const openLoginDialog = () => {
+    setMenuOpen(false);
+    setOpenLogin(true);
+  };
+
+  const handleUserClick = () => {
+    if (user) {
+      handleLogOutUser();
+    } else {
+      openLoginDialog();
+    }
+  };
+
   return (
-    <AppBar
-      {...props}
-      position="fixed"
-      sx={(theme) => ({
-        zIndex: theme.zIndex.drawer + 1,
-        bgcolor: "background.default",
-        color: "text.primary",
-        justifyContent: "center",
-        height: "var(--nav-h)",
-        top: top,
-      })}
-    >
-      <Toolbar
-        sx={{
-          justifyContent: "space-between",
-          minHeight: 80,
-          display: { xs: "flex" },
-          gridTemplateColumns: { md: "1fr auto 1fr" },
-          alignItems: "center",
-          gap: { md: 2 },
-        }}
+    <>
+      {/* MAIN HEADER */}
+      <AppBar
+        {...props}
+        position="fixed"
+        elevation={0}
+        sx={(theme) => ({
+          zIndex: theme.zIndex.drawer + 1,
+          bgcolor: COLORS.cream,
+          color: COLORS.green,
+          height: "var(--nav-h, 80px)",
+          top,
+          justifyContent: "center",
+          borderBottom: `1px solid ${COLORS.border}`,
+          boxShadow: "0 4px 20px rgba(40,36,30,0.035)",
+        })}
       >
-        {/* NAVIGATION */}
-        <Tabs
-          onChange={(_e, newValue) => setSelected(newValue)}
-          value={selected}
+        <Toolbar
           sx={{
-            justifyContent: "space-around",
+            minHeight: "80px !important",
             width: "100%",
-          }}
-          TabIndicatorProps={{
-            style: {
-              display: "none",
-            },
-          }}
-        >
-          {Pages.map((page) => (
-            <Tab
-              key={page.label}
-              icon={page.icon}
-              component={Link}
-              to={page.path}
-              value={page.label}
-              label={page.label}
-              sx={{
-                textTransform: "none",
-                color: "primary.main",
-                fontSize: 16,
-
-                "&.Mui-selected": {
-                  fontWeight: 600,
-                  color: "primary.main",
-                },
-
-                "&:hover": {
-                  color: "primary.main",
-                  opacity: 1,
-                  fontWeight: 600,
-                  fontSize: 16.5,
-                },
-              }}
-            />
-          ))}
-        </Tabs>
-
-        {/* CENTER LOGO */}
-        <Box
-          component={Link}
-          to={ROOT}
-          onClick={handleLogoClick}
-          sx={{
-            display: { xs: "none", md: "flex" },
+            boxSizing: "border-box",
+            px: { xs: 2.5, sm: 4, md: 6 },
+            display: "grid",
+            gridTemplateColumns: "1fr auto 1fr",
             alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-            cursor: "pointer",
-            textDecoration: "none",
           }}
         >
-          <Box
-            component="img"
-            src="/logo_B.svg"
-            alt="Ban Tao Resort - Back to Home"
+          {/* DESKTOP NAVIGATION */}
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={{ md: 2, lg: 3 }}
             sx={{
-              width: 120,
-              height: 120,
-              objectFit: "contain",
-              transition: "transform 0.3s ease",
+              display: { xs: "none", md: "flex" },
+              gridColumn: 1,
+            }}
+          >
+            {Pages.map((page) => {
+              const active = isActivePage(page.path);
 
+              return (
+                <Box key={page.path}>
+                  <Button
+                    component={Link}
+                    to={page.path}
+                    sx={{
+                      px: 0.5,
+                      py: 1.5,
+                      minWidth: "auto",
+                      color: active ? COLORS.green : COLORS.brown,
+                      fontSize: 12,
+                      fontWeight: active ? 600 : 400,
+                      letterSpacing: "0.09em",
+                      textTransform: "uppercase",
+                      whiteSpace: "nowrap",
+                      transition: "color 0.3s ease",
+                      "&:hover": {
+                        bgcolor: "transparent",
+                        color: COLORS.green,
+                      },
+                    }}
+                  >
+                    {page.label}
+                  </Button>
+                </Box>
+              );
+            })}
+          </Stack>
+
+          {/* MOBILE MENU BUTTON */}
+          <IconButton
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open navigation menu"
+            sx={{
+              display: { xs: "flex", md: "none" },
+              gridColumn: 1,
+              justifySelf: "start",
+              color: COLORS.green,
+              bgcolor: "transparent",
               "&:hover": {
-                transform: "scale(1.05)",
+                bgcolor: "rgba(118,99,84,0.07)",
               },
             }}
-          />
-        </Box>
-      </Toolbar>
-    </AppBar>
+          >
+            <MenuRoundedIcon />
+          </IconButton>
+
+          {/* CENTER LOGO */}
+          <Box
+            component={Link}
+            to={ROOT}
+            onClick={handleLogoClick}
+            aria-label="Ban Tao Village - Back to home"
+            sx={{
+              gridColumn: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
+              justifySelf: "center",
+            }}
+          >
+            <Box
+              component={motion.img}
+              src="/logo_B.svg"
+              alt="Ban Tao Village"
+              whileHover={{ scale: 1.045 }}
+              transition={{
+                duration: 0.35,
+                ease: "easeOut",
+              }}
+              sx={{
+                width: { xs: 105, md: 120 },
+                height: 78,
+                objectFit: "contain",
+              }}
+            />
+          </Box>
+
+          {/* LOGIN / CONNECTED USER */}
+          <Button
+            onClick={handleUserClick}
+            title={user ? "Click to sign out" : "Sign in"}
+            aria-label={user ? "Sign out" : "Sign in"}
+            startIcon={
+              user ? (
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    bgcolor: COLORS.green,
+                    color: COLORS.cream,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <PersonRoundedIcon sx={{ fontSize: 18 }} />
+
+                  {/* CONNECTED STATUS */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      bottom: 0,
+                      right: -2,
+                      width: 9,
+                      height: 9,
+                      borderRadius: "50%",
+                      bgcolor: "#78A58B",
+                      border: `2px solid ${COLORS.cream}`,
+                    }}
+                  />
+                </Box>
+              ) : (
+                <LoginRoundedIcon />
+              )
+            }
+            sx={{
+              gridColumn: 3,
+              justifySelf: "end",
+              minWidth: "auto",
+              px: { xs: 1, sm: 2 },
+              py: 1,
+              color: COLORS.brown,
+              borderRadius: 0,
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              textTransform: "none",
+              whiteSpace: "nowrap",
+              "&:hover": {
+                bgcolor: "rgba(118,99,84,0.07)",
+                color: COLORS.brownDark,
+              },
+              "& .MuiButton-startIcon": {
+                mr: { xs: 0, sm: 1 },
+                ml: 0,
+              },
+            }}
+          >
+            <Box
+              component="span"
+              sx={{
+                display: { xs: "none", sm: "inline" },
+              }}
+            >
+              {user ? `Hello, ${user.name || "Guest"}` : "LOGIN"}
+            </Box>
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      {/* MOBILE DRAWER */}
+      <Drawer
+        anchor="left"
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        PaperProps={{
+          sx: {
+            width: { xs: "85vw", sm: 360 },
+            maxWidth: 380,
+            bgcolor: COLORS.cream,
+            borderRadius: 0,
+            p: 3,
+            boxSizing: "border-box",
+          },
+        }}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 2,
+        }}
+      >
+        <Stack spacing={4}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography
+              sx={{
+                fontSize: 11,
+                letterSpacing: "0.2em",
+                color: COLORS.sand,
+              }}
+            >
+              EXPLORE BAN TAO
+            </Typography>
+
+            <IconButton
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close navigation menu"
+              sx={{
+                color: COLORS.green,
+              }}
+            >
+              <CloseRoundedIcon />
+            </IconButton>
+          </Stack>
+
+          {/* MOBILE LINKS */}
+          <Stack spacing={0}>
+            {Pages.map((page, index) => (
+              <Box
+                key={page.path}
+                component={motion.div}
+                initial={{
+                  opacity: 0,
+                  x: -12,
+                }}
+                animate={{
+                  opacity: menuOpen ? 1 : 0,
+                  x: menuOpen ? 0 : -12,
+                }}
+                transition={{
+                  delay: index * 0.06,
+                  duration: 0.35,
+                }}
+              >
+                <Button
+                  component={Link}
+                  to={page.path}
+                  onClick={() => setMenuOpen(false)}
+                  fullWidth
+                  endIcon={<ArrowOutwardRoundedIcon />}
+                  sx={{
+                    justifyContent: "space-between",
+                    py: 2.2,
+                    px: 0,
+                    borderBottom: `1px solid ${COLORS.border}`,
+                    borderRadius: 0,
+                    textTransform: "none",
+                    fontFamily: "Georgia, serif",
+                    fontSize: 24,
+                    fontWeight: 400,
+                    color: isActivePage(page.path)
+                      ? COLORS.green
+                      : COLORS.brown,
+                    "&:hover": {
+                      bgcolor: "transparent",
+                      color: COLORS.green,
+                    },
+                    "& .MuiButton-endIcon": {
+                      ml: "auto",
+                    },
+                  }}
+                >
+                  {page.label}
+                </Button>
+              </Box>
+            ))}
+          </Stack>
+
+          <Typography
+            sx={{
+              pt: 4,
+              fontSize: 11,
+              letterSpacing: "0.18em",
+              color: COLORS.sand,
+            }}
+          >
+            YOUR ISLAND ESCAPE AWAITS
+          </Typography>
+        </Stack>
+      </Drawer>
+
+      {/* LOGIN DIALOG */}
+      <Dialog
+        open={OpenLogin}
+        onClose={() => setOpenLogin(false)}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{
+          sx: {
+            borderRadius: 0,
+            bgcolor: COLORS.cream,
+            backgroundImage: "none",
+            boxShadow: "0 30px 90px rgba(25,35,29,0.22)",
+            maxWidth: 500,
+            m: { xs: 2, sm: 3 },
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            px: { xs: 3, sm: 6 },
+            pt: { xs: 5, sm: 6 },
+            pb: { xs: 4, sm: 5 },
+          }}
+        >
+          <CreateLogin />
+        </DialogContent>
+      </Dialog>
+
+      {/* REGISTER DIALOG */}
+      <Dialog
+        open={openSignup}
+        onClose={() => setOpenSignup(false)}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{
+          sx: {
+            borderRadius: 0,
+            bgcolor: COLORS.cream,
+            backgroundImage: "none",
+            boxShadow: "0 30px 90px rgba(25,35,29,0.22)",
+            maxWidth: 570,
+            maxHeight: "90vh",
+            m: { xs: 2, sm: 3 },
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            px: { xs: 3, sm: 6 },
+            pt: { xs: 5, sm: 6 },
+            pb: { xs: 4, sm: 5 },
+          }}
+        >
+          <CreateRegister />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
