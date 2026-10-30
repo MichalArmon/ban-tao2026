@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
 } from "@mui/material";
+import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -43,15 +44,10 @@ export default function Header({ Pages, top = 0, ...props }) {
   const { pathname } = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const {
-    user,
-    handleLogOutUser,
-    OpenLogin,
-    setOpenLogin,
-    openSignup,
-    setOpenSignup,
-  } = useUser();
+  const { user, OpenLogin, setOpenLogin, openSignup, setOpenSignup } =
+    useUser();
 
   const handleLogoClick = (event) => {
     event.preventDefault();
@@ -81,12 +77,16 @@ export default function Header({ Pages, top = 0, ...props }) {
     setOpenLogin(true);
   };
 
-  const handleUserClick = () => {
+  const handleUserClick = (event) => {
     if (user) {
-      handleLogOutUser();
+      setAnchorEl(event.currentTarget);
     } else {
       openLoginDialog();
     }
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -147,6 +147,7 @@ export default function Header({ Pages, top = 0, ...props }) {
                       textTransform: "uppercase",
                       whiteSpace: "nowrap",
                       transition: "color 0.3s ease",
+
                       "&:hover": {
                         bgcolor: "transparent",
                         color: COLORS.green,
@@ -170,6 +171,7 @@ export default function Header({ Pages, top = 0, ...props }) {
               justifySelf: "start",
               color: COLORS.green,
               bgcolor: "transparent",
+
               "&:hover": {
                 bgcolor: "rgba(118,99,84,0.07)",
               },
@@ -213,8 +215,10 @@ export default function Header({ Pages, top = 0, ...props }) {
           {/* LOGIN / CONNECTED USER */}
           <Button
             onClick={handleUserClick}
-            title={user ? "Click to sign out" : "Sign in"}
-            aria-label={user ? "Sign out" : "Sign in"}
+            title={user ? "Open account menu" : "Sign in"}
+            aria-label={user ? "Open account menu" : "Sign in"}
+            aria-haspopup={user ? "menu" : undefined}
+            aria-expanded={user ? Boolean(anchorEl) : undefined}
             startIcon={
               user ? (
                 <Box
@@ -247,7 +251,24 @@ export default function Header({ Pages, top = 0, ...props }) {
                   />
                 </Box>
               ) : (
-                <LoginRoundedIcon />
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    fontSize: 18,
+                    fontWeight: 600,
+                    letterSpacing: "0.12em",
+                    color: COLORS.brown,
+                  }}
+                >
+                  <LoginRoundedIcon sx={{ fontSize: 20 }} />
+                  <Box component="span" style={{ fontSize: 14 }}>
+                    {" "}
+                    LOGIN
+                  </Box>
+                </Box>
               )
             }
             sx={{
@@ -263,24 +284,26 @@ export default function Header({ Pages, top = 0, ...props }) {
               letterSpacing: "0.08em",
               textTransform: "none",
               whiteSpace: "nowrap",
+
               "&:hover": {
                 bgcolor: "rgba(118,99,84,0.07)",
                 color: COLORS.brownDark,
               },
+
               "& .MuiButton-startIcon": {
                 mr: { xs: 0, sm: 1 },
                 ml: 0,
               },
             }}
           >
-            <Box
+            {/* <Box
               component="span"
               sx={{
                 display: { xs: "none", sm: "inline" },
               }}
             >
               {user ? `Hello, ${user.name || "Guest"}` : "LOGIN"}
-            </Box>
+            </Box> */}
           </Button>
         </Toolbar>
       </AppBar>
@@ -369,10 +392,12 @@ export default function Header({ Pages, top = 0, ...props }) {
                     color: isActivePage(page.path)
                       ? COLORS.green
                       : COLORS.brown,
+
                     "&:hover": {
                       bgcolor: "transparent",
                       color: COLORS.green,
                     },
+
                     "& .MuiButton-endIcon": {
                       ml: "auto",
                     },
@@ -396,6 +421,11 @@ export default function Header({ Pages, top = 0, ...props }) {
           </Typography>
         </Stack>
       </Drawer>
+
+      {/* USER MENU */}
+      {user && (
+        <UserMenu anchorEl={anchorEl} handleClose={handleCloseUserMenu} />
+      )}
 
       {/* LOGIN DIALOG */}
       <Dialog
