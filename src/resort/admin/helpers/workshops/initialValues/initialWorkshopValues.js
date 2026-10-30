@@ -19,12 +19,11 @@ const initialWorkshopValues = {
   instructor: "Taj",
   duration: 120,
   level: "beginner",
-  hero: {
-    publicId: "",
-    url: "",
-    alt: "Instructor teaching a student how to pop-up on a surfboard",
-  },
+  heroPublicId: "",
+  heroUrl: "",
+  heroAlt: "Instructor teaching a student how to pop-up on a surfboard",
   gallery: [],
+  category: "surfing",
 };
 
 export default initialWorkshopValues;

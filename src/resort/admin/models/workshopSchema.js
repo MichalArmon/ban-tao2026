@@ -30,6 +30,7 @@ const workshopSchema = {
     "any.required": "Currency is required",
     "string.empty": "Currency cannot be empty",
   }),
+  category: Joi.string().required(),
   heroPublicId: Joi.string().required().messages({
     "any.required": "Hero image public ID is required",
     "string.empty": "Hero image public ID cannot be empty",

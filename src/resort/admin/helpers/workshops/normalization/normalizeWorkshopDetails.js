@@ -8,6 +8,7 @@ function normalizeWorkshopDetails(data) {
     tags: data.tags,
     price: data.price,
     currency: data.currency,
+    category: data.category,
 
     instructor: data.instructor,
     duration: data.duration,
@@ -15,7 +16,7 @@ function normalizeWorkshopDetails(data) {
     level: data.level,
 
     isActive: data.isActive,
-    isPrivet: data.isPrivet,
+    isPrivate: data.isPrivate,
     isClosed: data.isClosed,
 
     hero: {

@@ -39,6 +39,7 @@ function PublicLayout(props) {
     <>
       <UserExtraNav />
       <Header Pages={Pages} top={props.offsetTop || 35} />
+
       <Main>
         <Outlet />
       </Main>

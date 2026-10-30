@@ -78,7 +78,7 @@ export default function TreatmentModel({
   const handlePrevWeek = () =>
     setCurrentWeekStart(currentWeekStart.subtract(1, "week"));
   const reservation = {
-    userId: user._id,
+    userId: user?._id,
     treatmentId: treatmentId,
     guestsCount: 1,
     date: selectedDate,
