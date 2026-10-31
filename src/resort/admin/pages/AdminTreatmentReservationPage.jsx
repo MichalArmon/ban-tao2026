@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useTreatmentReservation } from "../../providers/TreatmentReservationProvider";
 
 import TreatmentReservationsDataList from "../components/treatmentReservations/TreatmentReservationsDataList";
-import CreateTreatmentReservation from "../components/treatmentReservations/CreateTreatmentReservation";
+import CreateTreatmentReservation from "../components/treatmentReservations/CreatetreatmentReservation";
 
 function AdminTreatmentReservationsPage() {
   const { isDialogOpen, setIsDialogOpen, setTreatmentReservation } =
