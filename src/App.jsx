@@ -32,6 +32,7 @@ import AdminTreatmentReservationsPage from "./resort/admin/pages/AdminTreatmentR
 import WorkshopFullPageCard from "./resort/public/components/workshops/WorkshopFullPageCard";
 import ContactSection from "./resort/public/components/showcase/ContactSection";
 import ScrollToTop from "./resort/components/ScrollToTop";
+import TreatmentFullPageCard from "./resort/public/components/treatments/TreatmentFullPageCard";
 
 function App() {
   const { setUser } = useUser();
@@ -58,6 +59,8 @@ function App() {
           <Route path="rooms/:id/order" element={<OrderPage type="room" />} />
           <Route path="rooms/:slug/" element={<FullPageCard />} />
           <Route path={ROUTES.treatments} element={<TreatmentsPage />} />
+          <Route path="treatments/:id" element={<TreatmentFullPageCard />} />
+
           <Route
             path="treatments/:id/order"
             element={<OrderPage type="treatment" />}

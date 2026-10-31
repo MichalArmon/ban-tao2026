@@ -1,6 +1,5 @@
-// src/pages/Workshops/Room.jsx
-import { useMemo, useState, useEffect } from "react";
-import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
   Container,
@@ -12,8 +11,10 @@ import {
   Stack,
   Divider,
   Paper,
+  CircularProgress,
 } from "@mui/material";
-import { Hotel, SquareFoot, People } from "@mui/icons-material";
+
+import { ArrowForwardOutlined } from "@mui/icons-material";
 
 import { useWorkshop } from "../../../providers/WorkshopProvider";
 import AnimatedTitle from "../../../components/ui/AnimatedTitle";
@@ -24,227 +25,388 @@ const FALLBACK_IMG =
 
 export default function WorkshopFullPageCard() {
   const { setIsLoading } = useLoading();
-  const [mainImage, setMainImage] = useState(null);
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [currentGallery, setCurrentGallery] = useState([]);
   const { handleGetWorkshopBySlug, workshop } = useWorkshop();
+
   const navigate = useNavigate();
   const { slug } = useParams();
-  console.log("params slug =", slug);
 
+  const [mainImage, setMainImage] = useState(null);
+  const [currentGallery, setCurrentGallery] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // FETCH WORKSHOP
   useEffect(() => {
+    let active = true;
+
+    const loadWorkshop = async () => {
+      setLoading(true);
+
+      try {
+        await handleGetWorkshopBySlug(slug);
+      } catch (error) {
+        console.error("Error loading workshop:", error);
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
     if (slug) {
-      console.log("slug:", slug);
-      handleGetWorkshopBySlug(slug);
+      loadWorkshop();
     }
+
+    return () => {
+      active = false;
+    };
+
+    // Fetch only when the slug changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
+  // UPDATE WORKSHOP IMAGES
   useEffect(() => {
-    if (workshop) {
-      console.log("workshop:", workshop);
-      setMainImage(workshop.hero.url || FALLBACK_IMG);
-      setImgLoaded(true);
-      const newGallery = workshop.gallery?.map((image) => image.url) || [];
-      setCurrentGallery(newGallery);
-      console.log(newGallery);
-    }
+    if (!workshop) return;
+
+    setMainImage(workshop.hero?.url || FALLBACK_IMG);
+
+    const gallery =
+      workshop.gallery?.map((image) => image?.url).filter(Boolean) || [];
+
+    setCurrentGallery(gallery);
   }, [workshop]);
+
+  // GLOBAL LOADING STATE
+  useEffect(() => {
+    setIsLoading(loading);
+
+    return () => setIsLoading(false);
+  }, [loading, setIsLoading]);
 
   const handleImageChange = (newImgSrc) => {
     if (!newImgSrc || newImgSrc === mainImage) return;
-    setImgLoaded(false);
     setMainImage(newImgSrc);
   };
 
-  if (!workshop) {
-    setIsLoading(true);
-    return null;
-  }
+  const handleAvailability = () => {
+    navigate("/resort/", {
+      state: { scrollToAvailability: true },
+    });
+  };
 
-  // const facilities = [
-  //   {
-  //     label: `${workshop.maxGuests ?? 2} guests`,
-  //     icon: <People sx={{ fontSize: 16 }} />,
-  //   },
-  //   {
-  //     label: `${workshop.sizeM2 ?? 30} m²`,
-  //     icon: <SquareFoot sx={{ fontSize: 16 }} />,
-  //   },
-  //   {
-  //     label: workshop.bedType ?? "King size",
-  //     icon: <Hotel sx={{ fontSize: 16 }} />,
-  //   },
-  // ];
+  if (loading || !workshop) {
+    return (
+      <Box
+        sx={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {loading && <CircularProgress color="primary" />}
+      </Box>
+    );
+  }
 
   return (
     <Container
       maxWidth="xl"
-      sx={{ pt: { xs: 2, md: 4 }, pb: { xs: 4, md: 8 }, mt: 10 }}
+      sx={{
+        mt: { xs: 9, md: 10 },
+        pt: { xs: 2, md: 4 },
+        pb: { xs: 6, md: 9 },
+        px: { xs: 2, sm: 3, md: 5 },
+      }}
     >
-      <AnimatedTitle>{workshop.title}</AnimatedTitle>
-      {/* ===== Hero + Gallery =====
-          מובייל: טור (hero למעלה, גלריה מתחת, גלילה אופקית)
-          דסקטופ: שורה (hero משמאל, גלריה צידית מימין)
-      */}
-      <Grid
-        container
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
-        sx={{ width: "100%" }}
-      >
-        {/* Hero */}
-        <Grid size={9}>
+      {/* WORKSHOP TITLE */}
+      <Box sx={{ mb: { xs: 3, md: 4 } }}>
+        <AnimatedTitle>{workshop.title}</AnimatedTitle>
+      </Box>
+
+      {/* HERO AND GALLERY */}
+      <Grid container spacing={{ xs: 1.5, md: 2 }} alignItems="stretch">
+        {/* MAIN IMAGE */}
+        <Grid size={{ xs: 12, md: 9 }}>
           <Paper
             elevation={0}
             sx={{
               width: "100%",
-              borderRadius: { xs: 2, md: 2 },
+              height: "100%",
               overflow: "hidden",
+              borderRadius: { xs: 2, md: 3 },
+              bgcolor: "background.paper",
               border: "1px solid",
               borderColor: "divider",
             }}
           >
-            {mainImage && (
-              <Box
-                component="img"
-                src={mainImage}
-                alt={workshop.title}
-                onError={() => setMainImage(FALLBACK_IMG)}
-                sx={{
-                  width: "100%",
-                  // במובייל יחס 16:9; בדסקטופ גובה קבוע
-                  height: { xs: "56vw", sm: "50vw", md: 520 },
-                  maxHeight: { xs: 420, md: 520 },
-                  objectFit: "cover",
-                  // opacity: imgLoaded ? 1 : 0,
-                  transition: "opacity 0.3s ease",
-                  display: "block",
-                }}
-              />
-            )}
+            <Box
+              component="img"
+              src={mainImage || FALLBACK_IMG}
+              alt={workshop.title}
+              decoding="async"
+              onError={(event) => {
+                if (event.currentTarget.src !== FALLBACK_IMG) {
+                  event.currentTarget.src = FALLBACK_IMG;
+                }
+              }}
+              sx={{
+                display: "block",
+                width: "100%",
+                height: {
+                  xs: 270,
+                  sm: 390,
+                  md: 520,
+                },
+                objectFit: "cover",
+              }}
+            />
           </Paper>
         </Grid>
 
-        {/* Gallery */}
-        <Grid size={3}>
+        {/* GALLERY */}
+        <Grid size={{ xs: 12, md: 3 }}>
           <Box
             sx={{
-              // מובייל: גלילה אופקית מתחת ל-Hero
-              display: "flex",
-              flexDirection: { xs: "row", md: "column" },
-              gap: 1,
-              overflowX: { xs: "auto", md: "visible" },
-              overflowY: { xs: "hidden", md: "auto" },
-              p: { xs: 0.5, md: 0 },
-              maxHeight: { md: 520 },
-              borderRadius: 2,
-
-              "&::-webkit-scrollbar": { height: 6, width: 6 },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "divider",
-                borderRadius: 8,
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "repeat(3, minmax(110px, 1fr))",
+                md: "1fr",
               },
+              gridTemplateRows: {
+                xs: "90px",
+                md: `repeat(${Math.max(
+                  currentGallery.length,
+                  1,
+                )}, minmax(0, 1fr))`,
+              },
+              gap: 1.5,
+              height: { xs: 90, md: 520 },
+              overflowX: { xs: "auto", md: "hidden" },
+              overflowY: "hidden",
             }}
           >
             {currentGallery.map((url, index) => {
               const isActive = url === mainImage;
+
               return (
                 <Box
-                  key={url + index}
-                  component="img"
-                  src={url}
-                  alt=""
+                  key={`${url}-${index}`}
+                  component="button"
+                  type="button"
                   onClick={() => handleImageChange(url)}
-                  onError={(event) => (event.currentTarget.src = FALLBACK_IMG)}
+                  aria-label={`View workshop image ${index + 1}`}
+                  aria-pressed={isActive}
                   sx={{
-                    cursor: "pointer",
-                    borderRadius: 1.2,
+                    width: "100%",
+                    height: "100%",
+                    minWidth: 0,
+                    minHeight: 0,
+                    p: 0,
+                    overflow: "hidden",
                     border: "2px solid",
-                    borderColor: isActive ? "primary.light" : "transparent",
-                    transition: "transform 0.2s ease, border-color 0.2s ease",
-                    "&:hover": { transform: "scale(1.03)" },
-                    // מובייל: תמונות קטנות לרוחב; דסקטופ: אריחים אנכיים
-                    width: { xs: 120, sm: 140, md: "100%" },
-                    height: { xs: 80, sm: 100, md: "auto" },
-                    objectFit: "cover",
-                    flex: { xs: "0 0 auto", md: "unset" },
-                    mb: { md: 1.2 },
+                    borderColor: isActive ? "primary.main" : "transparent",
+                    borderRadius: 1.5,
+                    bgcolor: "background.paper",
+                    cursor: "pointer",
+                    transition: "border-color 0.2s ease",
+
+                    "&:hover": {
+                      borderColor: "primary.light",
+                    },
+
+                    "&:focus-visible": {
+                      outline: "2px solid",
+                      outlineColor: "primary.main",
+                      outlineOffset: 2,
+                    },
                   }}
-                />
+                >
+                  <Box
+                    component="img"
+                    src={url}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = FALLBACK_IMG;
+                    }}
+                    sx={{
+                      display: "block",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Box>
               );
             })}
           </Box>
         </Grid>
       </Grid>
 
-      <Divider sx={{ my: { xs: 3, md: 4 } }} />
+      <Divider sx={{ my: { xs: 4, md: 6 } }} />
 
-      {/* ===== Content blocks ===== */}
-      <Grid container spacing={5} maxWidth="lg">
-        {/* במובייל Quick Facts קודם, על אזור רחב (full-bleed) */}
-        <Grid item size={{ md: 3, xs: 12 }} order={{ xs: 1, md: 2 }}>
+      {/* WORKSHOP INFORMATION */}
+      <Grid container spacing={{ xs: 4, md: 6 }} alignItems="start">
+        {/* DESCRIPTION */}
+        <Grid size={{ xs: 12, md: 7 }} sx={{ order: { xs: 2, md: 1 } }}>
+          <Typography
+            sx={{
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.13em",
+              textTransform: "uppercase",
+              color: "primary.main",
+              mb: 2,
+            }}
+          >
+            About the Workshop
+          </Typography>
+
+          {workshop.blurb && (
+            <Typography
+              sx={{
+                fontSize: { xs: 16, md: 18 },
+                fontWeight: 500,
+                lineHeight: 1.8,
+                whiteSpace: "pre-line",
+                color: "text.primary",
+                mb: 3,
+              }}
+            >
+              {workshop.blurb}
+            </Typography>
+          )}
+
+          {workshop.description && (
+            <Typography
+              sx={{
+                fontSize: { xs: 15, md: 17 },
+                lineHeight: 1.9,
+                whiteSpace: "pre-line",
+                color: "text.secondary",
+                mb: 4,
+              }}
+            >
+              {workshop.description}
+            </Typography>
+          )}
+
+          {!!workshop.tags?.length && (
+            <>
+              <Divider sx={{ mb: 4 }} />
+
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.13em",
+                  textTransform: "uppercase",
+                  color: "primary.main",
+                  mb: 2.5,
+                }}
+              >
+                Workshop Highlights
+              </Typography>
+
+              <Stack direction="row" flexWrap="wrap" useFlexGap gap={1}>
+                {workshop.tags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    variant="outlined"
+                    sx={{
+                      minHeight: 34,
+                      height: "auto",
+                      borderRadius: 1,
+                      borderColor: "divider",
+                      color: "text.secondary",
+                      fontSize: 13,
+
+                      "& .MuiChip-label": {
+                        py: 0.6,
+                      },
+                    }}
+                  />
+                ))}
+              </Stack>
+            </>
+          )}
+        </Grid>
+
+        {/* WORKSHOP QUICK FACTS */}
+        <Grid size={{ xs: 12, md: 5 }} sx={{ order: { xs: 1, md: 2 } }}>
           <Paper
             elevation={0}
             sx={{
-              p: { xs: 2.5, md: 3 },
+              p: { xs: 2.5, md: 3.5 },
               border: "1px solid",
               borderColor: "divider",
-              borderRadius: { xs: 0, md: 2 },
+              borderRadius: 2,
               bgcolor: "background.paper",
             }}
           >
             <Typography
-              variant="h6"
-              sx={{ fontWeight: 600, mb: 2, color: "text.secondary" }}
+              sx={{
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                mb: 3,
+              }}
             >
-              Workshop Quick Facts
+              Workshop Details
             </Typography>
+
+            {workshop.tags?.length > 0 && (
+              <Stack direction="row" flexWrap="wrap" useFlexGap gap={1}>
+                {workshop.tags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      borderRadius: 1,
+                      borderColor: "divider",
+                      color: "text.secondary",
+                    }}
+                  />
+                ))}
+              </Stack>
+            )}
+
+            <Divider sx={{ my: 3 }} />
+
+            <Button
+              variant="contained"
+              fullWidth
+              size="large"
+              endIcon={<ArrowForwardOutlined />}
+              onClick={handleAvailability}
+              sx={{
+                minHeight: 48,
+                px: 3,
+                py: 1.5,
+                borderRadius: 1.5,
+                textTransform: "none",
+                fontSize: 14,
+                fontWeight: 700,
+                boxShadow: "none",
+
+                "&:hover": {
+                  boxShadow: "none",
+                },
+              }}
+            >
+              Check Availability
+            </Button>
           </Paper>
         </Grid>
-
-        <Grid item size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>
-          <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
-            Workshop Description
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 3, whiteSpace: "pre-line" }}>
-            {workshop.blurb}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 3, whiteSpace: "pre-line" }}>
-            {workshop.description}
-          </Typography>
-
-          <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
-            Workshop Amenities
-          </Typography>
-          {!!workshop.tags?.length && (
-            <Stack
-              direction="row"
-              spacing={1}
-              flexWrap="wrap"
-              useFlexGap
-              sx={{ mb: 3 }}
-            >
-              {workshop.tags.map((tag) => (
-                <Chip key={tag} label={tag} variant="outlined" size="medium" />
-              ))}
-            </Stack>
-          )}
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ textTransform: "none" }}
-            onClick={() =>
-              navigate("/resort/", {
-                state: { scrollToAvailability: true },
-              })
-            }
-          >
-            Check availability
-          </Button>
-        </Grid>
       </Grid>
-
-      <Divider sx={{ mt: 4, mb: 1, display: { xs: "block", md: "none" } }} />
     </Container>
   );
 }

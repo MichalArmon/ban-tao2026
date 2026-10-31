@@ -8,8 +8,11 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+
 import { AccessTimeOutlined, ArrowForwardOutlined } from "@mui/icons-material";
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TreatmentModal from "./TreatmentModel";
 
 function TreatmentListSection({
@@ -28,11 +31,16 @@ function TreatmentListSection({
   duration,
 }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const detailsId = `treatment-details-${treatmentId}`;
+  const handleTreatmentDetails = () => {
+    if (!treatmentId) return;
+
+    navigate(`/resort/treatments/${treatmentId}`);
+  };
 
   const formattedPrice =
     price != null ? `${price} ${currency || ""}`.trim() : null;
@@ -86,11 +94,13 @@ function TreatmentListSection({
                 },
                 objectFit: "cover",
                 transition: "transform 0.6s ease",
+
                 "@media (hover: hover)": {
                   "&:hover": {
                     transform: "scale(1.025)",
                   },
                 },
+
                 "@media (prefers-reduced-motion: reduce)": {
                   transition: "none",
                 },
@@ -162,7 +172,7 @@ function TreatmentListSection({
             )}
 
             {/* DESCRIPTION */}
-            <Box id={detailsId} sx={{ scrollMarginTop: "100px" }}>
+            <Box>
               <Typography
                 sx={{
                   fontSize: 12,
@@ -248,6 +258,7 @@ function TreatmentListSection({
                       color: "primary.main",
                     }}
                   />
+
                   <Typography
                     sx={{
                       fontSize: 14,
@@ -282,6 +293,7 @@ function TreatmentListSection({
                 alignItems: "stretch",
               }}
             >
+              {/* BOOK NOW */}
               <Button
                 variant="contained"
                 onClick={handleOpen}
@@ -295,6 +307,7 @@ function TreatmentListSection({
                   fontWeight: 700,
                   textTransform: "none",
                   boxShadow: "none",
+
                   "&:hover": {
                     boxShadow: "none",
                   },
@@ -303,14 +316,11 @@ function TreatmentListSection({
                 Book Now
               </Button>
 
+              {/* TREATMENT DETAILS PAGE */}
               <Button
                 variant="outlined"
-                onClick={() => {
-                  document.getElementById(detailsId)?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }}
+                onClick={handleTreatmentDetails}
+                disabled={!treatmentId}
                 sx={{
                   px: 4,
                   py: 1.5,
@@ -321,6 +331,7 @@ function TreatmentListSection({
                   textTransform: "none",
                   color: "primary.main",
                   borderColor: "divider",
+
                   "&:hover": {
                     borderColor: "primary.main",
                     bgcolor: "transparent",
