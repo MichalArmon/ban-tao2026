@@ -14,7 +14,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { motion } from "motion/react";
 
 import MyTextField from "../../../../Form/MyTextField";
-import LoginSchema from "../../../admin/models/LoginSchema";
+import LoginSchema from "../../../admin/models/loginSchema";
 import useForm from "../../../hooks/useForm";
 
 const fieldStyles = {
