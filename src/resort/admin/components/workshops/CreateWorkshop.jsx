@@ -1,5 +1,5 @@
 import { useWorkshop } from "../../../providers/WorkshopProvider";
-import initialWorkshopValues from "../../helpers/Workshops/initialValues/initialWorkshopValues";
+import initialWorkshopValues from "../../helpers/workshops/initialValues/initialWorkshopValues";
 import WorkshopForm from "./WorkshopForm";
 function CreateWorkshop() {
   const { handleSubmitCreateWorkshop } = useWorkshop();
