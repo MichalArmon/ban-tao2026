@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useOrder } from "../../../providers/OrderProvider";
-import initialEditOrderValues from "../../helpers/Orders/initialValues/initialEditOrderValues";
+import initialEditOrderValues from "../../helpers/orders/initialValues/initialEditOrderValues";
 import OrderForm from "./OrderForm";
 
 function EditOrder({ orderSelected, setIsDialogOpen }) {
