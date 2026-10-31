@@ -1,257 +1,337 @@
-import React, { useState, useEffect } from "react";
-
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-  Typography,
   Box,
-  Button,
+  Container,
   Grid,
-  Paper,
+  Stack,
+  Typography,
+  Chip,
+  Button,
   Divider,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import dayjs from "dayjs";
-import { useWorkshop } from "../../../providers/WorkshopProvider";
-import { useSession } from "../../../providers/SessionProvider";
+
+import {
+  ArrowForwardOutlined,
+  ArrowOutwardOutlined,
+} from "@mui/icons-material";
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../../providers/UserProvider";
-import { useSessionReservation } from "../../../providers/SessionReservationProvider";
-import { useSnackBar } from "../../../providers/SnackBarProvider";
-import { useLoading } from "../../../providers/LoadingProvider";
+import WorkshopModal from "./WorkshopModel";
 
-export default function WorkshopModal({ open, onClose, workshopId }) {
-  const [groupedSessions, setGroupedSessions] = useState({});
-  const { isLoading, setIsLoading } = useLoading();
-  const [weekOffset, setWeekOffset] = useState(0);
+function WorkshopListSection({
+  imgSrc,
+  imgTitle,
+  title,
+  description,
+  level,
+  category,
+  bullets = [],
+  slug,
+  intensity,
+  price,
+  reverse = false,
+  workshopId,
+}) {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { sessions, getSessionsFromServer, handleGetSessionByWorkshop } =
-    useSession();
-  const { handleCreateSessionReservation } = useSessionReservation();
-  const { setSnack } = useSnackBar();
-  const { getWorkshopTitle, workshops, getWorkshopsFromServer } = useWorkshop();
 
-  const isNotLoggedIn = () => {
-    setSnack("warning", "please log in");
-  };
+  const onClose = () => setOpen(false);
 
-  useEffect(() => {
-    if (!sessions || sessions.length === 0) {
-      getSessionsFromServer();
-    }
+  const workshopTags = [
+    category,
+    level ? `${level} level` : null,
+    intensity ? `${intensity} intensity` : null,
+  ].filter(Boolean);
 
-    if (!workshops || workshops.length === 0) {
-      getWorkshopsFromServer();
-    }
-  }, [workshops]);
-  const startOfWeek = dayjs().add(weekOffset, "week").startOf("week");
-  const endOfWeek = dayjs().add(weekOffset, "week").endOf("week");
-
-  const filterCurrentWeekSessions = (sessionsArray) => {
-    return sessionsArray.filter((session) => {
-      const sessionDate = dayjs(session.startTime);
-
-      return (
-        sessionDate.isSame(startOfWeek, "day") ||
-        sessionDate.isSame(endOfWeek, "day") ||
-        (sessionDate.isAfter(startOfWeek) && sessionDate.isBefore(endOfWeek))
-      );
-    });
-  };
-
-  const groupSessionsByDate = (sessionsArray) => {
-    const grouped = {};
-    if (!sessionsArray || !Array.isArray(sessionsArray)) return grouped;
-    sessionsArray.forEach((session) => {
-      // מחלצים רק את התאריך (בלי שעה) כדי שישמש כמפתח
-      const dateKey = dayjs(session.startTime).format("YYYY-MM-DD");
-      if (!grouped[dateKey]) {
-        grouped[dateKey] = []; // אם זה סשן ראשון ביום הזה, פותחים מערך חדש
-      }
-      grouped[dateKey].push(session);
-    });
-    return grouped;
-  };
-
-  useEffect(() => {
-    if (open && workshopId) {
-      const fetchAndGroupSessions = async () => {
-        setIsLoading(true);
-        try {
-          const sessionsByWorkshop =
-            await handleGetSessionByWorkshop(workshopId);
-          const weeklySessions = filterCurrentWeekSessions(sessionsByWorkshop);
-          const grouped = groupSessionsByDate(weeklySessions);
-          setGroupedSessions(grouped);
-        } catch (error) {
-          console.log("Error fetching sessions:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchAndGroupSessions();
-    }
-  }, [open, workshopId, weekOffset]);
-
-  const handleReservation = async (session) => {
-    const reservation = {
-      userId: user?._id,
-      sessionId: session._id,
-      guestsCount: 1,
-      status: "pending",
-    };
-    const reservationId = await handleCreateSessionReservation(reservation);
-    console.log("reservation:", reservation);
-    if (!reservationId) {
-      return <Typography>loading...</Typography>;
-    }
-    navigate(`/resort/workshops/${reservationId}/order`);
-  };
+  const shortDescription =
+    description?.length > 260
+      ? `${description.slice(0, 260).trimEnd()}…`
+      : description;
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+    <Container
+      maxWidth="lg"
+      sx={{
+        py: { xs: 5, sm: 7, md: 10 },
+      }}
+    >
+      <Grid
+        container
+        spacing={{ xs: 3, sm: 4, md: 7 }}
+        direction={{
+          xs: "row",
+          md: reverse ? "row-reverse" : "row",
         }}
+        alignItems="center"
       >
-        <Typography variant="h6" fontWeight="bold">
-          {getWorkshopTitle(workshopId)}
-        </Typography>
-        <IconButton onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+        {/* IMAGE */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              overflow: "hidden",
+              borderRadius: { xs: 2, md: 2.5 },
+              bgcolor: "background.paper",
+            }}
+          >
+            <Box
+              component="img"
+              src={imgSrc}
+              alt={imgTitle || title}
+              loading="lazy"
+              decoding="async"
+              sx={{
+                display: "block",
+                width: "100%",
+                height: {
+                  xs: 290,
+                  sm: 390,
+                  md: 470,
+                },
+                objectFit: "cover",
+                transition: "transform 0.5s ease",
 
-      <Divider />
+                "@media (hover: hover)": {
+                  "&:hover": {
+                    transform: "scale(1.025)",
+                  },
+                },
 
-      <DialogContent sx={{ backgroundColor: "#f9f9f9", p: 3 }}>
-        {/* אזור הניווט (Toolbar) */}
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-          <AccessTimeIcon sx={{ mr: 1, color: "text.secondary" }} />
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Daily Workshop Schedule
-          </Typography>
-          {/* כפתורי הניווט בין שבועות (כרגע רק עיצוב) */}
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setWeekOffset((prev) => prev - 1)}
-              // disabled={weekOffset <= 0}
-            >
-              {"< PREVIOUS WEEK"}
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ color: "text.primary", borderColor: "#ccc" }}
-            >
-              {startOfWeek.format("DD/MM")} - {endOfWeek.format("DD/MM")}
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setWeekOffset((prev) => prev + 1)}
-            >
-              {"NEXT WEEK >"}
-            </Button>
-          </Box>
-        </Box>
+                "@media (prefers-reduced-motion: reduce)": {
+                  transition: "none",
+                },
+              }}
+            />
 
-        {/* לולאה שעוברת על כל תאריך בקבוצות שיצרנו */}
-        {isLoading ? (
-          <Typography variant="h1" sx={{ textAlign: "center", mt: 4 }}>
-            Loading schedule...
-          </Typography>
-        ) : (
-          Object.keys(groupedSessions).map((dateKey) => (
-            <Paper
-              key={dateKey}
-              sx={{ mb: 4, overflow: "hidden", borderRadius: 2 }}
-            >
-              {/* כותרת היום (הפס החום) */}
-              <Box sx={{ backgroundColor: "#a89c94", color: "white", p: 1.5 }}>
-                <Typography fontWeight="bold">
-                  {dayjs(dateKey).format("dddd, MM/DD/YYYY")}
-                </Typography>
-              </Box>
-
-              {/* כותרות העמודות של הטבלה */}
-              <Grid
-                container
+            {/* SUBTLE IMAGE LABEL */}
+            {category && (
+              <Box
                 sx={{
-                  p: 2,
-                  borderBottom: "1px solid #eee",
-                  fontWeight: "bold",
-                  color: "#555",
+                  position: "absolute",
+                  bottom: 18,
+                  left: 18,
+                  px: 2,
+                  py: 0.9,
+                  borderRadius: 1,
+                  bgcolor: "rgba(255,255,255,0.92)",
                 }}
               >
-                <Grid item xs={3}>
-                  Time
-                </Grid>
-                <Grid item xs={4}>
-                  Workshop / Class
-                </Grid>
-                <Grid item xs={3}>
-                  Studio
-                </Grid>
-                <Grid item xs={2} sx={{ textAlign: "center" }}>
-                  Action
-                </Grid>
-              </Grid>
-
-              {/* השורות של הסשנים עצמם באותו יום */}
-              {groupedSessions[dateKey].map((session) => (
-                <Grid
-                  container
-                  alignItems="center"
-                  key={session._id}
-                  sx={{ p: 2, borderBottom: "1px solid #eee" }}
+                <Typography
+                  sx={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: "0.09em",
+                    color: "text.primary",
+                    textTransform: "uppercase",
+                  }}
                 >
-                  <Grid item xs={3}>
-                    {/* כאן אנחנו יוצרות את הפורמט של השעות: 10:00 PM - 11:00 PM */}
-                    <Typography variant="body2" color="text.secondary">
-                      {dayjs(session.startTime).format("hh:mm A")} -{" "}
-                      {dayjs(session.endTime).format("hh:mm A")}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body2">{session._id}</Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">{session.location}</Typography>
-                  </Grid>
-                  <Grid item xs={2} sx={{ textAlign: "center" }}>
-                    <Button
-                      variant="contained"
+                  {category}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </Grid>
+
+        {/* CONTENT */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Stack
+            sx={{
+              width: "100%",
+              maxWidth: 530,
+              mx: "auto",
+            }}
+            spacing={{ xs: 2.5, md: 3 }}
+          >
+            {/* EYEBROW */}
+            <Typography
+              sx={{
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "primary.main",
+              }}
+            >
+              BAN TAO EXPERIENCES
+            </Typography>
+
+            {/* TITLE */}
+            <Typography
+              component="h2"
+              sx={{
+                fontSize: {
+                  xs: "clamp(2rem, 7vw, 2.7rem)",
+                  md: "clamp(2.4rem, 3.5vw, 3.4rem)",
+                },
+                fontWeight: 400,
+                letterSpacing: "-0.035em",
+                lineHeight: 1.15,
+                color: "text.primary",
+              }}
+            >
+              {title}
+            </Typography>
+
+            {/* DESCRIPTION */}
+            {shortDescription && (
+              <Typography
+                sx={{
+                  fontSize: { xs: 15, md: 16 },
+                  lineHeight: 1.9,
+                  color: "text.secondary",
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {shortDescription}
+              </Typography>
+            )}
+
+            {/* HIGHLIGHTS */}
+            {bullets.length > 0 && (
+              <Stack spacing={1.1}>
+                {bullets.slice(0, 3).map((bullet, index) => (
+                  <Stack
+                    key={index}
+                    direction="row"
+                    alignItems="flex-start"
+                    spacing={1.5}
+                  >
+                    <Box
                       sx={{
-                        backgroundColor: "#7a6b63",
-                        "&:hover": { backgroundColor: "#5c4e46" },
+                        width: 5,
+                        height: 5,
+                        borderRadius: "50%",
+                        bgcolor: "primary.main",
+                        mt: "10px",
+                        flexShrink: 0,
                       }}
-                      onClick={
-                        user
-                          ? () => handleReservation(session)
-                          : () => {
-                              isNotLoggedIn();
-                            }
-                      }
+                    />
+
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        lineHeight: 1.65,
+                        color: "text.secondary",
+                      }}
                     >
-                      BOOK
-                    </Button>
-                  </Grid>
-                </Grid>
-              ))}
-            </Paper>
-          ))
-        )}
-      </DialogContent>
-    </Dialog>
+                      {bullet}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            )}
+
+            {/* DETAILS */}
+            {(level || intensity || price != null) && (
+              <>
+                <Divider />
+
+                <Stack
+                  direction="row"
+                  flexWrap="wrap"
+                  useFlexGap
+                  gap={{ xs: 2, md: 3 }}
+                  alignItems="center"
+                >
+                  {level && (
+                    <Typography
+                      sx={{
+                        fontSize: 13,
+                        color: "text.secondary",
+                      }}
+                    >
+                      {level} level
+                    </Typography>
+                  )}
+
+                  {intensity && (
+                    <Typography
+                      sx={{
+                        fontSize: 13,
+                        color: "text.secondary",
+                      }}
+                    >
+                      {intensity} intensity
+                    </Typography>
+                  )}
+
+                  {price != null && (
+                    <Typography
+                      sx={{
+                        fontSize: 17,
+                        fontWeight: 600,
+                        color: "text.primary",
+                        ml: { md: "auto" },
+                      }}
+                    >
+                      {price}
+                    </Typography>
+                  )}
+                </Stack>
+              </>
+            )}
+
+            {/* ACTIONS */}
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={1.5}
+              sx={{ pt: { xs: 0.5, md: 1 } }}
+            >
+              <Button
+                variant="contained"
+                onClick={() => setOpen(true)}
+                endIcon={<ArrowForwardOutlined />}
+                sx={{
+                  minHeight: 48,
+                  px: 3.5,
+                  py: 1.4,
+                  borderRadius: 1.5,
+                  textTransform: "none",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  boxShadow: "none",
+                  "&:hover": {
+                    boxShadow: "none",
+                  },
+                }}
+              >
+                See Schedule
+              </Button>
+
+              <Button
+                variant="text"
+                onClick={() => navigate(`/resort/workshops/${slug}`)}
+                disabled={!slug}
+                endIcon={<ArrowOutwardOutlined />}
+                sx={{
+                  minHeight: 48,
+                  px: 2,
+                  color: "primary.main",
+                  textTransform: "none",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  justifyContent: {
+                    xs: "center",
+                    sm: "flex-start",
+                  },
+                  "&:hover": {
+                    bgcolor: "transparent",
+                    color: "text.primary",
+                  },
+                }}
+              >
+                Explore Workshop
+              </Button>
+            </Stack>
+          </Stack>
+        </Grid>
+      </Grid>
+
+      {/* SCHEDULE MODAL */}
+      <WorkshopModal open={open} onClose={onClose} workshopId={workshopId} />
+    </Container>
   );
 }
+
+export default WorkshopListSection;
