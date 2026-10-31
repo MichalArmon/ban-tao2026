@@ -22,7 +22,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import { useTreatmentReservation } from "../../../providers/TreatmentReservationProvider";
-import EditTreatmentReservation from "./EditTreatmentReservation";
+import EditTreatmentReservation from "./EdittreatmentReservation";
 import { useUser } from "../../../providers/UserProvider";
 import { useTreatment } from "../../../providers/TreatmentProvider";
 import { formatDate } from "../../../utils/date/dateUtils";
