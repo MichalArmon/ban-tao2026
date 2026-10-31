@@ -1,14 +1,13 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
-
+import { API_URL } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routerDict";
 import { useRoom } from "./RoomProvider";
 import { useUser } from "./UserProvider";
 import normalizeRoomReservation from "../admin/helpers/roomReservations/normalization/normalizeRoomReservationDetails";
 import { useLoading } from "./LoadingProvider";
-
-const URL = "http://localhost:8000";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 const RoomReservationContext = createContext();
 

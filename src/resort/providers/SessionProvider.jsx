@@ -2,8 +2,8 @@ import axios from "axios";
 import { createContext, useContext, useState, useCallback } from "react";
 import normalizeSessionDetails from "../admin/helpers/Sessions/normalization/normalizeSessionDetails";
 import { useLoading } from "./LoadingProvider";
-
-const URL = "http://localhost:8000";
+import { API_URL } from "../../config/api";
+const URL = API_URL;
 
 // const URL = "http://localhost:3000/api/v1";
 

@@ -3,9 +3,11 @@ import dayjs from "dayjs";
 import { createContext, useContext, useState } from "react";
 import normalizeTreatmentDetails from "../admin/helpers/treatments/normalization/normalizeTreatmentDetails";
 import { useLoading } from "./LoadingProvider";
-const URL = "http://localhost:8000";
+
 // const URL = "http://localhost:3000/api/v1";
 const today = dayjs().format("ddd, MMM D, YYYY");
+import { API_URL } from "../../config/api";
+const URL = API_URL;
 
 // 1.create context
 const TreatmentContext = createContext();

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useCallback, useContext, useState } from "react";
 import normalizeRoomDetails from "../admin/helpers/rooms/normalization/normalizeRoomDetails";
+import { API_URL } from "../../config/api";
 
 import { useSnackBar } from "./SnackBarProvider";
 import dayjs from "dayjs";
@@ -8,7 +9,7 @@ import { useUser } from "./UserProvider";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "./LoadingProvider";
 
-const URL = "http://localhost:8000";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 const RoomContext = createContext();
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import { useLoading } from "./LoadingProvider";
+import { API_URL } from "../../config/api";
 
 import { useSnackBar } from "./SnackBarProvider";
 import dayjs from "dayjs";
@@ -8,7 +9,7 @@ import { useUser } from "./UserProvider";
 import { useNavigate } from "react-router-dom";
 import normalizeRecRuleDetails from "../admin/helpers/recRules/normalization/normalizeRecRuleDetails";
 
-const URL = "http://localhost:8000";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 const RecRuleContext = createContext();
 

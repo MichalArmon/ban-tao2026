@@ -2,7 +2,8 @@ import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import normalizeWorkshopDetails from "../admin/helpers/workshops/normalization/normalizeWorkshopDetails.js";
 import { useLoading } from "./LoadingProvider";
-const URL = "http://localhost:8000";
+import { API_URL } from "../../config/api";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 
 // 1.create context

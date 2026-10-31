@@ -7,8 +7,9 @@ import { useTreatment } from "./TreatmentProvider";
 import { useUser } from "./UserProvider";
 import { useLoading } from "./LoadingProvider";
 import normalizeTreatmentReservation from "../admin/helpers/treatmentReservations/normalization/normalizeTreatmentReservationDetails";
+import { API_URL } from "../../config/api";
 
-const URL = "http://localhost:8000";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 const TreatmentReservationContext = createContext();
 

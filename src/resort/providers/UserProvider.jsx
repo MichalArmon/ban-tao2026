@@ -12,8 +12,9 @@ import {
 import normalizeRegisterDetails from "../admin/helpers/users/normalization/normalizeRegisterDetails";
 import normalizeLoginDetails from "../admin/helpers/users/normalization/normalizeLoginDetails";
 import { useLoading } from "./LoadingProvider";
+import { API_URL } from "../../config/api";
 
-const URL = "http://localhost:8000";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 const UserContext = createContext();
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import { useLoading } from "./LoadingProvider";
+import { API_URL } from "../../config/api";
 
 import dayjs from "dayjs";
 
@@ -9,7 +10,7 @@ import { ROUTES } from "../../routes/routerDict";
 import { useRoom } from "./RoomProvider";
 import { useUser } from "./UserProvider";
 
-const URL = "http://localhost:8000";
+const URL = API_URL;
 // const URL = "http://localhost:3000/api/v1";
 const OrderContext = createContext();
 
