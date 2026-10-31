@@ -1,4 +1,4 @@
-import UsersDataList from "../components/Users/UsersDataList";
+import UsersDataList from "../components/users/UsersDataList";
 import { Fab, Dialog, DialogContent, DialogTitle, Box } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
