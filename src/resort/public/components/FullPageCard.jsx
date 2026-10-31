@@ -1,6 +1,5 @@
-// src/pages/rooms/Room.jsx
-import { useMemo, useState, useEffect } from "react";
-import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
   Container,
@@ -13,7 +12,9 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
+
 import { Hotel, SquareFoot, People } from "@mui/icons-material";
+
 import { useRoom } from "../../providers/RoomProvider";
 import AnimatedTitle from "../../components/ui/AnimatedTitle";
 import { useLoading } from "../../providers/LoadingProvider";
@@ -23,242 +24,350 @@ const FALLBACK_IMG =
 
 export default function FullPageCard() {
   const { setIsLoading } = useLoading();
-  const [mainImage, setMainImage] = useState(null);
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [currentGallery, setCurrentGallery] = useState([]);
   const { handleGetRoomBySlug, room } = useRoom();
+
   const navigate = useNavigate();
   const { slug } = useParams();
-  console.log("params slug =", slug);
 
+  const [mainImage, setMainImage] = useState(null);
+  const [currentGallery, setCurrentGallery] = useState([]);
+
+  // FETCH ROOM
   useEffect(() => {
     if (slug) {
-      console.log("slug:", slug);
       handleGetRoomBySlug(slug);
     }
+
+    // Kept dependent on slug to preserve the existing fetch behavior.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
+  // UPDATE ROOM IMAGES
   useEffect(() => {
-    if (room) {
-      console.log("room:", room);
-      setMainImage(room.hero.url || FALLBACK_IMG);
-      setImgLoaded(true);
-      const newGallery = room.gallery?.map((image) => image.url) || [];
-      setCurrentGallery(newGallery);
-      console.log(newGallery);
-    }
+    if (!room) return;
+
+    setMainImage(room.hero?.url || FALLBACK_IMG);
+
+    const gallery =
+      room.gallery?.map((image) => image?.url).filter(Boolean) || [];
+
+    setCurrentGallery(gallery);
   }, [room]);
+
+  // LOADING STATE
+  useEffect(() => {
+    setIsLoading(!room);
+
+    return () => setIsLoading(false);
+  }, [room, setIsLoading]);
 
   const handleImageChange = (newImgSrc) => {
     if (!newImgSrc || newImgSrc === mainImage) return;
-    setImgLoaded(false);
     setMainImage(newImgSrc);
   };
 
-  if (!room) {
-    setIsLoading(true);
-    return null;
-  }
+  const handleAvailability = () => {
+    navigate("/resort/", {
+      state: { scrollToAvailability: true },
+    });
+  };
+
+  if (!room) return null;
 
   const facilities = [
     {
       label: `${room.maxGuests ?? 2} guests`,
-      icon: <People sx={{ fontSize: 16 }} />,
+      icon: <People sx={{ fontSize: 19 }} />,
     },
     {
       label: `${room.sizeM2 ?? 30} m²`,
-      icon: <SquareFoot sx={{ fontSize: 16 }} />,
+      icon: <SquareFoot sx={{ fontSize: 19 }} />,
     },
     {
       label: room.bedType ?? "King size",
-      icon: <Hotel sx={{ fontSize: 16 }} />,
+      icon: <Hotel sx={{ fontSize: 19 }} />,
     },
   ];
 
   return (
     <Container
       maxWidth="xl"
-      sx={{ pt: { xs: 2, md: 4 }, pb: { xs: 4, md: 8 }, mt: 10 }}
+      sx={{
+        mt: { xs: 9, md: 10 },
+        pt: { xs: 2, md: 4 },
+        pb: { xs: 6, md: 9 },
+        px: { xs: 2, sm: 3, md: 5 },
+      }}
     >
-      <AnimatedTitle>{room.title}</AnimatedTitle>
-      {/* ===== Hero + Gallery =====
-          מובייל: טור (hero למעלה, גלריה מתחת, גלילה אופקית)
-          דסקטופ: שורה (hero משמאל, גלריה צידית מימין)
-      */}
-      <Grid
-        container
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
-        sx={{ width: "100%" }}
-      >
-        {/* Hero */}
-        <Grid size={9}>
+      {/* ROOM TITLE */}
+      <Box sx={{ mb: { xs: 3, md: 4 } }}>
+        <AnimatedTitle>{room.title}</AnimatedTitle>
+      </Box>
+
+      {/* HERO IMAGE & GALLERY */}
+      <Grid container spacing={{ xs: 1.5, md: 2 }} alignItems="stretch">
+        {/* MAIN IMAGE */}
+        <Grid size={{ xs: 12, md: 9 }}>
           <Paper
             elevation={0}
             sx={{
               width: "100%",
-              borderRadius: { xs: 2, md: 2 },
+              height: "100%",
               overflow: "hidden",
+              borderRadius: { xs: 2, md: 3 },
+              bgcolor: "background.paper",
               border: "1px solid",
               borderColor: "divider",
             }}
           >
-            {mainImage && (
-              <Box
-                component="img"
-                src={mainImage}
-                alt={room.title}
-                onError={() => setMainImage(FALLBACK_IMG)}
-                sx={{
-                  width: "100%",
-                  // במובייל יחס 16:9; בדסקטופ גובה קבוע
-                  height: { xs: "56vw", sm: "50vw", md: 520 },
-                  maxHeight: { xs: 420, md: 520 },
-                  objectFit: "cover",
-                  // opacity: imgLoaded ? 1 : 0,
-                  transition: "opacity 0.3s ease",
-                  display: "block",
-                }}
-              />
-            )}
+            <Box
+              component="img"
+              src={mainImage || FALLBACK_IMG}
+              alt={room.title}
+              decoding="async"
+              onError={(event) => {
+                if (event.currentTarget.src !== FALLBACK_IMG) {
+                  event.currentTarget.src = FALLBACK_IMG;
+                }
+              }}
+              sx={{
+                display: "block",
+                width: "100%",
+                height: {
+                  xs: 270,
+                  sm: 390,
+                  md: 520,
+                },
+                objectFit: "cover",
+              }}
+            />
           </Paper>
         </Grid>
 
-        {/* Gallery */}
-        <Grid size={3}>
+        {/* GALLERY */}
+        <Grid size={{ xs: 12, md: 3 }}>
           <Box
             sx={{
-              // מובייל: גלילה אופקית מתחת ל-Hero
-              display: "flex",
-              flexDirection: { xs: "row", md: "column" },
-              gap: 1,
-              overflowX: { xs: "auto", md: "visible" },
-              overflowY: { xs: "hidden", md: "auto" },
-              p: { xs: 0.5, md: 0 },
-              maxHeight: { md: 520 },
-              borderRadius: 2,
-
-              "&::-webkit-scrollbar": { height: 6, width: 6 },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "divider",
-                borderRadius: 8,
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "repeat(3, minmax(110px, 1fr))",
+                md: "1fr",
               },
+              gridTemplateRows: {
+                xs: "90px",
+                md: `repeat(${Math.max(currentGallery.length, 1)}, minmax(0, 1fr))`,
+              },
+              gap: 1.5,
+              height: { xs: 90, md: 520 },
+              overflowX: { xs: "auto", md: "hidden" },
+              overflowY: "hidden",
             }}
           >
             {currentGallery.map((url, index) => {
               const isActive = url === mainImage;
+
               return (
                 <Box
-                  key={url + index}
-                  component="img"
-                  src={url}
-                  alt=""
+                  key={`${url}-${index}`}
+                  component="button"
+                  type="button"
                   onClick={() => handleImageChange(url)}
-                  onError={(event) => (event.currentTarget.src = FALLBACK_IMG)}
+                  aria-label={`View room image ${index + 1}`}
+                  aria-pressed={isActive}
                   sx={{
-                    cursor: "pointer",
-                    borderRadius: 1.2,
+                    width: "100%",
+                    height: "100%",
+                    minWidth: 0,
+                    minHeight: 0,
+                    p: 0,
+                    overflow: "hidden",
                     border: "2px solid",
-                    borderColor: isActive ? "primary.light" : "transparent",
-                    transition: "transform 0.2s ease, border-color 0.2s ease",
-                    "&:hover": { transform: "scale(1.03)" },
-                    // מובייל: תמונות קטנות לרוחב; דסקטופ: אריחים אנכיים
-                    width: { xs: 120, sm: 140, md: "100%" },
-                    height: { xs: 80, sm: 100, md: "auto" },
-                    objectFit: "cover",
-                    flex: { xs: "0 0 auto", md: "unset" },
-                    mb: { md: 1.2 },
+                    borderColor: isActive ? "primary.main" : "transparent",
+                    borderRadius: 1.5,
+                    bgcolor: "background.paper",
+                    cursor: "pointer",
+
+                    "&:focus-visible": {
+                      outline: "2px solid",
+                      outlineColor: "primary.main",
+                      outlineOffset: 2,
+                    },
                   }}
-                />
+                >
+                  <Box
+                    component="img"
+                    src={url}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    sx={{
+                      display: "block",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Box>
               );
             })}
           </Box>
         </Grid>
       </Grid>
 
-      <Divider sx={{ my: { xs: 3, md: 4 } }} />
+      <Divider sx={{ my: { xs: 4, md: 6 } }} />
 
-      {/* ===== Content blocks ===== */}
-      <Grid container spacing={4}>
-        {/* במובייל Quick Facts קודם, על אזור רחב (full-bleed) */}
-        <Grid item xs={12} md={5} order={{ xs: 1, md: 2 }}>
-          <Box
+      {/* ROOM INFORMATION */}
+      <Grid container spacing={{ xs: 4, md: 6 }} alignItems="start">
+        {/* DESCRIPTION AND AMENITIES */}
+        <Grid size={{ xs: 12, md: 7 }} sx={{ order: { xs: 2, md: 1 } }}>
+          <Typography
             sx={{
-              mx: { xs: -2, md: 0 }, // שוליים שליליים לביטול padding של ה-Container במובייל
-              px: { xs: 2, md: 0 }, // מחזירים padding פנימי נוח
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.13em",
+              textTransform: "uppercase",
+              color: "primary.main",
+              mb: 2,
             }}
           >
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 2.5, md: 3 },
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: { xs: 0, md: 2 }, // במובייל קצה-לקצה
-                bgcolor: "background.paper",
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, mb: 2, color: "text.secondary" }}
-              >
-                Room Quick Facts
-              </Typography>
-
-              <Grid container spacing={1.5}>
-                {facilities.map((f, i) => (
-                  <Grid key={i} item xs={6} md={12}>
-                    <Stack direction="row" alignItems="center" spacing={1.2}>
-                      <Box color="primary.main">{f.icon}</Box>
-                      <Typography variant="body1">{f.label}</Typography>
-                    </Stack>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12} md={7} order={{ xs: 2, md: 1 }}>
-          <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
             Room Description
           </Typography>
-          <Typography variant="body1" sx={{ mb: 3, whiteSpace: "pre-line" }}>
+
+          <Typography
+            sx={{
+              fontSize: { xs: 15, md: 17 },
+              lineHeight: 1.9,
+              whiteSpace: "pre-line",
+              color: "text.secondary",
+              maxWidth: 750,
+              mb: { xs: 4, md: 5 },
+            }}
+          >
             {room.blurb}
           </Typography>
 
-          <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600 }}>
-            Room Amenities
-          </Typography>
           {!!room.features?.length && (
-            <Stack
-              direction="row"
-              spacing={1}
-              flexWrap="wrap"
-              useFlexGap
-              sx={{ mb: 3 }}
-            >
-              {room.features.map((f) => (
-                <Chip key={f} label={f} variant="outlined" size="medium" />
-              ))}
-            </Stack>
+            <>
+              <Divider sx={{ mb: 4 }} />
+
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.13em",
+                  textTransform: "uppercase",
+                  color: "primary.main",
+                  mb: 2.5,
+                }}
+              >
+                Room Amenities
+              </Typography>
+
+              <Stack direction="row" flexWrap="wrap" useFlexGap gap={1}>
+                {room.features.map((feature) => (
+                  <Chip
+                    key={feature}
+                    label={feature}
+                    variant="outlined"
+                    sx={{
+                      minHeight: 34,
+                      height: "auto",
+                      borderRadius: 1,
+                      borderColor: "divider",
+                      color: "text.secondary",
+                      fontSize: 13,
+                      "& .MuiChip-label": {
+                        py: 0.6,
+                      },
+                    }}
+                  />
+                ))}
+              </Stack>
+            </>
           )}
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ textTransform: "none" }}
-            onClick={() =>
-              navigate("/resort/", {
-                state: { scrollToAvailability: true },
-              })
-            }
+        </Grid>
+
+        {/* QUICK FACTS */}
+        <Grid size={{ xs: 12, md: 5 }} sx={{ order: { xs: 1, md: 2 } }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: { xs: 2.5, md: 3.5 },
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              bgcolor: "background.paper",
+            }}
           >
-            Check availability
-          </Button>
+            <Typography
+              sx={{
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                mb: 3,
+              }}
+            >
+              Room Quick Facts
+            </Typography>
+
+            <Grid container spacing={2}>
+              {facilities.map((facility) => (
+                <Grid key={facility.label} size={{ xs: 12, sm: 4, md: 12 }}>
+                  <Stack direction="row" alignItems="center" spacing={1.5}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "primary.main",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {facility.icon}
+                    </Box>
+
+                    <Typography
+                      sx={{
+                        fontSize: 15,
+                        color: "text.primary",
+                      }}
+                    >
+                      {facility.label}
+                    </Typography>
+                  </Stack>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* CHECK AVAILABILITY */}
+            <Button
+              fullWidth
+              variant="contained"
+              size="large"
+              onClick={handleAvailability}
+              sx={{
+                minHeight: 48,
+                px: 3,
+                py: 1.5,
+                borderRadius: 1.5,
+                textTransform: "none",
+                fontSize: 14,
+                fontWeight: 700,
+                boxShadow: "none",
+
+                "&:hover": {
+                  boxShadow: "none",
+                },
+              }}
+            >
+              Check Availability
+            </Button>
+          </Paper>
         </Grid>
       </Grid>
-
-      <Divider sx={{ mt: 4, mb: 1, display: { xs: "block", md: "none" } }} />
     </Container>
   );
 }

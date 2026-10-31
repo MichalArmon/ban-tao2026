@@ -5,9 +5,9 @@ import {
   Grid,
   Stack,
   Typography,
-  Chip,
   Paper,
   Button,
+  Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import LikeButton from "../../../components/ui/LikeButton";
@@ -24,162 +24,268 @@ function RoomListSection({
   bedType,
   id,
 }) {
+  const navigate = useNavigate();
+
   const facilities = [
     {
       label: `${maxGuests ?? 2} guests`,
-      icon: <People sx={{ fontSize: 16 }} />,
+      icon: <People sx={{ fontSize: 19 }} />,
     },
     {
       label: `${sizeM2 ?? 30} m²`,
-      icon: <SquareFoot sx={{ fontSize: 16 }} />,
+      icon: <SquareFoot sx={{ fontSize: 19 }} />,
     },
     {
       label: bedType ?? "King size",
-      icon: <Hotel sx={{ fontSize: 16 }} />,
+      icon: <Hotel sx={{ fontSize: 19 }} />,
     },
   ];
 
-  const navigate = useNavigate();
+  const handleRoomDetails = () => {
+    navigate(`/resort/rooms/${slug}`);
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        py: { xs: 5, sm: 6, md: 9 },
+      }}
+    >
       <Grid
         container
-        spacing={4}
-        direction={reverse ? "row-reverse" : "row"}
+        spacing={{ xs: 3.5, sm: 4, md: 6 }}
+        direction={{ xs: "row", md: reverse ? "row-reverse" : "row" }}
         alignItems="center"
-        sx={{
-          flexWrap: "nowrap",
-          "@media (max-width:900px)": { flexWrap: "wrap" },
-        }}
       >
-        {/* IMAGE */}
-        <Grid
-          item
-          size={6}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
+        {/* ROOM IMAGE */}
+        <Grid size={{ xs: 12, md: 6 }}>
           <Box
-            component="img"
-            src={imgSrc}
-            alt={imgTitle}
-            loading="lazy"
             sx={{
+              position: "relative",
               width: "100%",
-              height: 400,
-              objectFit: "cover",
-              borderRadius: 3,
-              boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+              overflow: "hidden",
+              borderRadius: { xs: 2, md: 3 },
+              bgcolor: "#EDE9E2",
             }}
-          />
-          <Box sx={{ position: "absolute", top: 16, left: 16 }}>
-            <LikeButton entityId={id} entityType={"rooms"} />
+          >
+            <Box
+              component="img"
+              src={imgSrc}
+              alt={imgTitle || title}
+              loading="lazy"
+              decoding="async"
+              sx={{
+                display: "block",
+                width: "100%",
+                height: {
+                  xs: 270,
+                  sm: 360,
+                  md: 440,
+                },
+                objectFit: "cover",
+                transition: "transform 0.6s ease",
+                "@media (hover: hover)": {
+                  "&:hover": {
+                    transform: "scale(1.025)",
+                  },
+                },
+                "@media (prefers-reduced-motion: reduce)": {
+                  transition: "none",
+                },
+              }}
+            />
+
+            {/* LIKE BUTTON */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: { xs: 12, md: 18 },
+                left: { xs: 12, md: 18 },
+                zIndex: 2,
+              }}
+            >
+              <LikeButton entityId={id} entityType="rooms" />
+            </Box>
           </Box>
         </Grid>
 
-        {/* TEXT */}
-        <Grid size={6}>
-          <Typography
-            variant="h4"
-            sx={{ mb: 2.4, fontWeight: 400 }}
-            textAlign="start"
+        {/* ROOM CONTENT */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Stack
+            spacing={{ xs: 2.5, md: 3 }}
+            sx={{
+              width: "100%",
+              maxWidth: { md: 560 },
+              mx: "auto",
+            }}
           >
-            {title}
-          </Typography>
-
-          {/* כאן התיקון: הפכנו את זה ל-container כדי שה-md=6 של הילדים יעבוד */}
-          <Grid container spacing={4} alignItems="stretch">
-            {/* חצי שמאלי: תיאור החדר */}
-            <Grid item xs={12} size={6}>
-              <Typography
-                variant="h6"
-                textAlign="start"
-                sx={{ mb: 1, fontWeight: 600 }}
-              >
-                Room Description
-              </Typography>
-              {blurb && (
-                <Typography variant="body1" textAlign="start">
-                  {blurb}
-                </Typography>
-              )}
-              <Typography
-                variant="h6"
-                textAlign="start"
-                sx={{ mb: 1, fontWeight: 600 }}
-              >
-                Room Amenities
-              </Typography>
-              {blurb && (
-                <Typography variant="body1" textAlign="start">
-                  {blurb}
-                </Typography>
-              )}
-            </Grid>
-
-            {/* חצי ימני: עובדות מהירות */}
-            <Grid
-              item
-              xs={12}
-              size={6}
-              display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-              position="relative"
+            {/* SMALL LABEL */}
+            <Typography
+              sx={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: "primary.main",
+              }}
             >
-              <Paper
-                elevation={0}
+              STAY AT BAN TAO
+            </Typography>
+
+            {/* ROOM NAME */}
+            <Typography
+              component="h2"
+              sx={{
+                fontSize: {
+                  xs: "clamp(1.9rem, 7vw, 2.5rem)",
+                  md: "clamp(2.3rem, 3vw, 3.3rem)",
+                },
+                fontWeight: 500,
+                letterSpacing: "-0.035em",
+                lineHeight: 1.15,
+                color: "text.primary",
+              }}
+            >
+              {title}
+            </Typography>
+
+            {/* ROOM DESCRIPTION */}
+            <Box>
+              <Typography
                 sx={{
-                  p: { xs: 2.5, md: 3 },
-                  border: "1px solid",
-                  borderColor: "divider",
-                  borderRadius: { xs: 0, md: 2 },
-                  bgcolor: "background.paper",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.13em",
+                  textTransform: "uppercase",
+                  color: "text.secondary",
+                  mb: 1.5,
                 }}
               >
-                <Typography
-                  variant="h6"
-                  textAlign="start"
-                  sx={{ fontWeight: 600, mb: 1, color: "text.secondary" }}
-                >
-                  Room Quick Facts
-                </Typography>
+                The Room
+              </Typography>
 
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="flex-start" // מיישר את האייקונים יפה לשמאל בתוך הקופסה
-                  spacing={1.5}
-                >
-                  {facilities.map((f, i) => (
-                    // שינינו ל-xs=12 כדי שכל פיצ'ר יקבל שורה משלו בתוך הקופסה הקטנה
-                    <Grid key={i} item xs={12}>
-                      <Stack direction="row" alignItems="center" spacing={1.2}>
-                        <Box color="primary.main">{f.icon}</Box>
-                        <Typography variant="body1">{f.label}</Typography>
-                      </Stack>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Paper>
-              <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
-                <Button variant="contained">Book Now</Button>
+              <Typography
+                sx={{
+                  fontSize: { xs: 15, md: 16 },
+                  lineHeight: 1.85,
+                  color: "text.secondary",
+                  maxWidth: 520,
+                }}
+              >
+                {blurb || "Discover your space to relax and unwind."}
+              </Typography>
+            </Box>
 
-                <Button
-                  variant="text"
-                  onClick={() => {
-                    navigate(`/resort/rooms/${slug}`);
-                  }}
-                >
-                  Learn More
-                </Button>
-              </Stack>
-            </Grid>
-          </Grid>
+            <Divider sx={{ borderColor: "divider" }} />
+
+            {/* QUICK FACTS */}
+            <Paper
+              elevation={0}
+              sx={{
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: 2,
+                p: { xs: 2, sm: 2.5, md: 3 },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "text.secondary",
+                  mb: 2,
+                }}
+              >
+                Room Details
+              </Typography>
+
+              <Grid container spacing={{ xs: 2, sm: 2.5 }}>
+                {facilities.map((facility) => (
+                  <Grid key={facility.label} size={{ xs: 12, sm: 4, md: 4 }}>
+                    <Stack direction="row" alignItems="center" spacing={1.2}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: "primary.main",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {facility.icon}
+                      </Box>
+
+                      <Typography
+                        sx={{
+                          fontSize: 14,
+                          color: "text.primary",
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        {facility.label}
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+
+            {/* ACTIONS */}
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={1.5}
+              sx={{
+                pt: { xs: 0.5, md: 1 },
+                alignItems: "stretch",
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={handleRoomDetails}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  minHeight: 48,
+                  borderRadius: 1.5,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  textTransform: "none",
+                  boxShadow: "none",
+                  "&:hover": {
+                    boxShadow: "none",
+                  },
+                }}
+              >
+                Book Now
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={handleRoomDetails}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  minHeight: 48,
+                  borderRadius: 1.5,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textTransform: "none",
+                  color: "primary.main",
+                  borderColor: "divider",
+                  "&:hover": {
+                    borderColor: "primary.main",
+                    bgcolor: "transparent",
+                  },
+                }}
+              >
+                View Room Details
+              </Button>
+            </Stack>
+          </Stack>
         </Grid>
       </Grid>
     </Container>
