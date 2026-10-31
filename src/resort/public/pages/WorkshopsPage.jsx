@@ -1,8 +1,5 @@
-import WorkshopList from "../components/workShops/WorkShopList";
-import WorkshopsHeroPage from "../components/workShops/WorkShopsHeroPage";
-WorkshopsHeroPage;
-
-WorkshopList;
+import WorkshopList from "../components/workshops/WorkshopList";
+import WorkshopsHeroPage from "../components/workshops/WorkshopsHeroPage";
 
 function WorkShopsPage() {
   return (
