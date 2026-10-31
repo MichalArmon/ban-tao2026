@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useState, useCallback } from "react";
-import normalizeSessionDetails from "../admin/helpers/Sessions/normalization/normalizeSessionDetails";
+import normalizeSessionDetails from "../admin/helpers/sessions/normalization/normalizeSessionDetails";
 import { useLoading } from "./LoadingProvider";
 import { API_URL } from "../../config/api";
 const URL = API_URL;
